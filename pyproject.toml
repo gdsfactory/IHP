@@ -13,7 +13,7 @@ classifiers = [
 ]
 dependencies = [
   "gdsfactory~=9.20.7",
-  "gplugins[sax]~=1.4.2",
+  "gplugins[sax]>=1.4.2,<2.1.0",
   "doroutes>=0.2.0"
 ]
 description = "IHP pdk"
