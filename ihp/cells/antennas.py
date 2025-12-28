@@ -1,6 +1,7 @@
 """Äntenna components for IHP PDK."""
 
 import math
+from typing import Literal
 
 import gdsfactory as gf
 from gdsfactory.typings import LayerSpec
@@ -101,9 +102,9 @@ def DrawContArray(
 def dantenna(
     width: float = 0.78,
     length: float = 0.78,
-    addRecLayer: str = "t",
-    guardRingType: str = "none",
-    # guardRingDistance: float = 1.0,
+    addRecLayer: Literal["t", "f"] = "t",
+    guardRingType: Literal["none", "psub"] = "none",
+    guardRingDistance: float = 1.0,
 ) -> gf.Component:
     """Creates a diode antenna (dantenna) structure.
 
@@ -128,10 +129,18 @@ def dantenna(
 
     c = gf.Component()
 
+    wmin = float(tech["dantenna_minW"].rstrip("u"))
+    lmin = float(tech["dantenna_minL"].rstrip("u"))
+
+    if width < wmin:
+        width = wmin
+    if length < lmin:
+        length = lmin
+
     layer_metal1: LayerSpec = "Metal1drawing"
     ndiff_layer: LayerSpec = "Activdrawing"
-    # pdiff_layer: LayerSpec = "Activ"
-    # pdiffx_layer: LayerSpec = "pSD"
+    pdiff_layer: LayerSpec = "Activdrawing"
+    pdiffx_layer: LayerSpec = "pSDdrawing"
     cont_layer: LayerSpec = "Contdrawing"
     diods_layer: LayerSpec = "Recogdiode"
     layer_text: LayerSpec = "TEXTdrawing"
@@ -139,10 +148,10 @@ def dantenna(
     cont_size = tech["Cnt_a"]
     cont_dist = tech["Cnt_b"]
     cont_diff_over = tech["Cnt_c"]
-    # pdiffx_over = tech["pSD_a"]
-    # wmin = tech["dantenna_minW"]
-    # lmin = tech["dantenna_minL"]
+    pdiffx_over = tech["pSD_a"]
     diods_over = float(tech["dantenna_dov"].rstrip("u"))
+
+    typ = "N"
 
     x_min, y_min, x_max, y_max = DrawContArray(
         c,
@@ -163,14 +172,23 @@ def dantenna(
 
     metal1_ref.move((x_min, y_min))
 
-    c.add_ref(gf.components.rectangle(size=(width, length), layer=ndiff_layer))
+    if typ == "N":
+        c.add_ref(gf.components.rectangle(size=(width, length), layer=ndiff_layer))
+    else:
+        c.add_ref(gf.components.rectangle(size=(width, length), layer=pdiff_layer))
+        c.add_ref(
+            gf.components.rectangle(
+                size=(width + 2 * pdiffx_over, length + 2 * pdiffx_over),
+                layer=pdiffx_layer,
+            )
+        ).move((-pdiffx_over, -pdiffx_over))
 
     c.add_label(
         "dant",
         layer=layer_text,
         position=(
-            length / 2,
             width / 2,
+            length / 2,
         ),
     )
 
@@ -185,13 +203,123 @@ def dantenna(
     return c
 
 
+@gf.cell
+def dpantenna(
+    width: float = 0.78,
+    length: float = 0.78,
+    addRecLayer: Literal["t", "f"] = "t",
+    guardRingType: Literal["none", "nwell"] = "none",
+    guardRingDistance: float = 1.0,
+) -> gf.Component:
+    """Creates a dual-polarity antenna (dpantenna) structure.
+
+    Generates a layout cell containing a rectangular antenna region with an
+    optional recognition layer and an optional n-well guard ring. Parameters
+    allow customization of the antenna geometry and the spacing between the
+    antenna body and the surrounding guard ring.
+
+    Args:
+        width: Width of the antenna rectangle in microns.
+        length: Length of the antenna rectangle in microns.
+        addRecLayer: Whether to add a recognition layer. Valid values:
+            - 't': Add recognition layer.
+            - 'f': Do not add a recognition layer.
+        guardRingType: Type of guard ring to include. Valid values:
+            - 'none': No guard ring.
+            - 'nwell': Surrounding n-well guard ring.
+        guardRingDistance: Spacing between the antenna body and the n-well
+            guard ring, in microns.
+
+    Returns:
+        gdsfactory.Component: The generated antenna component.
+    """
+
+    c = gf.Component()
+
+    wmin = float(tech["dantenna_minW"].rstrip("u"))
+    lmin = float(tech["dantenna_minL"].rstrip("u"))
+
+    if width < wmin:
+        width = wmin
+    if length < lmin:
+        length = lmin
+
+    layer_metal1: LayerSpec = "Metal1drawing"
+    pdiff_layer: LayerSpec = "Activdrawing"
+    pdiffx_layer: LayerSpec = "pSDdrawing"
+    cont_layer: LayerSpec = "Contdrawing"
+    diods_layer: LayerSpec = "Recogdiode"
+    layer_text: LayerSpec = "TEXTdrawing"
+    layer_nwell: LayerSpec = "NWelldrawing"
+
+    cont_size = tech["Cnt_a"]
+    cont_dist = tech["Cnt_b"]
+    cont_diff_over = tech["Cnt_c"]
+    pdiffx_over = tech["pSD_c"]
+    diods_over = float(tech["dpantenna_dov"].rstrip("u"))
+    NW_c = tech["NW_c"]
+
+    x_min, y_min, x_max, y_max = DrawContArray(
+        c,
+        cont_layer,
+        0,
+        0,
+        width,
+        length,
+        cont_size,
+        cont_dist,
+        cont_diff_over,
+    )
+
+    # Metal1 encloses the contacts
+    metal1_ref = c << gf.components.rectangle(
+        size=(x_max - x_min, y_max - y_min), layer=layer_metal1
+    )
+
+    metal1_ref.move((x_min, y_min))
+
+    c.add_ref(gf.components.rectangle(size=(width, length), layer=pdiff_layer))
+    c.add_ref(
+        gf.components.rectangle(
+            size=(width + 2 * pdiffx_over, length + 2 * pdiffx_over),
+            layer=pdiffx_layer,
+        )
+    ).move((-pdiffx_over, -pdiffx_over))
+
+    c.add_label(
+        "dant",
+        layer=layer_text,
+        position=(
+            width / 2,
+            length / 2,
+        ),
+    )
+
+    if addRecLayer == "t":
+        c.add_ref(
+            gf.components.rectangle(
+                size=(width + 2 * diods_over, length + 2 * diods_over),
+                layer=diods_layer,
+            )
+        ).move((-diods_over, -diods_over))
+
+    c.add_ref(
+        gf.components.rectangle(
+            size=(width + 2 * NW_c, length + 2 * NW_c),
+            layer=layer_nwell,
+        )
+    ).move((-NW_c, -NW_c))
+
+    return c
+
+
 if __name__ == "__main__":
     from gdsfactory.difftest import xor
 
     from ihp import PDK, cells2
 
     PDK.activate()
-    c1 = dantenna()
-    c0 = cells2.dantenna()
+    c1 = dpantenna()
+    c0 = cells2.dpantenna(guardRingType="nwell")
     c = xor(c0, c1)
     c.show()  # pragma: no cover
