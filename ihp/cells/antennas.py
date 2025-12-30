@@ -12,14 +12,27 @@ tech_name = "SG13_dev"
 tech = Tech.get("SG13_dev").getTechParams()
 
 
-def fix(value):
-    if type(value) is float:
-        return int(math.floor(value))
-    else:
-        return value
+def fix(value: float) -> int:
+    """Rounds a floating-point value down to the nearest integer.
+
+    Args:
+        value: Value to be rounded or passed through.
+
+    Returns:
+        The rounded integer of ``value``.
+    """
+    return int(math.floor(value))
 
 
-def GridFix(x):
+def GridFix(x: float) -> float:
+    """Snaps a coordinate to the technology grid.
+
+    Args:
+        x: Coordinate value to be aligned to the technology grid.
+
+    Returns:
+        The grid-aligned coordinate value.
+    """
     SG13_GRID = tech["grid"]
     SG13_IGRID = 1 / SG13_GRID
     SG13_EPSILON = tech["epsilon1"]
@@ -38,7 +51,26 @@ def DrawContArray(
     cont_size,
     cont_dist,
     cont_diff_over,
-):
+) -> tuple[float, float, float, float]:
+    """Distributes an array of square contacts inside a rectangular region.
+
+    Args:
+        c: Target gdsfactory component to which the contacts are added.
+        cont_layer: Layer on which the contact rectangles are drawn.
+        y_min: Y-coordinate of the lower-left corner of the enclosing region.
+        x_min: X-coordinate of the lower-left corner of the enclosing region.
+        width: Width of the enclosing region.
+        length: Length of the enclosing region.
+        cont_size: Size of one square contact.
+        cont_dist: Spacing between adjacent contacts.
+        cont_diff_over: Minimum enclosure of contacts by the surrounding
+            diffusion or active region.
+
+    Returns:
+        Tuple[float, float, float, float]: Coordinates of the bounding box
+        enclosing the generated contact array in the form
+        ``(x_min, y_min, x_max, y_max)``.
+    """
     epsilon = tech["epsilon1"]
 
     xanz = fix(
@@ -322,4 +354,4 @@ if __name__ == "__main__":
     c1 = dpantenna()
     c0 = cells2.dpantenna(guardRingType="nwell")
     c = xor(c0, c1)
-    c.show()  # pragma: no cover
+    c.show()
