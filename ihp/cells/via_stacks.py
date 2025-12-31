@@ -6,6 +6,11 @@ from gdsfactory.typings import LayerSpec
 
 # Via design rules (in micrometers)
 VIA_RULES = {
+    "Cont": {
+        "size": 0.16,
+        "spacing": 0.18,
+        "enclosure": 0.06,
+    },
     "Via1": {
         "size": 0.26,
         "spacing": 0.36,
@@ -26,15 +31,20 @@ VIA_RULES = {
         "spacing": 0.36,
         "enclosure": 0.06,
     },
+    "Vmim": {
+        "size": 0.42,
+        "spacing": 0.47,
+        "enclosure": 0.42,
+    },
     "TopVia1": {
-        "size": 0.9,
-        "spacing": 0.9,
+        "size": 0.42,
+        "spacing": 0.42,
         "enclosure": 0.3,
     },
     "TopVia2": {
-        "size": 5.0,
-        "spacing": 5.0,
-        "enclosure": 1.0,
+        "size": 0.9,
+        "spacing": 1.06,
+        "enclosure": 0.5,
     },
 }
 
@@ -50,10 +60,12 @@ def get_via_name(bottom_metal: str, top_metal: str) -> str | None:
         Via layer name or None if not adjacent.
     """
     via_mapping = {
+        ("Activ",  "Metal1"): "Cont",
         ("Metal1", "Metal2"): "Via1",
         ("Metal2", "Metal3"): "Via2",
         ("Metal3", "Metal4"): "Via3",
         ("Metal4", "Metal5"): "Via4",
+        ("MIM", "TopMetal1"): "Vmim",
         ("Metal5", "TopMetal1"): "TopVia1",
         ("TopMetal1", "TopMetal2"): "TopVia2",
     }
@@ -71,10 +83,12 @@ def via_array(
     via_size: float | None = None,
     via_spacing: float | None = None,
     via_enclosure: float | None = None,
+    layer_cont: LayerSpec = "Contdrawing",
     layer_via1: LayerSpec = "Via1drawing",
     layer_via2: LayerSpec = "Via2drawing",
     layer_via3: LayerSpec = "Via3drawing",
     layer_via4: LayerSpec = "Via4drawing",
+    layer_vmim: LayerSpec = "Vmimdrawing",
     layer_topvia1: LayerSpec = "TopVia1drawing",
     layer_topvia2: LayerSpec = "TopVia2drawing",
 ) -> Component:
@@ -101,10 +115,12 @@ def via_array(
 
     # Map via type to layer parameter
     via_layer_map = {
+        "Cont": layer_cont,
         "Via1": layer_via1,
         "Via2": layer_via2,
         "Via3": layer_via3,
         "Via4": layer_via4,
+        "Vmim": layer_vmim,
         "TopVia1": layer_topvia1,
         "TopVia2": layer_topvia2,
     }

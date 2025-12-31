@@ -17,6 +17,7 @@
 ########################################################################
 
 import math
+from math import *
 from io import StringIO
 
 from cni.dlo import Layer, Location, Numeric, Orientation, Tech

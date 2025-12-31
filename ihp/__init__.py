@@ -9,7 +9,7 @@ from gdsfactory.typings import (
 )
 
 from ihp import cells, tech
-from ihp.config import PATH
+from .config import PATH
 
 # from ihp.models import get_models
 from ihp.tech import (

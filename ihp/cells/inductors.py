@@ -16,8 +16,10 @@ def inductor2(
     width: float = 2.0,
     space: float = 2.1,
     diameter: float = 25.35,
+    vias_width: float = 0.9,
     resistance: float = 0.5777,
     inductance: float = 33.303e-12,
+    terminal_1_length: float = 30.0,
     turns: int = 1,
     layer_metal_1: LayerSpec = "TopMetal1drawing",
     layer_metal_2: LayerSpec = "TopMetal2drawing",
@@ -40,57 +42,47 @@ def inductor2(
         "NoRCXdrawing",
     ),
 ) -> Component:
-    """Create a spiral inductor with two metal layers.
+    """Create a 2-turn inductor.
 
     Args:
-        width: Width of the metal trace in micrometers.
-        space: Spacing between adjacent turns in micrometers.
-        diameter: Inner diameter of the inductor in micrometers.
-        resistance: Target series resistance in ohms.
-        inductance: Target inductance in henries.
-        turns: Number of turns in the spiral.
-        layer_metal_1: Top metal layer 1.
-        layer_metal_2: Top metal layer 2.
-        layer_inductor: Inductor marker layer.
-        layer_metal_1_pin: Top metal pin 1.
-        layer_metal_2_pin: Top metal pin 2.
-        layer_ind_pin: Pin layer for the inductor device.
-        layer_via: Via layer used to connect between metal levels.
-        layers_no_fill: Layers used to define regions without metal fill.
+        width: Width of the inductor trace in micrometers.
+        space: Space between turns in micrometers.
+        diameter: Inner diameter in micrometers.
+        vias_width: Width of vias in micrometers (only when turns > 2)
+        resistance: Resistance in ohms.
+        inductance: Inductance in henries.
+        terminal_1_length: Length of the shorter terminal
+        turns: Number of turns (default 1 for inductor2).
 
     Returns:
-        Component containing the inductor layout.
+        Component with inductor layout.
     """
     if not isinstance(turns, int) or turns < 1:
         raise ValueError("turns must be an integer >= 1")
 
     c = Component()
 
-    # Simplify layers
     Pin_layers_1 = [layer_metal_1_pin, layer_ind_pin]
     Pin_layers_2 = [layer_metal_2_pin, layer_ind_pin]
-
-    # Geometry
-    TERMINAL_1_LENGTH = 30.0
-    VIAS_WIDTH = 0.9
 
     w = snap_to_grid(width, grid=0.005 * 2)
     s = snap_to_grid(space)
     d = snap_to_grid(diameter, grid=0.005 * 2)
 
     apothem_innermost = d / 2
-    VERTEX_ANGLE = math.pi / 4.0  # 45°
-    HALF_VERTEX_ANGLE = VERTEX_ANGLE / 2  # 22.5°
+    vertex_angle = math.pi / 4.0  # 45°
+    half_vertex_angle = vertex_angle / 2  # 22.5°
 
-    length_short_terminal = TERMINAL_1_LENGTH
+    length_short_terminal = terminal_1_length
     length_long_terminal = length_short_terminal + w + (w + s) * (turns - 1)
+
     octagon_center_offset_y = length_long_terminal + apothem_innermost
 
     # Add inductor layer
     outer_polygon_pts = []
     for i in range(8):
-        r_outer = octagon_center_offset_y / math.cos(HALF_VERTEX_ANGLE)
-        angle = i * VERTEX_ANGLE + HALF_VERTEX_ANGLE
+        r_outer = octagon_center_offset_y / math.cos(half_vertex_angle)
+        angle = i * vertex_angle + half_vertex_angle
 
         x = snap_to_grid(r_outer * math.cos(angle))
         y = snap_to_grid(r_outer * math.sin(angle) + octagon_center_offset_y)
@@ -178,7 +170,7 @@ def inductor2(
     # We break down the body of inductor into 3 sections
     for k in range(turns):
         apothem = (apothem_innermost + w / 2) + (w + s) * k
-        half_octagon_side = apothem * math.tan(HALF_VERTEX_ANGLE)
+        half_octagon_side = apothem * math.tan(half_vertex_angle)
 
         # Step 1a: We handle the left semi-octagon loops
         x = (-s / 2) if turns == 1 else (-s - w / 2)
@@ -248,18 +240,18 @@ def inductor2(
         connecting_path_TM1 = gf.Path(connecting_fragment_TM1)
         c << gf.path.extrude(connecting_path_TM1, layer=layer_metal_1, width=w)
 
-        offset_x = w / 2 - VIAS_WIDTH / 2
-        offset_y = VIAS_WIDTH / 2
+        offset_x = w / 2 - vias_width / 2
+        offset_y = vias_width / 2
 
         via_1_trace = c << gf.components.rectangle(
-            size=(VIAS_WIDTH, VIAS_WIDTH), layer=layer_via
+            size=(vias_width, vias_width), layer=layer_via
         )
         via_1_trace.move(
             (-s - w / 2 - w + offset_x, octagon_center_offset_y + apothem - offset_y)
         )
 
         via_2_trace = c << gf.components.rectangle(
-            size=(VIAS_WIDTH, VIAS_WIDTH), layer=layer_via
+            size=(vias_width, vias_width), layer=layer_via
         )
         via_2_trace.move(
             (
@@ -269,7 +261,7 @@ def inductor2(
         )
 
         via_3_trace = c << gf.components.rectangle(
-            size=(VIAS_WIDTH, VIAS_WIDTH), layer=layer_via
+            size=(vias_width, vias_width), layer=layer_via
         )
         via_3_trace.move(
             (
@@ -279,7 +271,7 @@ def inductor2(
         )
 
         via_4_trace = c << gf.components.rectangle(
-            size=(VIAS_WIDTH, VIAS_WIDTH), layer=layer_via
+            size=(vias_width, vias_width), layer=layer_via
         )
         via_4_trace.move(
             (
@@ -305,8 +297,10 @@ def inductor3(
     width: float = 2.0,
     space: float = 2.1,
     diameter: float = 25.84,
+    vias_width: float = 0.9,
     resistance: float = 1.386,
     inductance: float = 221.5e-12,
+    terminal_1_length: float = 30.0,
     turns: int = 2,
     layer_metal_1: LayerSpec = "TopMetal1drawing",
     layer_metal_2: LayerSpec = "TopMetal2drawing",
@@ -329,24 +323,17 @@ def inductor3(
         "NoRCXdrawing",
     ),
 ) -> Component:
-    """
-    Create a multi-turn inductor.
+    """Create a 3-turn inductor.
 
     Args:
-        width: Width of the metal trace in micrometers.
-        space: Spacing between adjacent turns in micrometers.
-        diameter: Inner diameter of the inductor in micrometers.
-        resistance: Target series resistance in ohms.
-        inductance: Target inductance in henries.
-        turns: Number of turns in the spiral.
-        layer_metal_1: Top metal layer 1.
-        layer_metal_2: Top metal layer 2.
-        layer_inductor: Inductor marker layer.
-        layer_metal_1_pin: Top metal pin 1.
-        layer_metal_2_pin: Top metal pin 2.
-        layer_ind_pin: Pin layer for the inductor device.
-        layer_via: Via layer used to connect between metal levels.
-        layers_no_fill: Layers used to define regions without metal fill.
+        width: Width of the inductor trace in micrometers.
+        space: Space between turns in micrometers.
+        diameter: Inner diameter in micrometers.
+        vias_width: Width of vias in micrometers (only when turns > 2)
+        resistance: Resistance in ohms.
+        inductance: Inductance in henries.
+        terminal_1_length: Length of the shorter terminal
+        turns: Number of turns (default 2 for inductor3).
 
     Returns:
         Component with inductor layout.
@@ -356,8 +343,10 @@ def inductor3(
         width=width,
         space=space,
         diameter=diameter,
+        vias_width=vias_width,
         resistance=resistance,
         inductance=inductance,
+        terminal_1_length=terminal_1_length,
         turns=turns,
         layer_metal_1=layer_metal_1,
         layer_metal_2=layer_metal_2,

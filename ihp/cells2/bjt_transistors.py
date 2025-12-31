@@ -84,17 +84,22 @@ def npn13G2(
         pin_layer=(tech.LAYER.Metal1pin),
         port_type="electrical",
         ports_on_short_side=True,
+        auto_rename_ports=False
     )
+    c.ports["e1"].name = "C"
+    c.ports["e2"].name = "B"
     gf.add_ports.add_ports_from_boxes(
         c,
         pin_layer=(tech.LAYER.Metal2pin),
         port_name_prefix="E",
         port_type="electrical",
         ports_on_short_side=True,
+        auto_rename_ports=False
     )
-    c.ports["e1"].name = "B"
-    c.ports["e2"].name = "C"
-    c.ports["e3"].name = "E"
+    c.ports["E1"].name = "E"
+    #c.ports["e1"].name = "B"
+    #c.ports["e2"].name = "C"
+    #c.ports["e3"].name = "E"
 
     return c
 

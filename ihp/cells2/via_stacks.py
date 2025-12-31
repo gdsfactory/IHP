@@ -96,6 +96,7 @@ def via_stack(
         pin_layer=(layer_map[bottom_layer]),
         port_type="electrical",
         ports_on_short_side=False,
+        auto_rename_ports = False
     )
     c.ports["e1"].name = "bottom"
     gf.add_ports.add_ports_from_boxes(

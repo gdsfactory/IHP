@@ -4,7 +4,7 @@ from functools import partial
 
 import gdsfactory as gf
 
-from ihp.config import PATH
+from ..config import PATH
 
 _add_ports_metal1 = partial(
     gf.add_ports.add_ports_from_markers_inside, pin_layer=(8, 2), port_layer=(8, 0)

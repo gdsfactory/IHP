@@ -22,7 +22,7 @@ license = {file = "LICENSE"}
 name = "ihp-gdsfactory"
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
-version = "0.1.0"
+version = "0.1.4"
 
 [project.optional-dependencies]
 dev = [
@@ -104,8 +104,8 @@ include-package-data = true
 "*" = ["*.csv", "*.yaml", "*.yml", "*.gds", "*.lyp", "*.oas", "*.lyt", "*.dat", "*.nc", "*.svg", '*.GDS', "*.json", "*.txt"]
 
 [tool.setuptools.packages.find]
-include = ["ihp", "cni"]
-where = ["."]
+include = ["ihp.*", "cni.*"]
+where = [".", "ihp", "cni"]
 
 [tool.tbump]
 
@@ -128,7 +128,7 @@ src = "README.md"
 src = "pyproject.toml"
 
 [[tool.tbump.file]]
-src = "ihp/__init__.py"
+src = ["ihp/__init__.py"]
 
 [tool.tbump.git]
 message_template = "Bump to {new_version}"
