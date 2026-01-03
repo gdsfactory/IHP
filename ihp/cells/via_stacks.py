@@ -60,7 +60,7 @@ def get_via_name(bottom_metal: str, top_metal: str) -> str | None:
         Via layer name or None if not adjacent.
     """
     via_mapping = {
-        ("Activ",  "Metal1"): "Cont",
+        ("Activ", "Metal1"): "Cont",
         ("Metal1", "Metal2"): "Via1",
         ("Metal2", "Metal3"): "Via2",
         ("Metal3", "Metal4"): "Via3",

@@ -9,7 +9,6 @@ from gdsfactory.typings import (
 )
 
 from ihp import cells, tech
-from .config import PATH
 
 # from ihp.models import get_models
 from ihp.tech import (
@@ -19,6 +18,8 @@ from ihp.tech import (
     cross_sections,
     routing_strategies,
 )
+
+from .config import PATH
 
 components = cells
 
