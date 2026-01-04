@@ -1,5 +1,6 @@
 # TODO: move this to sample project
 import gdsfactory as gf
+import numpy as np
 from gdsfactory.typings import CrossSectionSpec
 
 from ihp import cells
@@ -120,9 +121,50 @@ def palace_GSG(line_width: float = 20.0, gap: float = 10.0):
     line3 = c << cells.straight_metal(length=500, width=line_width)
     line3.move((0, 2 * (gap + line_width)))
 
-    # c.flatten()
-    # c.add_port("P1", port=line1["e1"])
-    # c.add_port("P2", port=line2["e2"])
+    p1_center = tuple(
+        np.mean([_line1.ports["e1"].center, line2.ports["e1"].center], axis=0)
+    )
+    p2_center = tuple(
+        np.mean([line2.ports["e1"].center, line3.ports["e1"].center], axis=0)
+    )
+    p4_center = tuple(
+        np.mean([_line1.ports["e2"].center, line2.ports["e2"].center], axis=0)
+    )
+    p3_center = tuple(
+        np.mean([line2.ports["e2"].center, line3.ports["e2"].center], axis=0)
+    )
+
+    c.add_port(
+        name="P1",
+        center=p1_center,
+        width=gap * 1.5,
+        orientation=180,
+        layer=_line1.ports["e1"].layer,
+    )
+
+    c.add_port(
+        name="P2",
+        center=p2_center,
+        width=gap * 1.5,
+        orientation=180,
+        layer=_line1.ports["e1"].layer,
+    )
+
+    c.add_port(
+        name="P3",
+        center=p3_center,
+        width=gap * 1.5,
+        orientation=0,
+        layer=_line1.ports["e1"].layer,
+    )
+
+    c.add_port(
+        name="P4",
+        center=p4_center,
+        width=gap * 1.5,
+        orientation=0,
+        layer=_line1.ports["e1"].layer,
+    )
 
     return c
 
