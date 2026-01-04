@@ -8,6 +8,7 @@ from .fixed import *
 from .inductors import *
 from .passives import *
 from .resistors import *
+from .simulation_comps import *
 from .text import *
 from .transistors import *
 from .via_stacks import *

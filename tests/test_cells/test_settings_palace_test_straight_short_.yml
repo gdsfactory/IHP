@@ -1,0 +1,6 @@
+info: {}
+name: palace_test_straight_short_L180_CSmetal_routing_W15
+settings:
+  cross_section: metal_routing
+  length: 180
+  width: 15

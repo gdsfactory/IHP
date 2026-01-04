@@ -1,0 +1,6 @@
+info: {}
+name: palace_test_straight_L880_CSmetal_routing_W15
+settings:
+  cross_section: metal_routing
+  length: 880
+  width: 15
