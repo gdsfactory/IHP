@@ -1,0 +1,277 @@
+name: circuit
+instances:
+  XM6:
+    component: nmos
+    settings:
+      width: 60.0
+      length: 0.13
+      nf: 10
+      model: sg13_lv_nmos
+  XRL2:
+    component: rppd
+    settings:
+      dx: 4.5
+      dy: 3.2
+      model: rppd
+  XRL1:
+    component: rppd
+    settings:
+      dx: 4.5
+      dy: 3.2
+      model: rppd
+  XM8:
+    component: nmos
+    settings:
+      width: 60.0
+      length: 0.13
+      nf: 10
+      model: sg13_lv_nmos
+  XM7:
+    component: nmos
+    settings:
+      width: 60.0
+      length: 0.13
+      nf: 10
+      model: sg13_lv_nmos
+  XM5:
+    component: nmos
+    settings:
+      width: 60.0
+      length: 0.13
+      nf: 10
+      model: sg13_lv_nmos
+  XM4:
+    component: nmos
+    settings:
+      width: 90.0
+      length: 0.13
+      nf: 15
+      model: sg13_lv_nmos
+  XM3:
+    component: nmos
+    settings:
+      width: 90.0
+      length: 0.13
+      nf: 15
+      model: sg13_lv_nmos
+  XM2:
+    component: nmos
+    settings:
+      width: 120.0
+      length: 0.13
+      nf: 20
+      model: sg13_lv_nmos
+  XM1:
+    component: nmos
+    settings:
+      width: 120.0
+      length: 0.13
+      nf: 20
+      model: sg13_lv_nmos
+  XM11:
+    component: nmos
+    settings:
+      width: 90.0
+      length: 0.13
+      nf: 15
+      model: sg13_lv_nmos
+  XM12:
+    component: nmos
+    settings:
+      width: 90.0
+      length: 0.13
+      nf: 15
+      model: sg13_lv_nmos
+  XM9:
+    component: nmos
+    settings:
+      width: 120.0
+      length: 0.13
+      nf: 20
+      model: sg13_lv_nmos
+  XM10:
+    component: nmos
+    settings:
+      width: 120.0
+      length: 0.13
+      nf: 20
+      model: sg13_lv_nmos
+  XC1:
+    component: cmim
+    settings:
+      width: 11.745
+      length: 9.445
+  XR1:
+    component: rppd
+    settings:
+      dx: 4.4
+      dy: 1.5
+      model: rppd
+  XC2:
+    component: cmim
+    settings:
+      width: 11.745
+      length: 9.445
+  XR2:
+    component: rppd
+    settings:
+      dx: 4.4
+      dy: 1.5
+      model: rppd
+  XM13:
+    component: nmos
+    settings:
+      width: 90.0
+      length: 0.13
+      nf: 15
+      model: sg13_lv_nmos
+  XM14:
+    component: nmos
+    settings:
+      width: 90.0
+      length: 0.13
+      nf: 15
+      model: sg13_lv_nmos
+  XM15:
+    component: nmos
+    settings:
+      width: 120.0
+      length: 0.13
+      nf: 20
+      model: sg13_lv_nmos
+  XM16:
+    component: nmos
+    settings:
+      width: 120.0
+      length: 0.13
+      nf: 20
+      model: sg13_lv_nmos
+  XC3:
+    component: cmim
+    settings:
+      width: 19.1
+      length: 10.7
+  XR3:
+    component: rppd
+    settings:
+      dx: 4.35
+      dy: 1.5
+      model: rppd
+  XC4:
+    component: cmim
+    settings:
+      width: 19.1
+      length: 10.7
+  XR4:
+    component: rppd
+    settings:
+      dx: 4.35
+      dy: 1.5
+      model: rppd
+  L3:
+    component: inductor2
+    settings:
+      inductance: 2.006e-09
+  L1:
+    component: inductor2
+    settings:
+      inductance: 2.006e-09
+  L2:
+    component: inductor2
+    settings:
+      inductance: 2.006e-09
+  L4:
+    component: inductor2
+    settings:
+      inductance: 2.006e-09
+placements:
+  XM6:
+    x: 0.0
+    y: 0.0
+  XRL2:
+    x: 100.0
+    y: 0.0
+  XRL1:
+    x: 200.0
+    y: 0.0
+  XM8:
+    x: 300.0
+    y: 0.0
+  XM7:
+    x: 400.0
+    y: 0.0
+  XM5:
+    x: 0.0
+    y: 100.0
+  XM4:
+    x: 100.0
+    y: 100.0
+  XM3:
+    x: 200.0
+    y: 100.0
+  XM2:
+    x: 300.0
+    y: 100.0
+  XM1:
+    x: 400.0
+    y: 100.0
+  XM11:
+    x: 0.0
+    y: 200.0
+  XM12:
+    x: 100.0
+    y: 200.0
+  XM9:
+    x: 200.0
+    y: 200.0
+  XM10:
+    x: 300.0
+    y: 200.0
+  XC1:
+    x: 400.0
+    y: 200.0
+  XR1:
+    x: 0.0
+    y: 300.0
+  XC2:
+    x: 100.0
+    y: 300.0
+  XR2:
+    x: 200.0
+    y: 300.0
+  XM13:
+    x: 300.0
+    y: 300.0
+  XM14:
+    x: 400.0
+    y: 300.0
+  XM15:
+    x: 0.0
+    y: 400.0
+  XM16:
+    x: 100.0
+    y: 400.0
+  XC3:
+    x: 200.0
+    y: 400.0
+  XR3:
+    x: 300.0
+    y: 400.0
+  XC4:
+    x: 400.0
+    y: 400.0
+  XR4:
+    x: 0.0
+    y: 500.0
+  L3:
+    x: 100.0
+    y: 500.0
+  L1:
+    x: 200.0
+    y: 500.0
+  L2:
+    x: 300.0
+    y: 500.0
+  L4:
+    x: 400.0
+    y: 500.0

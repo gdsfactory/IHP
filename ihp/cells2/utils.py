@@ -43,7 +43,7 @@ def generate_gf_from_ihp(cell_name, cell_params, function_name) -> gf.Component:
     # Step 5: Bring to GDSFactory
     # ----------------------------------------------------------------
     layout.write("temp.gds")
-    print(f"✅ {cell_name} PyCell placed successfully and GDS written.")
+    print(f"{cell_name} PyCell placed successfully and GDS written.")
     c = gf.read.import_gds(gdspath="temp.gds")
     os.remove("temp.gds")
     # ----------------------------------------------------------------

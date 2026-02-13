@@ -54,9 +54,13 @@ class SG13_Tech(TechImpl):
 
             layers = jsData.get("Layers", {})
             self._layers = {}
+            baseLayerNames = {}
             for key, value in layers.items():
                 layer, dataType = value.split(",")
                 self._layers[key] = (int(layer.strip()), int(dataType.strip()))
+                baseLayerNames[key.split(".")[0]] = int(layer.strip())
+            for baseLayerName, layer in baseLayerNames.items():
+                self._layers[baseLayerName] = (layer, 0)
 
         lypFilePath = ""
 

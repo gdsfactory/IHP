@@ -1,22 +1,545 @@
-"""Transistor components for IHP PDK."""
+"""Transistor components for IHP PDK.
+
+Pure GDSFactory implementations that replicate the geometry from the IHP PyCell
+library (cells2/ihp_pycell). The layout algorithm follows the PyCell construction
+exactly: left-to-right sequential placement of source contacts, gate poly, drain
+contacts, with design rules from the CNI tech parameters.
+"""
+
+import math
 
 import gdsfactory as gf
 from gdsfactory import Component
 from gdsfactory.typings import LayerSpec
 
+from ..tech import techParams as _tech
 
+# ---------------------------------------------------------------------------
+# Design rule constants from tech params
+# ---------------------------------------------------------------------------
+_EPSILON = _tech["epsilon1"]  # 0.001
+_GRID = _tech["grid"]  # 0.005
+_IGRID = 1.0 / _GRID  # 200
+
+_CONT_SIZE = _tech["Cnt_a"]  # 0.16  contact square size
+_CONT_DIST = _tech["Cnt_b"]  # 0.18  contact spacing
+_CONT_ACTIV_OVER = _tech["Cnt_c"]  # 0.07  contact enclosure by active
+_CONT_GATE_DIST = _tech["Cnt_f"]  # 0.11  gate poly to contact spacing
+_CONT_GATE_DIST_SMALL = _CONT_ACTIV_OVER + _tech["Gat_d"]  # 0.14
+
+_M1_OVER = _tech["M1_c"]  # 0.0  metal1 enclosure of contact
+_M1_ENDCAP = _tech["M1_c1"]  # 0.05  metal1 endcap beyond contacts
+
+_GATPOLY_ACTIV_OVER = _tech["Gat_c"]  # 0.18  poly extension over active
+
+_CONT_ACT_MIN = 2 * _CONT_ACTIV_OVER + _CONT_SIZE  # 0.30
+
+_PSD_ACTIV_OVER = _tech["pSD_c"]  # 0.18
+_PSD_GATE_OVER_LV = _tech["pSD_i"]  # 0.3
+_PSD_GATE_OVER_HV = _tech["pSD_i1"]  # 0.4
+_NW_ACTIV_OVER_LV = _tech["NW_c"]  # 0.31
+_NW_ACTIV_OVER_HV = _tech["NW_c1"]  # 0.62
+_TGO_ACTIV = _tech["TGO_a"]  # 0.27
+_TGO_GATPOLY = _tech["TGO_c"]  # 0.34
+
+
+# ---------------------------------------------------------------------------
+# Helper functions matching PyCell utility_functions.py
+# ---------------------------------------------------------------------------
+def _fix(value):
+    """Floor for floats (matches PyCell fix())."""
+    if isinstance(value, float):
+        return int(math.floor(value))
+    return value
+
+
+def _grid_fix(x: float) -> float:
+    """Snap to manufacturing grid (matches PyCell GridFix/tog/Snap)."""
+    return _fix(x * _IGRID + _EPSILON) * _GRID
+
+
+def _add_rect(
+    c: Component, layer: LayerSpec, x1: float, y1: float, x2: float, y2: float
+):
+    """Add a rectangle directly as a polygon (no sub-cell hierarchy).
+
+    Using add_polygon avoids sub-cell + transform indirection that can
+    introduce 1-dbu rounding mismatches during hierarchy flattening.
+    """
+    if x1 > x2:
+        x1, x2 = x2, x1
+    if y1 > y2:
+        y1, y2 = y2, y1
+    if x2 - x1 <= 0 or y2 - y1 <= 0:
+        return
+    c.add_polygon([(x1, y1), (x2, y1), (x2, y2), (x1, y2)], layer=layer)
+
+
+def _place_contacts(
+    c: Component,
+    layer_cont: LayerSpec,
+    xl: float,
+    yl: float,
+    xh: float,
+    yh: float,
+    ox: float,
+    oy: float,
+    ws: float,
+    ds: float,
+):
+    """Place contact array matching PyCell contactArray() from geometry.py.
+
+    Args:
+        c: Component to add contacts to.
+        layer_cont: Contact layer.
+        xl, yl: Lower-left of bounding box.
+        xh, yh: Upper-right of bounding box.
+        ox: X-direction enclosure (0 for transistor S/D contacts).
+        oy: Y-direction enclosure (cont_Activ_overRec for transistor S/D).
+        ws: Contact size.
+        ds: Contact spacing.
+    """
+    w = xh - xl
+    h = yh - yl
+
+    nx = _fix((w - ox * 2 + ds) / (ws + ds) + _EPSILON)
+    if nx <= 0:
+        return
+
+    if nx == 1:
+        dsx = 0.0
+    else:
+        dsx = (w - ox * 2 - ws * nx) / (nx - 1)
+
+    ny = _fix((h - oy * 2 + ds) / (ws + ds) + _EPSILON)
+    if ny <= 0:
+        return
+
+    if ny == 1:
+        dsy = 0.0
+    else:
+        dsy = (h - oy * 2 - ws * ny) / (ny - 1)
+
+    if nx == 1:
+        x_start = (w - ws) / 2
+    else:
+        x_start = ox
+
+    for _i in range(int(nx)):
+        if ny == 1:
+            y = (h - ws) / 2
+        else:
+            y = oy
+
+        for _j in range(int(ny)):
+            cx = _grid_fix(xl + x_start)
+            cy = _grid_fix(yl + y)
+            _add_rect(
+                c,
+                layer_cont,
+                cx,
+                cy,
+                _grid_fix(xl + x_start + ws),
+                _grid_fix(yl + y + ws),
+            )
+            y += ws + dsy
+
+        x_start += ws + dsx
+
+
+# ---------------------------------------------------------------------------
+# Core MOS layout engine
+# ---------------------------------------------------------------------------
+def _mos_core(
+    width: float,
+    length: float,
+    nf: int,
+    is_pmos: bool = False,
+    is_hv: bool = False,
+    layer_gatpoly: LayerSpec = "GatPolydrawing",
+    layer_activ: LayerSpec = "Activdrawing",
+    layer_cont: LayerSpec = "Contdrawing",
+    layer_metal1: LayerSpec = "Metal1drawing",
+    layer_psd: LayerSpec = "pSDdrawing",
+    layer_nwell: LayerSpec = "NWelldrawing",
+    layer_thickgateox: LayerSpec = "ThickGateOxdrawing",
+    layer_heattrans: LayerSpec = "HeatTransdrawing",
+    layer_substrate: LayerSpec = "Substratedrawing",
+    layer_metal1_pin: LayerSpec = "Metal1pin",
+    layer_gatpoly_pin: LayerSpec = "GatPolypin",
+) -> Component:
+    """Core MOS transistor layout matching IHP PyCell geometry.
+
+    Constructs layout left-to-right: source contacts -> gate poly -> drain contacts.
+    Exactly replicates nmos_code.py / pmos_code.py / nmosHV_code.py / pmosHV_code.py.
+    """
+    c = Component()
+
+    # Tech params
+    epsilon = _EPSILON
+    endcap = _M1_ENDCAP
+    cont_size = _CONT_SIZE
+    cont_dist = _CONT_DIST
+    cont_Activ_overRec = _CONT_ACTIV_OVER
+    cont_metall_over = _M1_OVER
+    gatpoly_Activ_over = _GATPOLY_ACTIV_OVER
+    gatpoly_cont_dist = _CONT_GATE_DIST
+    smallw_gatpoly_cont_dist = _CONT_GATE_DIST_SMALL
+    contActMin = _CONT_ACT_MIN
+
+    # PMOS-specific params
+    if is_pmos:
+        psd_pActiv_over = _PSD_ACTIV_OVER
+        psd_PFET_over = _PSD_GATE_OVER_HV if is_hv else _PSD_GATE_OVER_LV
+        nwell_pActiv_over = _NW_ACTIV_OVER_HV if is_hv else _NW_ACTIV_OVER_LV
+
+    # HV params
+    thGateOxGat = _TGO_GATPOLY
+    thGateOxAct = _TGO_ACTIV
+
+    # Endcap adjustment
+    if endcap < cont_metall_over:
+        endcap = cont_metall_over
+
+    # Process dimensions
+    ng = _fix(nf + epsilon)
+    w = width / ng
+    w = _grid_fix(w)
+    gate_length = _grid_fix(length)
+
+    # Narrow-width gate-contact spacing adjustment
+    if w < contActMin - epsilon:
+        gatpoly_cont_dist = smallw_gatpoly_cont_dist
+
+    xdiff_beg = 0.0
+    ydiff_beg = 0.0
+    ydiff_end = w
+
+    diffoffset = 0.0
+    if w < contActMin:
+        diffoffset = (contActMin - w) / 2
+        diffoffset = _grid_fix(diffoffset)
+
+    # Number of contacts (differs between nmos and pmos)
+    distc = cont_size + cont_dist
+    if is_pmos:
+        # pmos formula: subtracts 2*endcap from lcon
+        lcon = w - 2 * cont_Activ_overRec
+        ncont = _fix((lcon + cont_dist - 2 * endcap) / distc + epsilon)
+    else:
+        # nmos formula
+        ncont = _fix(
+            (w - 2 * cont_Activ_overRec + cont_dist) / (cont_size + cont_dist) + epsilon
+        )
+
+    if ncont == 0:
+        ncont = 1
+
+    diff_cont_offset = _grid_fix(
+        (w - 2 * cont_Activ_overRec - ncont * cont_size - (ncont - 1) * cont_dist) / 2
+    )
+
+    # -----------------------------------------------------------------------
+    # Source contact column (first S/D region)
+    # -----------------------------------------------------------------------
+    xcont_beg = xdiff_beg + cont_Activ_overRec
+    ycont_beg = ydiff_beg + cont_Activ_overRec
+    ycont_cnt = ycont_beg + diffoffset + diff_cont_offset
+    xcont_end = xcont_beg + cont_size
+
+    # Metal1 Y extents (computed once, reused for all S/D columns)
+    yMet1 = ycont_cnt - endcap
+    yMet2 = ycont_cnt + cont_size + (ncont - 1) * distc + endcap
+    yMet1 = min(yMet1, ydiff_beg + diffoffset)
+    yMet2 = max(yMet2, ydiff_end + diffoffset)
+
+    # Source Metal1
+    _add_rect(
+        c,
+        layer_metal1,
+        xcont_beg - cont_metall_over,
+        yMet1,
+        xcont_end + cont_metall_over,
+        yMet2,
+    )
+
+    # Source contacts
+    _place_contacts(
+        c,
+        layer_cont,
+        xcont_beg,
+        ydiff_beg,
+        xcont_end,
+        ydiff_end + diffoffset * 2,
+        0,
+        cont_Activ_overRec,
+        cont_size,
+        cont_dist,
+    )
+
+    # Pin sublayer selection: the live PyCell's MkPin() uses Layer("Metal1", "drawing")
+    # which means addPin() creates geometry on the drawing layer only for pmos.
+    # For nmos and HV variants, the PyCell DOES create pin sublayer geometry.
+    if is_pmos and not is_hv:
+        pin_layer_m1 = layer_metal1
+        pin_layer_poly = layer_gatpoly
+    else:
+        pin_layer_m1 = layer_metal1_pin
+        pin_layer_poly = layer_gatpoly_pin
+
+    # Source pin marker
+    _add_rect(
+        c,
+        pin_layer_m1,
+        xcont_beg - cont_metall_over,
+        yMet1,
+        xcont_end + cont_metall_over,
+        yMet2,
+    )
+
+    # Save source port location
+    src_x = (xcont_beg - cont_metall_over + xcont_end + cont_metall_over) / 2
+    src_y = (yMet1 + yMet2) / 2
+    port_height = yMet2 - yMet1
+
+    # Source diffusion (Activ)
+    _add_rect(
+        c,
+        layer_activ,
+        xcont_beg - cont_Activ_overRec,
+        ycont_beg - cont_Activ_overRec,
+        xcont_end + cont_Activ_overRec,
+        ycont_beg + cont_size + cont_Activ_overRec,
+    )
+
+    # -----------------------------------------------------------------------
+    # Gate fingers loop
+    # -----------------------------------------------------------------------
+    gate_x = gate_y = drain_x = drain_y = gate_height = 0.0
+    for i in range(1, ng + 1):
+        # Poly gate
+        xpoly_beg = xcont_end + gatpoly_cont_dist
+        ypoly_beg = ydiff_beg - gatpoly_Activ_over
+        xpoly_end = xpoly_beg + gate_length
+        ypoly_end = ydiff_end + gatpoly_Activ_over
+
+        _add_rect(
+            c,
+            layer_gatpoly,
+            xpoly_beg,
+            ypoly_beg + diffoffset,
+            xpoly_end,
+            ypoly_end + diffoffset,
+        )
+
+        # HeatTrans layer (thermal marker)
+        _add_rect(
+            c,
+            layer_heattrans,
+            xpoly_beg,
+            ypoly_beg + diffoffset,
+            xpoly_end,
+            ypoly_end + diffoffset,
+        )
+
+        # Gate pin (first finger only, matching onep(i) check)
+        if i == 1:
+            _add_rect(
+                c,
+                pin_layer_poly,
+                xpoly_beg,
+                ypoly_beg + diffoffset,
+                xpoly_end,
+                ypoly_end + diffoffset,
+            )
+            gate_x = (xpoly_beg + xpoly_end) / 2
+            gate_y = (ypoly_beg + ypoly_end) / 2 + diffoffset
+            gate_height = ypoly_end - ypoly_beg
+
+        # Drain/next-source contact column
+        xcont_beg = xpoly_end + gatpoly_cont_dist
+        ycont_beg = ydiff_beg + cont_Activ_overRec
+        ycont_cnt = ycont_beg + diffoffset + diff_cont_offset
+        xcont_end = xcont_beg + cont_size
+
+        # Metal1 for this S/D column
+        _add_rect(
+            c,
+            layer_metal1,
+            xcont_beg - cont_metall_over,
+            yMet1,
+            xcont_end + cont_metall_over,
+            yMet2,
+        )
+
+        # Contacts for this S/D column
+        _place_contacts(
+            c,
+            layer_cont,
+            xcont_beg,
+            ydiff_beg,
+            xcont_end,
+            ydiff_end + diffoffset * 2,
+            0,
+            cont_Activ_overRec,
+            cont_size,
+            cont_dist,
+        )
+
+        # Drain pin (first finger only)
+        if i == 1:
+            _add_rect(
+                c,
+                pin_layer_m1,
+                xcont_beg - cont_metall_over,
+                yMet1,
+                xcont_end + cont_metall_over,
+                yMet2,
+            )
+            drain_x = (xcont_beg - cont_metall_over + xcont_end + cont_metall_over) / 2
+            drain_y = src_y
+
+        # Drain/source diffusion (Activ)
+        _add_rect(
+            c,
+            layer_activ,
+            xcont_beg - cont_Activ_overRec,
+            ycont_beg - cont_Activ_overRec,
+            xcont_end + cont_Activ_overRec,
+            ycont_beg + cont_size + cont_Activ_overRec,
+        )
+
+    # -----------------------------------------------------------------------
+    # Spanning diffusion rectangle
+    # -----------------------------------------------------------------------
+    xdiff_end = xcont_end + cont_Activ_overRec
+    _add_rect(
+        c,
+        layer_activ,
+        xdiff_beg,
+        ydiff_beg + diffoffset,
+        xdiff_end,
+        ydiff_end + diffoffset,
+    )
+
+    # -----------------------------------------------------------------------
+    # PMOS: pSD and NWell layers
+    # -----------------------------------------------------------------------
+    if is_pmos:
+        # pSD layer
+        _add_rect(
+            c,
+            layer_psd,
+            xdiff_beg - psd_pActiv_over,
+            ypoly_beg - psd_PFET_over + gatpoly_Activ_over + diffoffset,
+            xdiff_end + psd_pActiv_over,
+            ypoly_end + psd_PFET_over - gatpoly_Activ_over + diffoffset,
+        )
+
+        # NWell layer with minimum-width offset
+        # PyCell uses self.grid = tech.getGridResolution() which is 0.0 for SG13
+        _grid_res = 0.0  # tech.getGridResolution()
+        nwell_offset = max(0, _grid_fix((contActMin - w) / 2 + 0.5 * _grid_res))
+        _add_rect(
+            c,
+            layer_nwell,
+            xdiff_beg - nwell_pActiv_over,
+            ydiff_beg - nwell_pActiv_over + diffoffset - nwell_offset,
+            xdiff_end + nwell_pActiv_over,
+            ydiff_end + nwell_pActiv_over + diffoffset + nwell_offset,
+        )
+
+    # -----------------------------------------------------------------------
+    # B-Pin on Substrate (pmos only)
+    # -----------------------------------------------------------------------
+    if is_pmos:
+        _add_rect(
+            c,
+            layer_substrate,
+            xcont_beg - cont_Activ_overRec,
+            ycont_beg - cont_Activ_overRec,
+            xcont_end + cont_Activ_overRec,
+            ycont_beg + cont_size + cont_Activ_overRec,
+        )
+
+    # -----------------------------------------------------------------------
+    # HV: ThickGateOx layer
+    # -----------------------------------------------------------------------
+    if is_hv:
+        if is_pmos:
+            # pmosHV: check if NWell is bigger than standard TGO enclosure
+            x1 = xdiff_beg - thGateOxAct
+            x2 = xdiff_end + thGateOxAct
+            y1 = ydiff_beg - gatpoly_Activ_over - thGateOxGat
+            y2 = ydiff_end + gatpoly_Activ_over + thGateOxGat
+
+            nwell_offset_tgo = max(0, _grid_fix((contActMin - w) / 2 + 0.5 * _grid_res))
+            if nwell_pActiv_over > thGateOxAct:
+                x1 = xdiff_beg - nwell_pActiv_over
+                x2 = xdiff_end + nwell_pActiv_over
+            if (nwell_pActiv_over + diffoffset - nwell_offset_tgo) > (
+                gatpoly_Activ_over - thGateOxGat
+            ):
+                y1 = ydiff_beg - nwell_pActiv_over + diffoffset - nwell_offset_tgo
+                y2 = ydiff_end + nwell_pActiv_over + diffoffset + nwell_offset_tgo
+
+            _add_rect(c, layer_thickgateox, x1, y1, x2, y2)
+        else:
+            # nmosHV: standard TGO enclosure
+            _add_rect(
+                c,
+                layer_thickgateox,
+                xdiff_beg - thGateOxAct,
+                ydiff_beg - gatpoly_Activ_over - thGateOxGat,
+                xdiff_end + thGateOxAct,
+                ydiff_end + gatpoly_Activ_over + thGateOxGat,
+            )
+
+    # -----------------------------------------------------------------------
+    # GDSFactory ports for netlisting (S, D, G)
+    # Port widths must be even multiples of dbu (0.002 um) per kfactory.
+    # -----------------------------------------------------------------------
+    def _even_dbu(w):
+        dbu_w = round(w / 0.001)
+        return (dbu_w + dbu_w % 2) * 0.001
+
+    m1_layer = (8, 0)  # Metal1 drawing
+    poly_layer = (5, 0)  # GatPoly drawing
+    c.add_port(
+        name="S",
+        center=(src_x, src_y),
+        width=_even_dbu(port_height),
+        orientation=180,
+        layer=m1_layer,
+    )
+    c.add_port(
+        name="D",
+        center=(drain_x, drain_y),
+        width=_even_dbu(port_height),
+        orientation=0,
+        layer=m1_layer,
+    )
+    c.add_port(
+        name="G",
+        center=(gate_x, gate_y),
+        width=_even_dbu(gate_height),
+        orientation=270,
+        layer=poly_layer,
+    )
+
+    return c
+
+
+# ---------------------------------------------------------------------------
+# Public cell functions
+# ---------------------------------------------------------------------------
 @gf.cell
 def nmos(
-    width: float = 1.0,
+    width: float = 0.15,
     length: float = 0.13,
     nf: int = 1,
     m: int = 1,
     model: str = "sg13_lv_nmos",
-    layer_gatpoly: LayerSpec = "GatPolydrawing",
-    layer_activ: LayerSpec = "Activdrawing",
-    layer_nsd: LayerSpec = "nSDdrawing",
-    layer_cont: LayerSpec = "Contdrawing",
-    layer_metal1: LayerSpec = "Metal1drawing",
 ) -> Component:
     """Create an NMOS transistor.
 
@@ -26,157 +549,11 @@ def nmos(
         nf: Number of fingers.
         m: Multiplier (number of parallel devices).
         model: Device model name.
-        layer_gatpoly: Gate polysilicon layer.
-        layer_activ: Active region layer.
-        layer_nsd: N+ source/drain implant layer.
-        layer_cont: Contact layer.
-        layer_metal1: Metal1 layer.
 
     Returns:
         Component with NMOS transistor layout.
     """
-    c = Component()
-
-    # Design rules
-    gate_min_width = 0.15
-    gate_min_length = 0.13
-    cont_size = 0.16
-    cont_spacing = 0.18
-    cont_gate_spacing = 0.14
-    cont_enc_active = 0.07
-    cont_enc_metal = 0.06
-    poly_extension = 0.18
-    active_extension = 0.23
-    psd_enclosure = 0.12
-
-    # Calculate dimensions
-    gate_width = max(width / nf, gate_min_width)
-    gate_length = max(length, gate_min_length)
-
-    # Grid snap
-    grid = 0.005
-    gate_width = round(gate_width / grid) * grid
-    gate_length = round(gate_length / grid) * grid
-
-    # Create transistor fingers
-    finger_pitch = gate_width + 2 * cont_gate_spacing + cont_size
-
-    for i in range(nf):
-        x_offset = i * finger_pitch
-
-        # Gate poly
-        gate = gf.components.rectangle(
-            size=(gate_length, gate_width + 2 * poly_extension),
-            layer=layer_gatpoly,
-        )
-        gate_ref = c.add_ref(gate)
-        gate_ref.movex(x_offset)
-
-        # Active region
-        active_width = gate_width
-        active_length = gate_length + 2 * active_extension
-        active = gf.components.rectangle(
-            size=(active_length, active_width),
-            layer=layer_activ,
-        )
-        active_ref = c.add_ref(active)
-        active_ref.move((x_offset - active_extension, poly_extension))
-
-        # Source/Drain contacts
-        # Calculate number of contacts
-        n_cont_y = int((active_width - cont_size) / cont_spacing) + 1
-
-        # Source contacts (left)
-        for j in range(n_cont_y):
-            y_pos = poly_extension + j * cont_spacing
-
-            cont = gf.components.rectangle(
-                size=(cont_size, cont_size),
-                layer=layer_cont,
-            )
-            cont_ref = c.add_ref(cont)
-            cont_ref.move((x_offset - active_extension + cont_enc_active, y_pos))
-
-            # Metal1 for source
-            m1 = gf.components.rectangle(
-                size=(cont_size + 2 * cont_enc_metal, cont_size + 2 * cont_enc_metal),
-                layer=layer_metal1,
-            )
-            m1_ref = c.add_ref(m1)
-            m1_ref.move(
-                (
-                    x_offset - active_extension + cont_enc_active - cont_enc_metal,
-                    y_pos - cont_enc_metal,
-                )
-            )
-
-        # Drain contacts (right)
-        for j in range(n_cont_y):
-            y_pos = poly_extension + j * cont_spacing
-
-            cont = gf.components.rectangle(
-                size=(cont_size, cont_size),
-                layer=layer_cont,
-            )
-            cont_ref = c.add_ref(cont)
-            cont_ref.move((x_offset + gate_length + cont_gate_spacing, y_pos))
-
-            # Metal1 for drain
-            m1 = gf.components.rectangle(
-                size=(cont_size + 2 * cont_enc_metal, cont_size + 2 * cont_enc_metal),
-                layer=layer_metal1,
-            )
-            m1_ref = c.add_ref(m1)
-            m1_ref.move(
-                (
-                    x_offset + gate_length + cont_gate_spacing - cont_enc_metal,
-                    y_pos - cont_enc_metal,
-                )
-            )
-
-    # N+ implant
-    nsd = gf.components.rectangle(
-        size=(nf * finger_pitch + active_extension, gate_width + 2 * psd_enclosure),
-        layer=layer_nsd,
-    )
-    nsd_ref = c.add_ref(nsd)
-    nsd_ref.move((-active_extension - psd_enclosure, poly_extension - psd_enclosure))
-
-    # Add ports
-    c.add_port(
-        name="G",
-        center=(nf * finger_pitch / 2, -poly_extension),
-        width=gate_length,
-        orientation=270,
-        layer=layer_gatpoly,
-        port_type="electrical",
-    )
-
-    c.add_port(
-        name="S",
-        center=(-active_extension, gate_width / 2 + poly_extension),
-        width=gate_width,
-        orientation=180,
-        layer=layer_metal1,
-        port_type="electrical",
-    )
-
-    c.add_port(
-        name="D",
-        center=(gate_length + active_extension, gate_width / 2 + poly_extension),
-        width=gate_width,
-        orientation=0,
-        layer=layer_metal1,
-        port_type="electrical",
-    )
-
-    # Add metadata
-    c.info["model"] = model
-    c.info["width"] = width
-    c.info["length"] = length
-    c.info["nf"] = nf
-    c.info["m"] = m
-    c.info["type"] = "nmos"
+    c = _mos_core(width, length, nf, is_pmos=False, is_hv=False)
 
     # VLSIR simulation metadata
     c.info["vlsir"] = {
@@ -198,17 +575,11 @@ def nmos(
 
 @gf.cell
 def pmos(
-    width: float = 1.0,
+    width: float = 0.15,
     length: float = 0.13,
     nf: int = 1,
     m: int = 1,
     model: str = "sg13_lv_pmos",
-    layer_nwell: LayerSpec = "NWelldrawing",
-    layer_gatpoly: LayerSpec = "GatPolydrawing",
-    layer_activ: LayerSpec = "Activdrawing",
-    layer_psd: LayerSpec = "pSDdrawing",
-    layer_cont: LayerSpec = "Contdrawing",
-    layer_metal1: LayerSpec = "Metal1drawing",
 ) -> Component:
     """Create a PMOS transistor.
 
@@ -218,170 +589,11 @@ def pmos(
         nf: Number of fingers.
         m: Multiplier (number of parallel devices).
         model: Device model name.
-        layer_nwell: N-well layer.
-        layer_gatpoly: Gate polysilicon layer.
-        layer_activ: Active region layer.
-        layer_psd: P+ source/drain implant layer.
-        layer_cont: Contact layer.
-        layer_metal1: Metal1 layer.
 
     Returns:
         Component with PMOS transistor layout.
     """
-    c = Component()
-
-    # Design rules
-    gate_min_width = 0.15
-    gate_min_length = 0.13
-    cont_size = 0.16
-    cont_spacing = 0.18
-    cont_gate_spacing = 0.14
-    cont_enc_active = 0.07
-    cont_enc_metal = 0.06
-    poly_extension = 0.18
-    active_extension = 0.23
-    nwell_enclosure = 0.31
-    psd_enclosure = 0.12
-
-    # Calculate dimensions
-    gate_width = max(width / nf, gate_min_width)
-    gate_length = max(length, gate_min_length)
-
-    # Grid snap
-    grid = 0.005
-    gate_width = round(gate_width / grid) * grid
-    gate_length = round(gate_length / grid) * grid
-
-    # N-Well
-    nwell_width = gate_width + 2 * nwell_enclosure
-    nwell_length = gate_length + 2 * active_extension + 2 * nwell_enclosure
-    nwell = gf.components.rectangle(
-        size=(nwell_length * nf, nwell_width),
-        layer=layer_nwell,
-    )
-    nwell_ref = c.add_ref(nwell)
-    nwell_ref.move(
-        (-active_extension - nwell_enclosure, poly_extension - nwell_enclosure)
-    )
-
-    # Create transistor fingers
-    finger_pitch = gate_width + 2 * cont_gate_spacing + cont_size
-
-    for i in range(nf):
-        x_offset = i * finger_pitch
-
-        # Gate poly
-        gate = gf.components.rectangle(
-            size=(gate_length, gate_width + 2 * poly_extension),
-            layer=layer_gatpoly,
-        )
-        gate_ref = c.add_ref(gate)
-        gate_ref.movex(x_offset)
-
-        # Active region
-        active_width = gate_width
-        active_length = gate_length + 2 * active_extension
-        active = gf.components.rectangle(
-            size=(active_length, active_width),
-            layer=layer_activ,
-        )
-        active_ref = c.add_ref(active)
-        active_ref.move((x_offset - active_extension, poly_extension))
-
-        # Source/Drain contacts
-        n_cont_y = int((active_width - cont_size) / cont_spacing) + 1
-
-        # Source contacts (left)
-        for j in range(n_cont_y):
-            y_pos = poly_extension + j * cont_spacing
-
-            cont = gf.components.rectangle(
-                size=(cont_size, cont_size),
-                layer=layer_cont,
-            )
-            cont_ref = c.add_ref(cont)
-            cont_ref.move((x_offset - active_extension + cont_enc_active, y_pos))
-
-            # Metal1 for source
-            m1 = gf.components.rectangle(
-                size=(cont_size + 2 * cont_enc_metal, cont_size + 2 * cont_enc_metal),
-                layer=layer_metal1,
-            )
-            m1_ref = c.add_ref(m1)
-            m1_ref.move(
-                (
-                    x_offset - active_extension + cont_enc_active - cont_enc_metal,
-                    y_pos - cont_enc_metal,
-                )
-            )
-
-        # Drain contacts (right)
-        for j in range(n_cont_y):
-            y_pos = poly_extension + j * cont_spacing
-
-            cont = gf.components.rectangle(
-                size=(cont_size, cont_size),
-                layer=layer_cont,
-            )
-            cont_ref = c.add_ref(cont)
-            cont_ref.move((x_offset + gate_length + cont_gate_spacing, y_pos))
-
-            # Metal1 for drain
-            m1 = gf.components.rectangle(
-                size=(cont_size + 2 * cont_enc_metal, cont_size + 2 * cont_enc_metal),
-                layer=layer_metal1,
-            )
-            m1_ref = c.add_ref(m1)
-            m1_ref.move(
-                (
-                    x_offset + gate_length + cont_gate_spacing - cont_enc_metal,
-                    y_pos - cont_enc_metal,
-                )
-            )
-
-    # P+ implant
-    psd = gf.components.rectangle(
-        size=(nf * finger_pitch + active_extension, gate_width + 2 * psd_enclosure),
-        layer=layer_psd,
-    )
-    psd_ref = c.add_ref(psd)
-    psd_ref.move((-active_extension - psd_enclosure, poly_extension - psd_enclosure))
-
-    # Add ports
-    c.add_port(
-        name="G",
-        center=(nf * finger_pitch / 2, -poly_extension),
-        width=gate_length,
-        orientation=270,
-        layer=layer_gatpoly,
-        port_type="electrical",
-    )
-
-    c.add_port(
-        name="S",
-        center=(-active_extension, gate_width / 2 + poly_extension),
-        width=gate_width,
-        orientation=180,
-        layer=layer_metal1,
-        port_type="electrical",
-    )
-
-    c.add_port(
-        name="D",
-        center=(gate_length + active_extension, gate_width / 2 + poly_extension),
-        width=gate_width,
-        orientation=0,
-        layer=layer_metal1,
-        port_type="electrical",
-    )
-
-    # Add metadata
-    c.info["model"] = model
-    c.info["width"] = width
-    c.info["length"] = length
-    c.info["nf"] = nf
-    c.info["m"] = m
-    c.info["type"] = "pmos"
+    c = _mos_core(width, length, nf, is_pmos=True, is_hv=False)
 
     # VLSIR simulation metadata
     c.info["vlsir"] = {
@@ -403,17 +615,11 @@ def pmos(
 
 @gf.cell
 def nmos_hv(
-    width: float = 1.0,
+    width: float = 0.60,
     length: float = 0.45,
     nf: int = 1,
     m: int = 1,
     model: str = "sg13_hv_nmos",
-    layer_thickgateox: LayerSpec = "ThickGateOxdrawing",
-    layer_gatpoly: LayerSpec = "GatPolydrawing",
-    layer_activ: LayerSpec = "Activdrawing",
-    layer_nsd: LayerSpec = "nSDdrawing",
-    layer_cont: LayerSpec = "Contdrawing",
-    layer_metal1: LayerSpec = "Metal1drawing",
 ) -> Component:
     """Create a high-voltage NMOS transistor.
 
@@ -423,44 +629,11 @@ def nmos_hv(
         nf: Number of fingers.
         m: Multiplier (number of parallel devices).
         model: Device model name.
-        layer_thickgateox: Thick gate oxide layer.
-        layer_gatpoly: Gate polysilicon layer.
-        layer_activ: Active region layer.
-        layer_nsd: N+ source/drain implant layer.
-        layer_cont: Contact layer.
-        layer_metal1: Metal1 layer.
 
     Returns:
         Component with HV NMOS transistor layout.
     """
-    c = Component()
-
-    # Add base nmos as reference
-    nmos_ref = c << nmos(
-        width=width,
-        length=length,
-        nf=nf,
-        m=m,
-        model=model,
-        layer_gatpoly=layer_gatpoly,
-        layer_activ=layer_activ,
-        layer_nsd=layer_nsd,
-        layer_cont=layer_cont,
-        layer_metal1=layer_metal1,
-    )
-
-    # Add thick gate oxide layer
-    thick_ox = gf.components.rectangle(
-        size=(length + 0.5, width + 0.5),
-        layer=layer_thickgateox,
-        centered=True,
-    )
-    c.add_ref(thick_ox)
-
-    # Copy ports from base nmos
-    c.add_ports(nmos_ref.ports)
-
-    c.info["type"] = "nmos_hv"
+    c = _mos_core(width, length, nf, is_pmos=False, is_hv=True)
 
     # VLSIR simulation metadata
     c.info["vlsir"] = {
@@ -482,18 +655,11 @@ def nmos_hv(
 
 @gf.cell
 def pmos_hv(
-    width: float = 1.0,
-    length: float = 0.45,
+    width: float = 0.30,
+    length: float = 0.40,
     nf: int = 1,
     m: int = 1,
     model: str = "sg13_hv_pmos",
-    layer_thickgateox: LayerSpec = "ThickGateOxdrawing",
-    layer_nwell: LayerSpec = "NWelldrawing",
-    layer_gatpoly: LayerSpec = "GatPolydrawing",
-    layer_activ: LayerSpec = "Activdrawing",
-    layer_psd: LayerSpec = "pSDdrawing",
-    layer_cont: LayerSpec = "Contdrawing",
-    layer_metal1: LayerSpec = "Metal1drawing",
 ) -> Component:
     """Create a high-voltage PMOS transistor.
 
@@ -503,46 +669,11 @@ def pmos_hv(
         nf: Number of fingers.
         m: Multiplier (number of parallel devices).
         model: Device model name.
-        layer_thickgateox: Thick gate oxide layer.
-        layer_nwell: N-well layer.
-        layer_gatpoly: Gate polysilicon layer.
-        layer_activ: Active region layer.
-        layer_psd: P+ source/drain implant layer.
-        layer_cont: Contact layer.
-        layer_metal1: Metal1 layer.
 
     Returns:
         Component with HV PMOS transistor layout.
     """
-    c = Component()
-
-    # Add base pmos as reference
-    pmos_ref = c << pmos(
-        width=width,
-        length=length,
-        nf=nf,
-        m=m,
-        model=model,
-        layer_nwell=layer_nwell,
-        layer_gatpoly=layer_gatpoly,
-        layer_activ=layer_activ,
-        layer_psd=layer_psd,
-        layer_cont=layer_cont,
-        layer_metal1=layer_metal1,
-    )
-
-    # Add thick gate oxide layer
-    thick_ox = gf.components.rectangle(
-        size=(length + 0.5, width + 0.5),
-        layer=layer_thickgateox,
-        centered=True,
-    )
-    c.add_ref(thick_ox)
-
-    # Copy ports from base pmos
-    c.add_ports(pmos_ref.ports)
-
-    c.info["type"] = "pmos_hv"
+    c = _mos_core(width, length, nf, is_pmos=True, is_hv=True)
 
     # VLSIR simulation metadata
     c.info["vlsir"] = {
@@ -562,6 +693,9 @@ def pmos_hv(
     return c
 
 
+# ---------------------------------------------------------------------------
+# RF variants - delegated to fixed GDS imports (full implementation deferred)
+# ---------------------------------------------------------------------------
 @gf.cell
 def rfnmos(
     width: float = 2.0,
@@ -569,79 +703,23 @@ def rfnmos(
     nf: int = 2,
     m: int = 1,
     model: str = "sg13_lv_rfnmos",
-    layer_gatpoly: LayerSpec = "GatPolydrawing",
-    layer_activ: LayerSpec = "Activdrawing",
-    layer_nsd: LayerSpec = "nSDdrawing",
-    layer_cont: LayerSpec = "Contdrawing",
-    layer_metal1: LayerSpec = "Metal1drawing",
 ) -> Component:
-    """Create an RF NMOS transistor with optimized layout.
+    """Create an RF NMOS transistor.
 
-    Args:
-        width: Total width of the transistor in micrometers.
-        length: Gate length in micrometers.
-        nf: Number of fingers (should be even for RF).
-        m: Multiplier (number of parallel devices).
-        model: Device model name.
-        layer_gatpoly: Gate polysilicon layer.
-        layer_activ: Active region layer.
-        layer_nsd: N+ source/drain implant layer.
-        layer_cont: Contact layer.
-        layer_metal1: Metal1 layer.
-
-    Returns:
-        Component with RF NMOS transistor layout.
+    Currently delegates to fixed GDS import. Parametric RF layout is deferred
+    due to complexity (gate rings, guard rings, Metal2 connections).
     """
-    # Ensure even number of fingers for RF layout
-    if nf % 2 != 0:
-        nf = nf + 1
+    from . import fixed
 
-    c = Component()
-
-    # Add base nmos as reference
-    nmos_ref = c << nmos(
-        width=width,
-        length=length,
-        nf=nf,
-        m=m,
-        model=model,
-        layer_gatpoly=layer_gatpoly,
-        layer_activ=layer_activ,
-        layer_nsd=layer_nsd,
-        layer_cont=layer_cont,
-        layer_metal1=layer_metal1,
-    )
-
-    # Add substrate shielding for RF
-    shield_layer = (37, 0)  # Example shield layer
-    shield = gf.components.rectangle(
-        size=(length * nf * 1.5, width * 1.2),
-        layer=shield_layer,
-        centered=True,
-    )
-    c.add_ref(shield)
-
-    # Copy ports from base nmos
-    c.add_ports(nmos_ref.ports)
-
-    c.info["type"] = "rfnmos"
-
-    # VLSIR simulation metadata
+    c = fixed.rfnmos()
     c.info["vlsir"] = {
         "model": "sg13_lv_nmos",
         "spice_type": "SUBCKT",
         "spice_lib": "sg13g2_moslv_mod.lib",
         "port_order": ["d", "g", "s", "b"],
-        "port_map": {"D": "d", "G": "g", "S": "s"},
-        "params": {
-            "w": width * 1e-6,
-            "l": length * 1e-6,
-            "ng": nf,
-            "m": m,
-            "rfmode": 1,  # Enable RF mode
-        },
+        "port_map": {},
+        "params": {"rfmode": 1},
     }
-
     return c
 
 
@@ -652,82 +730,23 @@ def rfpmos(
     nf: int = 2,
     m: int = 1,
     model: str = "sg13_lv_rfpmos",
-    layer_nwell: LayerSpec = "NWelldrawing",
-    layer_gatpoly: LayerSpec = "GatPolydrawing",
-    layer_activ: LayerSpec = "Activdrawing",
-    layer_psd: LayerSpec = "pSDdrawing",
-    layer_cont: LayerSpec = "Contdrawing",
-    layer_metal1: LayerSpec = "Metal1drawing",
 ) -> Component:
-    """Create an RF PMOS transistor with optimized layout.
+    """Create an RF PMOS transistor.
 
-    Args:
-        width: Total width of the transistor in micrometers.
-        length: Gate length in micrometers.
-        nf: Number of fingers (should be even for RF).
-        m: Multiplier (number of parallel devices).
-        model: Device model name.
-        layer_nwell: N-well layer.
-        layer_gatpoly: Gate polysilicon layer.
-        layer_activ: Active region layer.
-        layer_psd: P+ source/drain implant layer.
-        layer_cont: Contact layer.
-        layer_metal1: Metal1 layer.
-
-    Returns:
-        Component with RF PMOS transistor layout.
+    Currently delegates to fixed GDS import. Parametric RF layout is deferred
+    due to complexity (gate rings, guard rings, Metal2 connections).
     """
-    # Ensure even number of fingers for RF layout
-    if nf % 2 != 0:
-        nf = nf + 1
+    from . import fixed
 
-    c = Component()
-
-    # Add base pmos as reference
-    pmos_ref = c << pmos(
-        width=width,
-        length=length,
-        nf=nf,
-        m=m,
-        model=model,
-        layer_nwell=layer_nwell,
-        layer_gatpoly=layer_gatpoly,
-        layer_activ=layer_activ,
-        layer_psd=layer_psd,
-        layer_cont=layer_cont,
-        layer_metal1=layer_metal1,
-    )
-
-    # Add substrate shielding for RF
-    shield_layer = (37, 0)  # Example shield layer
-    shield = gf.components.rectangle(
-        size=(length * nf * 1.5, width * 1.2),
-        layer=shield_layer,
-        centered=True,
-    )
-    c.add_ref(shield)
-
-    # Copy ports from base pmos
-    c.add_ports(pmos_ref.ports)
-
-    c.info["type"] = "rfpmos"
-
-    # VLSIR simulation metadata
+    c = fixed.rfpmos()
     c.info["vlsir"] = {
         "model": "sg13_lv_pmos",
         "spice_type": "SUBCKT",
         "spice_lib": "sg13g2_moslv_mod.lib",
         "port_order": ["d", "g", "s", "b"],
-        "port_map": {"D": "d", "G": "g", "S": "s"},
-        "params": {
-            "w": width * 1e-6,
-            "l": length * 1e-6,
-            "ng": nf,
-            "m": m,
-            "rfmode": 1,  # Enable RF mode
-        },
+        "port_map": {},
+        "params": {"rfmode": 1},
     }
-
     return c
 
 
@@ -735,25 +754,26 @@ if __name__ == "__main__":
     from gdsfactory.difftest import xor
 
     from ihp import PDK
-    from ihp.cells import fixed
+    from ihp import cells2 as pycell
 
     PDK.activate()
 
-    # Test the components
-    c0 = fixed.nmos()  # original
-    c1 = nmos()  # New
-    # c = gf.grid([c0, c1], spacing=100)
+    c0 = pycell.nmos()  # PyCell reference
+    c1 = nmos()  # Pure GDSFactory
     c = xor(c0, c1)
     c.show()
 
-    # c0 = cells.pmos()  # original
-    # c1 = pmos()  # New
-    # # c = gf.grid([c0, c1], spacing=100)
+    # c0 = pycell.pmos()
+    # c1 = pmos()
     # c = xor(c0, c1)
     # c.show()
 
-    # c0 = cells.rfnmos()  # original
-    # c1 = rfnmos()  # New
-    # # c = gf.grid([c0, c1], spacing=100)
+    # c0 = pycell.nmosHV()
+    # c1 = nmos_hv()
+    # c = xor(c0, c1)
+    # c.show()
+
+    # c0 = pycell.pmosHV()
+    # c1 = pmos_hv()
     # c = xor(c0, c1)
     # c.show()

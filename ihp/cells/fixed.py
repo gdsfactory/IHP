@@ -275,7 +275,7 @@ def chipText() -> gf.Component:
 
 
 @gf.cell
-def cmim() -> gf.Component:
+def cmim_fixed() -> gf.Component:
     """Returns cmim fixed cell.
 
     .. plot::

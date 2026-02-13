@@ -1,9 +1,4 @@
 info:
-  length: 0.13
-  m: 1
-  model: sg13_lv_nmos
-  nf: 1
-  type: nmos
   vlsir:
     model: sg13_lv_nmos
     params:
@@ -22,16 +17,10 @@ info:
     - b
     spice_lib: sg13g2_moslv_mod.lib
     spice_type: SUBCKT
-  width: 1
-name: nmos_W1_L0p13_N1_M1_Msg13_lv_nmos_LGGatPolydrawing_LAAc_b1381431
+name: nmos_W0p15_L0p13_N1_M1_Msg13_lv_nmos
 settings:
-  layer_activ: Activdrawing
-  layer_cont: Contdrawing
-  layer_gatpoly: GatPolydrawing
-  layer_metal1: Metal1drawing
-  layer_nsd: nSDdrawing
   length: 0.13
   m: 1
   model: sg13_lv_nmos
   nf: 1
-  width: 1
+  width: 0.15

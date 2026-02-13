@@ -1,11 +1,35 @@
 info:
+  area_um2: 36
+  capacitance_fF: 55.142
+  length: 6
+  model: cmim
   vlsir:
-    model: cmim
-    port_map: {}
+    model: cap_cmim
+    params:
+      l: 0.0
+      w: 0.0
     port_order:
     - PLUS
     - MINUS
     spice_lib: capacitors_mod.lib
     spice_type: SUBCKT
-name: cmim
-settings: {}
+  width: 6
+name: cmim_W6_L6_LMMetal5drawing_LMMIMdrawing_LVVmimdrawing_L_8b51f9e9
+settings:
+  layer_cap_mark: MemCapdrawing
+  layer_m4nofill: Metal4nofill
+  layer_m5nofill: Metal5nofill
+  layer_metal5: Metal5drawing
+  layer_metal5label: Metal5label
+  layer_metal5pin: Metal5pin
+  layer_mim: MIMdrawing
+  layer_text: TEXTdrawing
+  layer_tm1nofill: TopMetal1nofill
+  layer_tm2nofill: TopMetal2nofill
+  layer_topmetal1: TopMetal1drawing
+  layer_topmetal1label: TopMetal1label
+  layer_topmetal1pin: TopMetal1pin
+  layer_vmim: Vmimdrawing
+  length: 6
+  model: cmim
+  width: 6
