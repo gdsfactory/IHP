@@ -9,7 +9,8 @@ authors = [{name = "gdsfactory", email = "contact@gdsfactory.com"}]
 classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
-  "Programming Language :: Python :: 3.13"
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
   "gdsfactory~=9.34.0",
@@ -23,7 +24,7 @@ keywords = ["python"]
 license = {file = "LICENSE"}
 name = "ihp-gdsfactory"
 readme = "README.md"
-requires-python = ">=3.11,<3.14"
+requires-python = ">=3.11,<3.15"
 version = "0.2.0"
 
 [project.optional-dependencies]
