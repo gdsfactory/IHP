@@ -872,7 +872,7 @@ wheels = [
 
 [[package]]
 name = "gdsfactory"
-version = "9.34.0"
+version = "9.35.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "attrs" },
@@ -908,9 +908,9 @@ dependencies = [
     { name = "typing-extensions" },
     { name = "watchdog" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e5/60/d451c9c6165c65d3ab1b772b24b468212b5e08c9c0218ea671fb058e4b40/gdsfactory-9.34.0.tar.gz", hash = "sha256:22b0c541b48e4d939c3492bf85dbd9a3f9d93b67c1b5495c6efb0ad09f88311e", size = 499833, upload-time = "2026-02-01T18:58:27.318Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/b3/23/8fbe32a381faa3caccd1d4bf4bb63bc9c8c0c6c3f1702e2e5be34a3cd7f1/gdsfactory-9.35.1.tar.gz", hash = "sha256:8b2a9d1803e44eeeb38c831ab3c8ecffeb4d52a00be4966ac0b1623496458818", size = 503453, upload-time = "2026-02-21T01:08:33.355Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/1e/90/6f97dd3f2ff2c47b7579876ed9b5b8f014bb39f92b2704a1958f5a8b06dc/gdsfactory-9.34.0-py3-none-any.whl", hash = "sha256:ed6f490fcbe891726c4cfe42917600bd8560c93d1a3dd6889b2db85a64859fdb", size = 701493, upload-time = "2026-02-01T18:58:24.632Z" },
+    { url = "https://files.pythonhosted.org/packages/c2/fd/732ef063fee303f088309f4e90c52a04d133757859a79080fe64058162f6/gdsfactory-9.35.1-py3-none-any.whl", hash = "sha256:9c4d311870d052d1ddd18f9af33557d43c0035fb8cf47a7c1f150598f9143e72", size = 709096, upload-time = "2026-02-21T01:08:30.969Z" },
 ]
 
 [[package]]
@@ -1265,7 +1265,7 @@ simulation = [
 requires-dist = [
     { name = "autodoc-pydantic", marker = "extra == 'docs'" },
     { name = "doroutes", specifier = ">=0.2.0" },
-    { name = "gdsfactory", specifier = "~=9.34.0" },
+    { name = "gdsfactory", specifier = "~=9.35.1" },
     { name = "gplugins", extras = ["sax"], specifier = "~=2.0.0" },
     { name = "gsim", marker = "python_full_version >= '3.12' and extra == 'simulation'" },
     { name = "jsondiff", marker = "extra == 'dev'" },
