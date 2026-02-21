@@ -9,4 +9,14 @@ info:
     spice_lib: capacitors_mod.lib
     spice_type: SUBCKT
 name: rfcmim
+ports:
+  o1:
+    center:
+    - 3.5
+    - -5.6
+    layer: 170
+    name: o1
+    orientation: 270
+    port_type: optical
+    width: 18.2
 settings: {}

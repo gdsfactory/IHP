@@ -1,3 +1,22 @@
 info: {}
 name: iprobe
+ports:
+  o1:
+    center:
+    - -0.6
+    - 2.5
+    layer: 170
+    name: o1
+    orientation: 180
+    port_type: optical
+    width: 5
+  o2:
+    center:
+    - 0.6
+    - 2.5
+    layer: 170
+    name: o2
+    orientation: 0
+    port_type: optical
+    width: 5
 settings: {}

@@ -9,4 +9,5 @@ info:
     spice_lib: diodes.lib
     spice_type: SUBCKT
 name: isolbox
+ports: {}
 settings: {}

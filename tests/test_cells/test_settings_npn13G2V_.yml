@@ -10,4 +10,32 @@ info:
     spice_lib: sg13g2_hbt_mod.lib
     spice_type: SUBCKT
 name: npn13G2V
+ports:
+  o1:
+    center:
+    - 3.87
+    - 5.75
+    layer: 170
+    name: o1
+    orientation: 90
+    port_type: optical
+    width: 2.34
+  o2:
+    center:
+    - 3.87
+    - 1.45
+    layer: 170
+    name: o2
+    orientation: 270
+    port_type: optical
+    width: 1.05
+  o3:
+    center:
+    - 3.87
+    - 2.82
+    layer: 185
+    name: o3
+    orientation: 270
+    port_type: optical
+    width: 2.34
 settings: {}

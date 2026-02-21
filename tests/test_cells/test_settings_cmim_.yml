@@ -8,4 +8,5 @@ info:
     spice_lib: capacitors_mod.lib
     spice_type: SUBCKT
 name: cmim
+ports: {}
 settings: {}

@@ -1,6 +1,9 @@
 install:
 	uv sync --extra docs --extra dev --extra simulation
 
+all:
+	uv run python ihp/samples/all_cells.py
+
 rm-samples:
 	rm -rf ihp/samples
 
@@ -15,8 +18,11 @@ tech:
 test:
 	uv run pytest -s
 
+test-ports:
+	uv run pytest -s tests/test_cells.py::test_optical_port_positions
+
 test-force:
-	uv run pytest -s --force-regen
+	uv run pytest -s --update-gds-refs --force-regen
 
 git-rm-merged:
 	git branch -D `git branch --merged | grep -v \* | xargs`

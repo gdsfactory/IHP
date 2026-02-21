@@ -13,6 +13,43 @@ info:
     spice_lib: null
     spice_type: BIPOLAR
 name: bipolar_Mnpn_SLNone_A1
+ports:
+  B:
+    center:
+    - -1
+    - 0
+    layer: 399
+    name: B
+    orientation: 180
+    port_type: optical
+    width: 0.1
+  C:
+    center:
+    - 0
+    - 1
+    layer: 399
+    name: C
+    orientation: 90
+    port_type: optical
+    width: 0.1
+  E:
+    center:
+    - 0
+    - -1
+    layer: 399
+    name: E
+    orientation: 270
+    port_type: optical
+    width: 0.1
+  S:
+    center:
+    - 1
+    - 0
+    layer: 399
+    name: S
+    orientation: 0
+    port_type: optical
+    width: 0.1
 settings:
   area: 1
   model: npn

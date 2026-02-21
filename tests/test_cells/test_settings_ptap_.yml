@@ -1,3 +1,13 @@
 info: {}
 name: ptap
+ports:
+  o1:
+    center:
+    - 0.69
+    - 0.39
+    layer: 170
+    name: o1
+    orientation: 0
+    port_type: optical
+    width: 0.6
 settings: {}

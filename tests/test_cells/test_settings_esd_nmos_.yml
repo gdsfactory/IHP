@@ -12,6 +12,25 @@ info:
     spice_lib: sg13g2_moslv_mod.lib
     spice_type: SUBCKT
 name: esd_nmos_W50_L0p5_N10_Mnmoscl_2_LPPWelldrawing_LAActivd_fa755f41
+ports:
+  GND:
+    center:
+    - 0
+    - -2.5
+    layer: 170
+    name: GND
+    orientation: 270
+    port_type: electrical
+    width: 16
+  PAD:
+    center:
+    - 0
+    - 4
+    layer: 185
+    name: PAD
+    orientation: 90
+    port_type: electrical
+    width: 16
 settings:
   layer_activ: Activdrawing
   layer_cont: Contdrawing

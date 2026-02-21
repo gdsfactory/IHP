@@ -7,4 +7,5 @@ info:
     spice_lib: sg13g2_bondpad.lib
     spice_type: SUBCKT
 name: bondpad
+ports: {}
 settings: {}

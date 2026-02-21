@@ -11,6 +11,25 @@ info:
     spice_lib: null
     spice_type: INDUCTOR
 name: inductor_I1em09_Mlind
+ports:
+  n:
+    center:
+    - 1
+    - 0
+    layer: 399
+    name: n
+    orientation: 0
+    port_type: optical
+    width: 0.1
+  p:
+    center:
+    - 0
+    - 0
+    layer: 399
+    name: p
+    orientation: 180
+    port_type: optical
+    width: 0.1
 settings:
   inductance: 0.0
   model: lind

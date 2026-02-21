@@ -15,6 +15,43 @@ info:
     spice_lib: null
     spice_type: MOS
 name: mos_W1em06_L1em07_N1_Mnmos_SLNone
+ports:
+  B:
+    center:
+    - 1
+    - 0
+    layer: 399
+    name: B
+    orientation: 90
+    port_type: optical
+    width: 0.1
+  D:
+    center:
+    - 0
+    - 1
+    layer: 399
+    name: D
+    orientation: 180
+    port_type: optical
+    width: 0.1
+  G:
+    center:
+    - -1
+    - 0
+    layer: 399
+    name: G
+    orientation: 270
+    port_type: optical
+    width: 0.1
+  S:
+    center:
+    - 0
+    - -1
+    layer: 399
+    name: S
+    orientation: 0
+    port_type: optical
+    width: 0.1
 settings:
   length: 0.0
   model: nmos

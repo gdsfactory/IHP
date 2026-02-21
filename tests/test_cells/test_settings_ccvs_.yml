@@ -12,5 +12,42 @@ info:
     spice_lib: null
     spice_type: CCVS
 name: ccvs_R1000
+ports:
+  n_ctrl:
+    center:
+    - 1
+    - 0
+    layer: 399
+    name: n_ctrl
+    orientation: 0
+    port_type: optical
+    width: 0.1
+  n_out:
+    center:
+    - 0
+    - -1
+    layer: 399
+    name: n_out
+    orientation: 270
+    port_type: optical
+    width: 0.1
+  p_ctrl:
+    center:
+    - -1
+    - 0
+    layer: 399
+    name: p_ctrl
+    orientation: 180
+    port_type: optical
+    width: 0.1
+  p_out:
+    center:
+    - 0
+    - 1
+    layer: 399
+    name: p_out
+    orientation: 90
+    port_type: optical
+    width: 0.1
 settings:
   rm: 1000

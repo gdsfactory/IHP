@@ -9,4 +9,32 @@ info:
     spice_lib: sg13g2_esd.lib
     spice_type: SUBCKT
 name: diodevdd_2kv
+ports:
+  o1:
+    center:
+    - -2.12
+    - 18.535
+    layer: 185
+    name: o1
+    orientation: 180
+    port_type: optical
+    width: 21.56
+  o2:
+    center:
+    - 10.94
+    - 18.535
+    layer: 185
+    name: o2
+    orientation: 0
+    port_type: optical
+    width: 29.6
+  o3:
+    center:
+    - 4.86
+    - 0
+    layer: 170
+    name: o3
+    orientation: 270
+    port_type: optical
+    width: 9.72
 settings: {}

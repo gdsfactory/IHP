@@ -9,4 +9,41 @@ info:
     spice_lib: sg13g2_dschottky_nbl1_mod.lib
     spice_type: SUBCKT
 name: schottky_nbl1
+ports:
+  o1:
+    center:
+    - -2.3
+    - 0.77
+    layer: 170
+    name: o1
+    orientation: 180
+    port_type: optical
+    width: 5.7
+  o2:
+    center:
+    - 0.6
+    - 3.355
+    layer: 170
+    name: o2
+    orientation: 90
+    port_type: optical
+    width: 2.3
+  o3:
+    center:
+    - 3.5
+    - 0.77
+    layer: 170
+    name: o3
+    orientation: 0
+    port_type: optical
+    width: 5.7
+  o4:
+    center:
+    - 0.6
+    - -1.815
+    layer: 185
+    name: o4
+    orientation: 270
+    port_type: optical
+    width: 2.36
 settings: {}

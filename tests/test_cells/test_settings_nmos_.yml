@@ -24,6 +24,34 @@ info:
     spice_type: SUBCKT
   width: 1
 name: nmos_W1_L0p13_N1_M1_Msg13_lv_nmos_LGGatPolydrawing_LAAc_b1381431
+ports:
+  D:
+    center:
+    - 0.36
+    - 0.68
+    layer: 170
+    name: D
+    orientation: 0
+    port_type: electrical
+    width: 1
+  G:
+    center:
+    - 0.72
+    - -0.18
+    layer: 8
+    name: G
+    orientation: 270
+    port_type: electrical
+    width: 0.13
+  S:
+    center:
+    - -0.23
+    - 0.68
+    layer: 170
+    name: S
+    orientation: 180
+    port_type: electrical
+    width: 1
 settings:
   layer_activ: Activdrawing
   layer_cont: Contdrawing

@@ -8,4 +8,14 @@ info:
     spice_lib: diodes.lib
     spice_type: SUBCKT
 name: dpantenna
+ports:
+  o1:
+    center:
+    - 0.39
+    - 0.14
+    layer: 170
+    name: o1
+    orientation: 270
+    port_type: optical
+    width: 0.6
 settings: {}

@@ -4,6 +4,7 @@ info:
   type: sealring
   width: 200
 name: sealring_W200_H200_RW5_LMMetal1drawing_LMMetal2drawing__b3748dda
+ports: {}
 settings:
   height: 200
   layer_metal1: Metal1drawing

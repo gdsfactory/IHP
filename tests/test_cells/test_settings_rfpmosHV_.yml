@@ -12,4 +12,41 @@ info:
     spice_lib: sg13g2_moshv_mod.lib
     spice_type: SUBCKT
 name: rfpmosHV
+ports:
+  o1:
+    center:
+    - 1.35
+    - 2.54
+    layer: 170
+    name: o1
+    orientation: 180
+    port_type: optical
+    width: 1.22
+  o2:
+    center:
+    - 2.23
+    - 3.23
+    layer: 170
+    name: o2
+    orientation: 90
+    port_type: optical
+    width: 0.9
+  o3:
+    center:
+    - 2.23
+    - 0.7
+    layer: 170
+    name: o3
+    orientation: 270
+    port_type: optical
+    width: 3.22
+  o4:
+    center:
+    - 2.23
+    - 1.85
+    layer: 170
+    name: o4
+    orientation: 270
+    port_type: optical
+    width: 0.9
 settings: {}

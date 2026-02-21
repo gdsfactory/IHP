@@ -7,6 +7,34 @@ info:
   turns: 2
   width: 2
 name: inductor3_W2_S2p1_D25p84_VW0p9_R1p386_I2p215em1_T1L30_T_d6a5eb3b
+ports:
+  P1:
+    center:
+    - 0
+    - 0
+    layer: 354
+    name: P1
+    orientation: 270
+    port_type: optical
+    width: 2
+  P2:
+    center:
+    - -4.1
+    - 0
+    layer: 340
+    name: P2
+    orientation: 270
+    port_type: optical
+    width: 2
+  P3:
+    center:
+    - 4.1
+    - 0
+    layer: 340
+    name: P3
+    orientation: 270
+    port_type: optical
+    width: 2
 settings:
   diameter: 25.84
   inductance: 0.0

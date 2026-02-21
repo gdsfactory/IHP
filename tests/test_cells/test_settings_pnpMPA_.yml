@@ -9,4 +9,32 @@ info:
     spice_lib: sg13g2_hbt_mod.lib
     spice_type: SUBCKT
 name: pnpMPA
+ports:
+  o1:
+    center:
+    - -1.07
+    - 0
+    layer: 170
+    name: o1
+    orientation: 180
+    port_type: optical
+    width: 2.76
+  o2:
+    center:
+    - -0.33
+    - 0
+    layer: 170
+    name: o2
+    orientation: 180
+    port_type: optical
+    width: 1.96
+  o3:
+    center:
+    - 0
+    - 3.01
+    layer: 170
+    name: o3
+    orientation: 90
+    port_type: optical
+    width: 4.9
 settings: {}

@@ -11,6 +11,25 @@ info:
     spice_lib: null
     spice_type: CAPACITOR
 name: capacitor_C1em12_Mcpoly
+ports:
+  n:
+    center:
+    - 1
+    - 0
+    layer: 399
+    name: n
+    orientation: 0
+    port_type: optical
+    width: 0.1
+  p:
+    center:
+    - 0
+    - 0
+    layer: 399
+    name: p
+    orientation: 180
+    port_type: optical
+    width: 0.1
 settings:
   capacitance: 0.0
   model: cpoly

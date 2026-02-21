@@ -13,6 +13,43 @@ info:
     spice_lib: null
     spice_type: TLINE
 name: tline_Z50_T1em09
+ports:
+  n1:
+    center:
+    - 0
+    - -1
+    layer: 399
+    name: n1
+    orientation: 180
+    port_type: optical
+    width: 0.1
+  n2:
+    center:
+    - 2
+    - -1
+    layer: 399
+    name: n2
+    orientation: 0
+    port_type: optical
+    width: 0.1
+  p1:
+    center:
+    - 0
+    - 0
+    layer: 399
+    name: p1
+    orientation: 180
+    port_type: optical
+    width: 0.1
+  p2:
+    center:
+    - 2
+    - 0
+    layer: 399
+    name: p2
+    orientation: 0
+    port_type: optical
+    width: 0.1
 settings:
   td: 0.0
   z0: 50

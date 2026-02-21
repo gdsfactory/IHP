@@ -1,3 +1,40 @@
 info: {}
 name: CuPillarPad
+ports:
+  e1:
+    center:
+    - 0
+    - 0
+    layer: 354
+    name: e1
+    orientation: 180
+    port_type: optical
+    width: 45
+  e2:
+    center:
+    - 0
+    - 0
+    layer: 354
+    name: e2
+    orientation: 0
+    port_type: optical
+    width: 45
+  e3:
+    center:
+    - 0
+    - 0
+    layer: 354
+    name: e3
+    orientation: 90
+    port_type: optical
+    width: 45
+  e4:
+    center:
+    - 0
+    - 0
+    layer: 354
+    name: e4
+    orientation: 270
+    port_type: optical
+    width: 45
 settings: {}
