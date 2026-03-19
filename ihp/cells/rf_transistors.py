@@ -884,7 +884,26 @@ def _rf_mos_core(
 # ---------------------------------------------------------------------------
 # Public RF cell functions
 # ---------------------------------------------------------------------------
-@gf.cell
+@gf.cell(
+    tags=["IHP", "mos", "lv", "rf"],
+    symbol="nmos",
+    ports={"top": ["D"], "bottom": ["S"], "left": ["G"], "right": ["B"]},
+    models=[{
+        "language": "spice",
+        "name": "sg13_lv_nmos",
+        "spice_type": "SUBCKT",
+        "library": "cornerMOSlv.lib",
+        "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
+        "port_order": ["D", "G", "S", "B"],
+        "params": {
+            "w": "width * 1e-6",
+            "l": "length * 1e-6",
+            "ng": "nf",
+            "m": "m",
+            "rfmode": "1",
+        },
+    }],
+)
 def rfnmos(
     width: float = 1.0,
     length: float = 0.13,
@@ -894,7 +913,6 @@ def rfnmos(
     met2_cont: bool = True,
     gat_ring: bool = True,
     guard_ring: str = "Yes",
-    model: str = "sg13_lv_nmos",
 ) -> Component:
     """Create an RF NMOS transistor.
 
@@ -907,7 +925,6 @@ def rfnmos(
         met2_cont: Include Metal2-to-contact connections.
         gat_ring: Include gate ring around the transistor.
         guard_ring: Guard ring type: "Yes", "No", "U", or "Top+Bottom".
-        model: Device model name.
 
     Returns:
         Component with RF NMOS transistor layout.
@@ -937,24 +954,29 @@ def rfnmos(
         is_pmos=False,
         is_hv=False,
     )
-    c.info["vlsir"] = {
-        "model": "sg13_lv_nmos",
-        "spice_type": "SUBCKT",
-        "spice_lib": "sg13g2_moslv_mod.lib",
-        "port_order": ["d", "g", "s", "b"],
-        "port_map": {"D": "d", "G": "g", "S": "s"},
-        "params": {
-            "w": width * 1e-6,
-            "l": length * 1e-6,
-            "ng": nf,
-            "m": m,
-            "rfmode": 1,
-        },
-    }
     return c
 
 
-@gf.cell
+@gf.cell(
+    tags=["IHP", "mos", "lv", "rf"],
+    symbol="pmos",
+    ports={"top": ["D"], "bottom": ["S"], "left": ["G"], "right": ["B"]},
+    models=[{
+        "language": "spice",
+        "name": "sg13_lv_pmos",
+        "spice_type": "SUBCKT",
+        "library": "cornerMOSlv.lib",
+        "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
+        "port_order": ["D", "G", "S", "B"],
+        "params": {
+            "w": "width * 1e-6",
+            "l": "length * 1e-6",
+            "ng": "nf",
+            "m": "m",
+            "rfmode": "1",
+        },
+    }],
+)
 def rfpmos(
     width: float = 1.0,
     length: float = 0.13,
@@ -964,7 +986,6 @@ def rfpmos(
     met2_cont: bool = True,
     gat_ring: bool = True,
     guard_ring: str = "Yes",
-    model: str = "sg13_lv_pmos",
 ) -> Component:
     """Create an RF PMOS transistor.
 
@@ -977,7 +998,6 @@ def rfpmos(
         met2_cont: Include Metal2-to-contact connections.
         gat_ring: Include gate ring around the transistor.
         guard_ring: Guard ring type: "Yes", "No", "U", or "Top+Bottom".
-        model: Device model name.
 
     Returns:
         Component with RF PMOS transistor layout.
@@ -1007,24 +1027,29 @@ def rfpmos(
         is_pmos=True,
         is_hv=False,
     )
-    c.info["vlsir"] = {
-        "model": "sg13_lv_pmos",
-        "spice_type": "SUBCKT",
-        "spice_lib": "sg13g2_moslv_mod.lib",
-        "port_order": ["d", "g", "s", "b"],
-        "port_map": {"D": "d", "G": "g", "S": "s"},
-        "params": {
-            "w": width * 1e-6,
-            "l": length * 1e-6,
-            "ng": nf,
-            "m": m,
-            "rfmode": 1,
-        },
-    }
     return c
 
 
-@gf.cell
+@gf.cell(
+    tags=["IHP", "mos", "hv", "rf"],
+    symbol="nmos",
+    ports={"top": ["D"], "bottom": ["S"], "left": ["G"], "right": ["B"]},
+    models=[{
+        "language": "spice",
+        "name": "sg13_hv_nmos",
+        "spice_type": "SUBCKT",
+        "library": "cornerMOShv.lib",
+        "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
+        "port_order": ["D", "G", "S", "B"],
+        "params": {
+            "w": "width * 1e-6",
+            "l": "length * 1e-6",
+            "ng": "nf",
+            "m": "m",
+            "rfmode": "1",
+        },
+    }],
+)
 def rfnmos_hv(
     width: float = 1.0,
     length: float = 0.45,
@@ -1034,7 +1059,6 @@ def rfnmos_hv(
     met2_cont: bool = True,
     gat_ring: bool = True,
     guard_ring: str = "Yes",
-    model: str = "sg13_hv_nmos",
 ) -> Component:
     """Create a high-voltage RF NMOS transistor.
 
@@ -1047,7 +1071,6 @@ def rfnmos_hv(
         met2_cont: Include Metal2-to-contact connections.
         gat_ring: Include gate ring around the transistor.
         guard_ring: Guard ring type: "Yes", "No", "U", or "Top+Bottom".
-        model: Device model name.
 
     Returns:
         Component with HV RF NMOS transistor layout.
@@ -1077,24 +1100,29 @@ def rfnmos_hv(
         is_pmos=False,
         is_hv=True,
     )
-    c.info["vlsir"] = {
-        "model": "sg13_hv_nmos",
-        "spice_type": "SUBCKT",
-        "spice_lib": "sg13g2_moshv_mod.lib",
-        "port_order": ["d", "g", "s", "b"],
-        "port_map": {"D": "d", "G": "g", "S": "s"},
-        "params": {
-            "w": width * 1e-6,
-            "l": length * 1e-6,
-            "ng": nf,
-            "m": m,
-            "rfmode": 1,
-        },
-    }
     return c
 
 
-@gf.cell
+@gf.cell(
+    tags=["IHP", "mos", "hv", "rf"],
+    symbol="pmos",
+    ports={"top": ["D"], "bottom": ["S"], "left": ["G"], "right": ["B"]},
+    models=[{
+        "language": "spice",
+        "name": "sg13_hv_pmos",
+        "spice_type": "SUBCKT",
+        "library": "cornerMOShv.lib",
+        "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
+        "port_order": ["D", "G", "S", "B"],
+        "params": {
+            "w": "width * 1e-6",
+            "l": "length * 1e-6",
+            "ng": "nf",
+            "m": "m",
+            "rfmode": "1",
+        },
+    }],
+)
 def rfpmos_hv(
     width: float = 1.0,
     length: float = 0.40,
@@ -1104,7 +1132,6 @@ def rfpmos_hv(
     met2_cont: bool = True,
     gat_ring: bool = True,
     guard_ring: str = "Yes",
-    model: str = "sg13_hv_pmos",
 ) -> Component:
     """Create a high-voltage RF PMOS transistor.
 
@@ -1117,7 +1144,6 @@ def rfpmos_hv(
         met2_cont: Include Metal2-to-contact connections.
         gat_ring: Include gate ring around the transistor.
         guard_ring: Guard ring type: "Yes", "No", "U", or "Top+Bottom".
-        model: Device model name.
 
     Returns:
         Component with HV RF PMOS transistor layout.
@@ -1147,18 +1173,4 @@ def rfpmos_hv(
         is_pmos=True,
         is_hv=True,
     )
-    c.info["vlsir"] = {
-        "model": "sg13_hv_pmos",
-        "spice_type": "SUBCKT",
-        "spice_lib": "sg13g2_moshv_mod.lib",
-        "port_order": ["d", "g", "s", "b"],
-        "port_map": {"D": "d", "G": "g", "S": "s"},
-        "params": {
-            "w": width * 1e-6,
-            "l": length * 1e-6,
-            "ng": nf,
-            "m": m,
-            "rfmode": 1,
-        },
-    }
     return c

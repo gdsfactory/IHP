@@ -120,7 +120,23 @@ def DrawContArray(
     return x_min, y_min, x_max, y_max
 
 
-@gf.cell
+@gf.cell(
+    tags=["IHP", "diode", "antenna"],
+    symbol="diode",
+    ports={"left": ["1"], "right": ["2"]},
+    models=[{
+        "language": "spice",
+        "name": "dantenna",
+        "spice_type": "SUBCKT",
+        "library": "cornerDIO.lib",
+        "sections": ["dio_tt", "dio_ss", "dio_ff"],
+        "port_order": ["1", "2"],
+        "params": {
+            "w": "width * 1e-6",
+            "l": "length * 1e-6",
+        },
+    }],
+)
 def dantenna(
     width: float = 0.78,
     length: float = 0.78,
@@ -225,20 +241,26 @@ def dantenna(
             )
         ).move((-diods_over, -diods_over))
 
-    # VLSIR Simulation Metadata
-    c.info["vlsir"] = {
-        "model": "dantenna",
-        "spice_type": "SUBCKT",
-        "spice_lib": "diodes.lib",
-        "port_order": ["1", "2"],
-        "port_map": {},  # No physical ports defined on component
-        "params": {"w": width * 1e-6, "l": length * 1e-6},
-    }
-
     return c
 
 
-@gf.cell
+@gf.cell(
+    tags=["IHP", "diode", "antenna"],
+    symbol="diode",
+    ports={"left": ["1"], "right": ["2"]},
+    models=[{
+        "language": "spice",
+        "name": "dpantenna",
+        "spice_type": "SUBCKT",
+        "library": "cornerDIO.lib",
+        "sections": ["dio_tt", "dio_ss", "dio_ff"],
+        "port_order": ["1", "2"],
+        "params": {
+            "w": "width * 1e-6",
+            "l": "length * 1e-6",
+        },
+    }],
+)
 def dpantenna(
     width: float = 0.78,
     length: float = 0.78,
@@ -347,16 +369,6 @@ def dpantenna(
             layer=layer_nwell,
         )
     ).move((-NW_c, -NW_c))
-
-    # VLSIR Simulation Metadata
-    c.info["vlsir"] = {
-        "model": "dpantenna",
-        "spice_type": "SUBCKT",
-        "spice_lib": "diodes.lib",
-        "port_order": ["1", "2"],
-        "port_map": {},  # No physical ports defined on component
-        "params": {"w": width * 1e-6, "l": length * 1e-6},
-    }
 
     return c
 

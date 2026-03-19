@@ -505,13 +505,30 @@ def _mos_core(
 # ---------------------------------------------------------------------------
 # Public cell functions
 # ---------------------------------------------------------------------------
-@gf.cell
+@gf.cell(
+    tags=["IHP", "mos", "lv"],
+    symbol="nmos",
+    ports={"top": ["D"], "bottom": ["S"], "left": ["G"], "right": ["B"]},
+    models=[{
+        "language": "spice",
+        "name": "sg13_lv_nmos",
+        "spice_type": "SUBCKT",
+        "library": "cornerMOSlv.lib",
+        "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
+        "port_order": ["D", "G", "S", "B"],
+        "params": {
+            "w": "width * 1e-6",
+            "l": "length * 1e-6",
+            "ng": "nf",
+            "m": "m",
+        },
+    }],
+)
 def nmos(
     width: float = 0.15,
     length: float = 0.13,
     nf: int = 1,
     m: int = 1,
-    model: str = "sg13_lv_nmos",
 ) -> Component:
     """Create an NMOS transistor.
 
@@ -520,7 +537,6 @@ def nmos(
         length: Gate length in micrometers.
         nf: Number of fingers.
         m: Multiplier (number of parallel devices).
-        model: Device model name.
 
     Returns:
         Component with NMOS transistor layout.
@@ -541,31 +557,33 @@ def nmos(
 
     c = _mos_core(width, length, nf, is_pmos=False, is_hv=False)
 
-    # VLSIR simulation metadata
-    c.info["vlsir"] = {
-        "model": "sg13_lv_nmos",
-        "spice_type": "SUBCKT",
-        "spice_lib": "sg13g2_moslv_mod.lib",
-        "port_order": ["d", "g", "s", "b"],
-        "port_map": {"D": "d", "G": "g", "S": "s"},
-        "params": {
-            "w": width * 1e-6,
-            "l": length * 1e-6,
-            "ng": nf,
-            "m": m,
-        },
-    }
-
     return c
 
 
-@gf.cell
+@gf.cell(
+    tags=["IHP", "mos", "lv"],
+    symbol="pmos",
+    ports={"top": ["D"], "bottom": ["S"], "left": ["G"], "right": ["B"]},
+    models=[{
+        "language": "spice",
+        "name": "sg13_lv_pmos",
+        "spice_type": "SUBCKT",
+        "library": "cornerMOSlv.lib",
+        "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
+        "port_order": ["D", "G", "S", "B"],
+        "params": {
+            "w": "width * 1e-6",
+            "l": "length * 1e-6",
+            "ng": "nf",
+            "m": "m",
+        },
+    }],
+)
 def pmos(
     width: float = 0.15,
     length: float = 0.13,
     nf: int = 1,
     m: int = 1,
-    model: str = "sg13_lv_pmos",
 ) -> Component:
     """Create a PMOS transistor.
 
@@ -574,7 +592,6 @@ def pmos(
         length: Gate length in micrometers.
         nf: Number of fingers.
         m: Multiplier (number of parallel devices).
-        model: Device model name.
 
     Returns:
         Component with PMOS transistor layout.
@@ -595,31 +612,33 @@ def pmos(
 
     c = _mos_core(width, length, nf, is_pmos=True, is_hv=False)
 
-    # VLSIR simulation metadata
-    c.info["vlsir"] = {
-        "model": "sg13_lv_pmos",
-        "spice_type": "SUBCKT",
-        "spice_lib": "sg13g2_moslv_mod.lib",
-        "port_order": ["d", "g", "s", "b"],
-        "port_map": {"D": "d", "G": "g", "S": "s"},
-        "params": {
-            "w": width * 1e-6,
-            "l": length * 1e-6,
-            "ng": nf,
-            "m": m,
-        },
-    }
-
     return c
 
 
-@gf.cell
+@gf.cell(
+    tags=["IHP", "mos", "hv"],
+    symbol="nmos",
+    ports={"top": ["D"], "bottom": ["S"], "left": ["G"], "right": ["B"]},
+    models=[{
+        "language": "spice",
+        "name": "sg13_hv_nmos",
+        "spice_type": "SUBCKT",
+        "library": "cornerMOShv.lib",
+        "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
+        "port_order": ["D", "G", "S", "B"],
+        "params": {
+            "w": "width * 1e-6",
+            "l": "length * 1e-6",
+            "ng": "nf",
+            "m": "m",
+        },
+    }],
+)
 def nmos_hv(
     width: float = 0.60,
     length: float = 0.45,
     nf: int = 1,
     m: int = 1,
-    model: str = "sg13_hv_nmos",
 ) -> Component:
     """Create a high-voltage NMOS transistor.
 
@@ -628,7 +647,6 @@ def nmos_hv(
         length: Gate length in micrometers.
         nf: Number of fingers.
         m: Multiplier (number of parallel devices).
-        model: Device model name.
 
     Returns:
         Component with HV NMOS transistor layout.
@@ -649,31 +667,33 @@ def nmos_hv(
 
     c = _mos_core(width, length, nf, is_pmos=False, is_hv=True)
 
-    # VLSIR simulation metadata
-    c.info["vlsir"] = {
-        "model": "sg13_hv_nmos",
-        "spice_type": "SUBCKT",
-        "spice_lib": "sg13g2_moshv_mod.lib",
-        "port_order": ["d", "g", "s", "b"],
-        "port_map": {"D": "d", "G": "g", "S": "s"},
-        "params": {
-            "w": width * 1e-6,
-            "l": length * 1e-6,
-            "ng": nf,
-            "m": m,
-        },
-    }
-
     return c
 
 
-@gf.cell
+@gf.cell(
+    tags=["IHP", "mos", "hv"],
+    symbol="pmos",
+    ports={"top": ["D"], "bottom": ["S"], "left": ["G"], "right": ["B"]},
+    models=[{
+        "language": "spice",
+        "name": "sg13_hv_pmos",
+        "spice_type": "SUBCKT",
+        "library": "cornerMOShv.lib",
+        "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
+        "port_order": ["D", "G", "S", "B"],
+        "params": {
+            "w": "width * 1e-6",
+            "l": "length * 1e-6",
+            "ng": "nf",
+            "m": "m",
+        },
+    }],
+)
 def pmos_hv(
     width: float = 0.30,
     length: float = 0.40,
     nf: int = 1,
     m: int = 1,
-    model: str = "sg13_hv_pmos",
 ) -> Component:
     """Create a high-voltage PMOS transistor.
 
@@ -682,7 +702,6 @@ def pmos_hv(
         length: Gate length in micrometers.
         nf: Number of fingers.
         m: Multiplier (number of parallel devices).
-        model: Device model name.
 
     Returns:
         Component with HV PMOS transistor layout.
@@ -702,21 +721,6 @@ def pmos_hv(
         raise ValueError(f"pmos_hv nf={nf} out of range [1, {TECH.pmos_hv_max_nf}]")
 
     c = _mos_core(width, length, nf, is_pmos=True, is_hv=True)
-
-    # VLSIR simulation metadata
-    c.info["vlsir"] = {
-        "model": "sg13_hv_pmos",
-        "spice_type": "SUBCKT",
-        "spice_lib": "sg13g2_moshv_mod.lib",
-        "port_order": ["d", "g", "s", "b"],
-        "port_map": {"D": "d", "G": "g", "S": "s"},
-        "params": {
-            "w": width * 1e-6,
-            "l": length * 1e-6,
-            "ng": nf,
-            "m": m,
-        },
-    }
 
     return c
 

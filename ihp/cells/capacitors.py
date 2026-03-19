@@ -311,7 +311,23 @@ def cmom(
     return c
 
 
-@gf.cell
+@gf.cell(
+    tags=["IHP", "capacitor", "mim"],
+    symbol="capacitor",
+    ports={"left": ["PLUS"], "right": ["MINUS"]},
+    models=[{
+        "language": "spice",
+        "name": "cap_cmim",
+        "spice_type": "SUBCKT",
+        "library": "cornerCAP.lib",
+        "sections": ["cap_typ", "cap_bcs", "cap_wcs"],
+        "port_order": ["PLUS", "MINUS"],
+        "params": {
+            "w": "width * 1e-6",
+            "l": "length * 1e-6",
+        },
+    }],
+)
 def cmim(
     width: float = 6.0,
     length: float = 6.0,
@@ -329,7 +345,6 @@ def cmim(
     layer_topmetal1label: LayerSpec = "TopMetal1label",
     layer_metal5pin: LayerSpec = "Metal5pin",
     layer_topmetal1pin: LayerSpec = "TopMetal1pin",
-    model: str = "cmim",
     **kwargs,
 ) -> Component:
     """Create a MIM (Metal-Insulator-Metal) capacitor.
@@ -353,8 +368,6 @@ def cmim(
         layer_topmetal1label: TopMetal1 label logic layer.
         layer_metal5pin: Metal5 pin logic layer.
         layer_topmetal1pin: TopMetal1 pin logic layer.
-
-        model: Device model name.
 
     Returns:
         Component with MIM capacitor layout.
@@ -508,36 +521,43 @@ def cmim(
         layer=layer_text,
     )
 
-    c.add_label(text=model, position=(c.x, c.y + width / 2), layer=layer_text)
+    c.add_label(text="cap_cmim", position=(c.x, c.y + width / 2), layer=layer_text)
 
     # fringe_factor = kwargs.get("fringe_factor", 0.355)
     # capacitance = width * length * mim_drc['mim_cap_density']
     # capacitance *= (1+fringe_factor)
-    capacitance = CbCapCalc("C", 0, length, width, model)
+    capacitance = CbCapCalc("C", 0, length, width, "cap_cmim")
 
     c.add_label(
         text=f"C = {capacitance} fF", position=(c.x, c.y - width / 2), layer=layer_text
     )
 
-    c.info["model"] = model
+    c.info["model"] = "cap_cmim"
     c.info["width"] = width
     c.info["length"] = length
     c.info["capacitance_fF"] = capacitance
     c.info["area_um2"] = width * length
 
-    # VLSIR simulation metadata
-    c.info["vlsir"] = {
-        "model": "cap_cmim",
-        "spice_type": "SUBCKT",
-        "spice_lib": "capacitors_mod.lib",
-        "port_order": ["PLUS", "MINUS"],
-        "params": {"w": width * 1e-6, "l": length * 1e-6},
-    }
-
     return c
 
 
-@gf.cell
+@gf.cell(
+    tags=["IHP", "capacitor", "mim", "rf"],
+    symbol="capacitor",
+    ports={"left": ["PLUS"], "right": ["MINUS"], "bottom": ["bn"]},
+    models=[{
+        "language": "spice",
+        "name": "cap_rfcmim",
+        "spice_type": "SUBCKT",
+        "library": "cornerCAP.lib",
+        "sections": ["cap_typ", "cap_bcs", "cap_wcs"],
+        "port_order": ["PLUS", "MINUS", "bn"],
+        "params": {
+            "l": "length * 1e-6",
+            "w": "width * 1e-6",
+        },
+    }],
+)
 def rfcmim(
     width: float = 7.0,
     length: float = 7.0,
@@ -570,7 +590,6 @@ def rfcmim(
     layer_metal5label: LayerSpec = "Metal5label",
     layer_topmetal1label: LayerSpec = "TopMetal1label",
     layer_metal1label: LayerSpec = "Metal1label",
-    model: str = "rfcmim",
 ) -> Component:
     """Create a MIM (Metal-Insulator-Metal) capacitor isolated by a
     bulk charge-drift encapsulation P-Plus guard-ring.
@@ -593,8 +612,6 @@ def rfcmim(
         layer_topmetal1label: TopMetal1 label logic layer.
         layer_metal5pin: Metal5 pin logic layer.
         layer_topmetal1pin: TopMetal1 pin logic layer.
-
-        model: Device model name.
 
     Returns:
         Component with MIM capacitor layout.
@@ -630,7 +647,6 @@ def rfcmim(
         layer_topmetal1pin=layer_topmetal1pin,
         layer_metal5label=layer_metal5label,
         layer_topmetal1label=layer_topmetal1label,
-        model=model,
     )
     c.info = cap.info
     c.add_ref(cap)
@@ -714,16 +730,6 @@ def rfcmim(
     )
     c.add_label(text="TIE_LOW", position=(tie.x, tie.y), layer=layer_metal1label)
     c.add_label(text="TIE_LOW", position=(tie.x, tie.y), layer=layer_text)
-
-    # VLSIR simulation metadata
-    c.info["vlsir"] = {
-        "model": "cap_rfcmim",
-        "spice_type": "SUBCKT",
-        "spice_lib": "capacitors_mod.lib",
-        "port_order": ["PLUS", "MINUS", "bn"],
-        "port_map": {"PLUS": "PLUS", "MINUS": "MINUS"},
-        "params": {"l": length * 1e-6, "w": width * 1e-6},
-    }
 
     return c
 

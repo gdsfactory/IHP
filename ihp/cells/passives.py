@@ -14,12 +14,28 @@ FloatLike: TypeAlias = np.float32 | np.float64 | float
 Point: TypeAlias = tuple[FloatLike, FloatLike]
 
 
-@gf.cell
+@gf.cell(
+    tags=["IHP", "varicap", "hv"],
+    symbol="ckt",
+    ports={"left": ["G1"], "right": ["W", "G2"], "bottom": ["bn"]},
+    models=[{
+        "language": "spice",
+        "name": "sg13_hv_svaricap",
+        "spice_type": "SUBCKT",
+        "library": "cornerMOShv.lib",
+        "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
+        "port_order": ["G1", "W", "G2", "bn"],
+        "params": {
+            "w": "width * 1e-6",
+            "l": "length * 1e-6",
+            "Nx": "nf",
+        },
+    }],
+)
 def svaricap(
     width: float = 1.0,
     length: float = 1.0,
     nf: int = 1,
-    model: str = "sg13_hv_svaricap",
     layer_nwell: LayerSpec = "NWelldrawing",
     layer_activ: LayerSpec = "Activdrawing",
     layer_gatpoly: LayerSpec = "GatPolydrawing",
@@ -35,7 +51,6 @@ def svaricap(
         width: Width of the varicap in micrometers.
         length: Length of the varicap in micrometers.
         nf: Number of fingers.
-        model: Device model name.
         layer_nwell: N-well layer.
         layer_activ: Active region layer.
         layer_gatpoly: Gate polysilicon layer.
@@ -175,25 +190,26 @@ def svaricap(
         port_type="electrical",
     )
 
-    # Add VLSIR metadata
-    c.info["vlsir"] = {
-        "model": model,
-        "spice_type": "SUBCKT",
-        "spice_lib": "sg13g2_svaricaphv_mod.lib",
-        "port_order": ["G1", "W", "G2", "bn"],
-        "port_map": {},
-        "params": {"w": width * 1e-6, "l": length * 1e-6, "Nx": nf},
-    }
-
     return c
 
 
-@gf.cell
+@gf.cell(
+    tags=["IHP", "esd"],
+    symbol="ckt",
+    ports={"top": ["VDD"], "bottom": ["VSS"]},
+    models=[{
+        "language": "spice",
+        "name": "nmoscl_2",
+        "spice_type": "SUBCKT",
+        "library": "cornerMOSlv.lib",
+        "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
+        "port_order": ["VDD", "VSS"],
+    }],
+)
 def esd_nmos(
     width: float = 50.0,
     length: float = 0.5,
     nf: int = 10,
-    model: str = "nmoscl_2",
     layer_pwell: LayerSpec = "PWelldrawing",
     layer_activ: LayerSpec = "Activdrawing",
     layer_gatpoly: LayerSpec = "GatPolydrawing",
@@ -211,7 +227,6 @@ def esd_nmos(
         width: Total width of the ESD device in micrometers.
         length: Gate length in micrometers.
         nf: Number of fingers.
-        model: Device model name.
         layer_pwell: P-well layer.
         layer_activ: Active region layer.
         layer_gatpoly: Gate polysilicon layer.
@@ -357,20 +372,26 @@ def esd_nmos(
         port_type="electrical",
     )
 
-    # Add VLSIR metadata
-    c.info["vlsir"] = {
-        "model": model,
-        "spice_type": "SUBCKT",
-        "spice_lib": "sg13g2_moslv_mod.lib",
-        "port_order": ["VDD", "VSS"],
-        "port_map": {},
-        "params": {"w": width * 1e-6, "l": length * 1e-6, "ng": nf},
-    }
-
     return c
 
 
-@gf.cell
+@gf.cell(
+    tags=["IHP", "tap"],
+    symbol="ckt",
+    ports={"left": ["1"], "right": ["2"]},
+    models=[{
+        "language": "spice",
+        "name": "ptap1",
+        "spice_type": "SUBCKT",
+        "library": "cornerRES.lib",
+        "sections": ["res_typ", "res_bcs", "res_wcs"],
+        "port_order": ["1", "2"],
+        "params": {
+            "w": "width * 1e-6",
+            "l": "length * 1e-6",
+        },
+    }],
+)
 def ptap1(
     width: float = 1.0,
     length: float = 1.0,
@@ -480,24 +501,26 @@ def ptap1(
     c.info["rows"] = rows
     c.info["cols"] = cols
 
-    # Add VLSIR metadata
-    c.info["vlsir"] = {
-        "model": "ptap1",
-        "spice_type": "SUBCKT",
-        "spice_lib": "resistors_mod.lib",
-        "port_order": ["1", "2"],
-        "port_map": {},
-        "params": {
-            "w": width * 1e-6,
-            "l": length * 1e-6,
-        },
-        # TODO: Translate "rows, cols"
-    }
-
     return c
 
 
-@gf.cell
+@gf.cell(
+    tags=["IHP", "tap"],
+    symbol="ckt",
+    ports={"left": ["1"], "right": ["2"]},
+    models=[{
+        "language": "spice",
+        "name": "ntap1",
+        "spice_type": "SUBCKT",
+        "library": "cornerRES.lib",
+        "sections": ["res_typ", "res_bcs", "res_wcs"],
+        "port_order": ["1", "2"],
+        "params": {
+            "w": "width * 1e-6",
+            "l": "length * 1e-6",
+        },
+    }],
+)
 def ntap1(
     width: float = 1.0,
     length: float = 1.0,
@@ -617,20 +640,6 @@ def ntap1(
     c.info["length"] = length
     c.info["rows"] = rows
     c.info["cols"] = cols
-
-    # Add VLSIR metadata
-    c.info["vlsir"] = {
-        "model": "ntap1",
-        "spice_type": "SUBCKT",
-        "spice_lib": "resistors_mod.lib",
-        "port_order": ["1", "2"],
-        "port_map": {},
-        "params": {
-            "w": width * 1e-6,
-            "l": length * 1e-6,
-        },
-        # TODO: Translate "rows, cols"
-    }
 
     return c
 

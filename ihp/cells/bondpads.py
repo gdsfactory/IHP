@@ -22,7 +22,18 @@ def regular_octagon_points(diameter: float):
     ]
 
 
-@gf.cell
+@gf.cell(
+    tags=["IHP", "bondpad"],
+    symbol="ckt",
+    ports={"left": ["PAD"]},
+    models=[{
+        "language": "spice",
+        "name": "bondpad",
+        "spice_type": "SUBCKT",
+        "library": "sg13g2_bondpad.lib",
+        "port_order": ["PAD"],
+    }],
+)
 def bondpad(
     shape: Literal["octagon", "square", "circle"] = "octagon",
     diameter: float = 80.0,
@@ -102,19 +113,6 @@ def bondpad(
     c.info["diameter"] = diameter
     c.info["top_metal"] = layer_top_metal
 
-    # VLSIR Simulation Metadata
-    c.info["vlsir"] = {
-        "model": "bondpad",
-        "spice_type": "SUBCKT",
-        "spice_lib": "sg13g2_bondpad.lib",
-        "port_order": ["PAD"],
-        "port_map": {"pad": "PAD"},
-        "params": {
-            "size": diameter * 1e-6,
-            "shape": {"octagon": 0, "square": 1, "circle": 2}[shape],
-            "padtype": 0,  # TODO
-        },
-    }
 
     return c
 

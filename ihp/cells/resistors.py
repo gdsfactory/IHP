@@ -21,12 +21,27 @@ def add_rect(
     return ref
 
 
-@gf.cell
+@gf.cell(
+    tags=["IHP", "resistor", "poly"],
+    symbol="resistor",
+    ports={"left": ["1"], "right": ["2"], "bottom": ["bn"]},
+    models=[{
+        "language": "spice",
+        "name": "rsil",
+        "spice_type": "SUBCKT",
+        "library": "cornerRES.lib",
+        "sections": ["res_typ", "res_bcs", "res_wcs"],
+        "port_order": ["1", "2", "bn"],
+        "params": {
+            "w": "dx * 1e-6",
+            "l": "dy * 1e-6",
+        },
+    }],
+)
 def rsil(
     dy: float = 0.5,
     dx: float = 0.5,
     resistance: float | None = None,
-    model: str = "rsil",
     layer_poly: LayerSpec = "PolyResdrawing",
     layer_heat: LayerSpec = "HeatResdrawing",
     layer_gate: LayerSpec = "GatPolydrawing",
@@ -42,7 +57,6 @@ def rsil(
         dy: length of the resistor in micrometers.
         dx: width of the resistor in micrometers.
         resistance: Target resistance in ohms (optional).
-        model: Device model name.
         layer_poly: Polysilicon layer.
         layer_heat: Thermal resistor marker.
         layer_gate: Gate polysilicon layer.
@@ -188,7 +202,6 @@ def rsil(
     # Metadata
     c.info.update(
         {
-            "model": model,
             "dy": dy,
             "dx": dx,
             "resistance": resistance,
@@ -197,25 +210,30 @@ def rsil(
         }
     )
 
-    # VLSIR simulation metadata
-    c.info["vlsir"] = {
-        "model": model,
-        "spice_type": "SUBCKT",
-        "spice_lib": "resistors_mod.lib",
-        "port_order": ["1", "2", "bn"],
-        "port_map": {"P1": "1", "P2": "2"},
-        "params": {"w": dx * 1e-6, "l": dy * 1e-6, "m": 1},
-    }
-
     return c
 
 
-@gf.cell
+@gf.cell(
+    tags=["IHP", "resistor", "poly"],
+    symbol="resistor",
+    ports={"left": ["1"], "right": ["2"], "bottom": ["bn"]},
+    models=[{
+        "language": "spice",
+        "name": "rppd",
+        "spice_type": "SUBCKT",
+        "library": "cornerRES.lib",
+        "sections": ["res_typ", "res_bcs", "res_wcs"],
+        "port_order": ["1", "2", "bn"],
+        "params": {
+            "w": "dx * 1e-6",
+            "l": "dy * 1e-6",
+        },
+    }],
+)
 def rppd(
     dy: float = 0.5,
     dx: float = 0.5,
     resistance: float | None = None,
-    model: str = "rppd",
     layer_poly: LayerSpec = "PolyResdrawing",
     layer_heat: LayerSpec = "HeatResdrawing",
     layer_gate: LayerSpec = "GatPolydrawing",
@@ -232,7 +250,6 @@ def rppd(
         dy: length of the resistor in micrometers.
         dx: width of the resistor in micrometers.
         resistance: Target resistance in ohms (optional).
-        model: Device model name.
         layer_poly: Polysilicon layer.
         layer_heat: Thermal resistor marker.
         layer_gate: Gate polysilicon layer.
@@ -391,7 +408,6 @@ def rppd(
     # Metadata
     c.info.update(
         {
-            "model": model,
             "dy": dy,
             "dx": dx,
             "resistance": resistance,
@@ -400,25 +416,30 @@ def rppd(
         }
     )
 
-    # VLSIR simulation metadata
-    c.info["vlsir"] = {
-        "model": model,
-        "spice_type": "SUBCKT",
-        "spice_lib": "resistors_mod.lib",
-        "port_order": ["1", "3", "bn"],
-        "port_map": {"P1": "1", "P2": "3"},
-        "params": {"w": dx * 1e-6, "l": dy * 1e-6, "m": 1},
-    }
-
     return c
 
 
-@gf.cell
+@gf.cell(
+    tags=["IHP", "resistor", "poly"],
+    symbol="resistor",
+    ports={"left": ["1"], "right": ["2"], "bottom": ["bn"]},
+    models=[{
+        "language": "spice",
+        "name": "rhigh",
+        "spice_type": "SUBCKT",
+        "library": "cornerRES.lib",
+        "sections": ["res_typ", "res_bcs", "res_wcs"],
+        "port_order": ["1", "2", "bn"],
+        "params": {
+            "w": "dx * 1e-6",
+            "l": "dy * 1e-6",
+        },
+    }],
+)
 def rhigh(
     dy: float = 0.96,
     dx: float = 0.5,
     resistance: float | None = None,
-    model: str = "rhigh",
     layer_poly: LayerSpec = "PolyResdrawing",
     layer_heat: LayerSpec = "HeatResdrawing",
     layer_gate: LayerSpec = "GatPolydrawing",
@@ -436,7 +457,6 @@ def rhigh(
         dy: length of the resistor in micrometers.
         dx: width of the resistor in micrometers.
         resistance: Target resistance in ohms (optional).
-        model: Device model name.
         layer_poly: Polysilicon layer.
         layer_heat: Thermal resistor marker.
         layer_gate: Gate polysilicon layer.
@@ -595,7 +615,6 @@ def rhigh(
     # Metadata
     c.info.update(
         {
-            "model": model,
             "dy": dy,
             "dx": dx,
             "resistance": resistance,
@@ -603,16 +622,6 @@ def rhigh(
             "n_squares": n_squares,
         }
     )
-
-    # VLSIR simulation metadata
-    c.info["vlsir"] = {
-        "model": model,
-        "spice_type": "SUBCKT",
-        "spice_lib": "resistors_mod.lib",
-        "port_order": ["1", "3", "bn"],
-        "port_map": {"P1": "1", "P2": "3"},
-        "params": {"w": dx * 1e-6, "l": dy * 1e-6, "m": 1},
-    }
 
     return c
 

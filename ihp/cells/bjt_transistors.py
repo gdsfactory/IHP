@@ -29,7 +29,25 @@ def _snap_width_to_grid(width_um: float) -> float:
     return round(w / grid) * grid
 
 
-@gf.cell
+@gf.cell(
+    tags=["IHP", "bjt", "npn"],
+    symbol="npn",
+    ports={"top": ["C"], "left": ["B"], "bottom": ["E"], "right": ["S"]},
+    models=[{
+        "language": "spice",
+        "name": "npn13G2",
+        "spice_type": "SUBCKT",
+        "library": "cornerHBT.lib",
+        "sections": ["hbt_typ", "hbt_bcs", "hbt_wcs"],
+        "port_order": ["C", "B", "E", "S"],
+        "params": {
+            "Nx": "Nx",
+            "Ny": "Ny",
+            "we": "emitter_width * 1e-6",
+            "le": "emitter_length * 1e-6",
+        },
+    }],
+)
 def npn13G2(
     baspolyx: float = 0.3,
     bipwinx: float = 0.07,
@@ -720,27 +738,28 @@ def npn13G2(
             port_type="electrical",
         )
 
-        # VLSIR Simulation Metadata
-        c.info["vlsir"] = {
-            "model": "npn13G2",
-            "spice_type": "SUBCKT",
-            "spice_lib": "sg13g2_hbt_mod.lib",
-            "port_order": ["c", "b", "e", "bn"],
-            "port_map": {"C": "c", "B": "b", "E": "e"},
-            "params": {
-                "Nx": Nx,
-                "Ny": Ny,
-                "we": emitter_width * 1e-6,
-                "le": emitter_length * 1e-6,
-            },
-        }
-
         # TODO: Extend to handle empoly, bipwin, cmet
 
     return c
 
 
-@gf.cell
+@gf.cell(
+    tags=["IHP", "bjt", "npn"],
+    symbol="npn",
+    ports={"top": ["C"], "left": ["B"], "bottom": ["E"], "right": ["S"]},
+    models=[{
+        "language": "spice",
+        "name": "npn13G2l",
+        "spice_type": "SUBCKT",
+        "library": "cornerHBT.lib",
+        "sections": ["hbt_typ", "hbt_bcs", "hbt_wcs"],
+        "port_order": ["C", "B", "E", "S"],
+        "params": {
+            "we": "emitter_width * 1e-6",
+            "le": "emitter_length * 1e-6",
+        },
+    }],
+)
 def npn13G2L(
     emitter_length: float = 1,
     emitter_width: float = 0.07,
@@ -1295,23 +1314,26 @@ def npn13G2L(
         ),
     )
 
-    # VLSIR Simulation Metadata
-    c.info["vlsir"] = {
-        "model": "npn13G2l",
-        "spice_type": "SUBCKT",
-        "spice_lib": "sg13g2_hbt_mod.lib",
-        "port_order": ["c", "b", "e", "bn"],
-        "port_map": {"C": "c", "B": "b", "E": "e"},
-        "params": {
-            "we": emitter_width * 1e-6,
-            "le": emitter_length * 1e-6,
-        },
-    }
-
     return c
 
 
-@gf.cell
+@gf.cell(
+    tags=["IHP", "bjt", "npn"],
+    symbol="npn",
+    ports={"top": ["C"], "left": ["B"], "bottom": ["E"], "right": ["S"]},
+    models=[{
+        "language": "spice",
+        "name": "npn13G2v",
+        "spice_type": "SUBCKT",
+        "library": "cornerHBT.lib",
+        "sections": ["hbt_typ", "hbt_bcs", "hbt_wcs"],
+        "port_order": ["C", "B", "E", "S"],
+        "params": {
+            "we": "emitter_width * 1e-6",
+            "le": "emitter_length * 1e-6",
+        },
+    }],
+)
 def npn13G2V(
     emitter_length: float = 1,
     emitter_width: float = 0.12,
@@ -1887,19 +1909,6 @@ def npn13G2V(
         ),
     )
 
-    # VLSIR Simulation Metadata
-    c.info["vlsir"] = {
-        "model": "npn13G2v",
-        "spice_type": "SUBCKT",
-        "spice_lib": "sg13g2_hbt_mod.lib",
-        "port_order": ["c", "b", "e", "bn"],
-        "port_map": {"C": "c", "B": "b", "E": "e"},
-        "params": {
-            "we": emitter_width * 1e-6,
-            "le": emitter_length * 1e-6,
-        },
-    }
-
     return c
 
 
@@ -1992,7 +2001,19 @@ def contactArray(
         x = x + ws + dsx
 
 
-@gf.cell
+@gf.cell(
+    tags=["IHP", "bjt", "pnp"],
+    symbol="pnp",
+    ports={"top": ["C"], "left": ["B"], "bottom": ["E"]},
+    models=[{
+        "language": "spice",
+        "name": "pnpMPA",
+        "spice_type": "SUBCKT",
+        "library": "cornerHBT.lib",
+        "sections": ["hbt_typ", "hbt_bcs", "hbt_wcs"],
+        "port_order": ["C", "B", "E"],
+    }],
+)
 def pnpMPA(length: float = 2, width: float = 0.7) -> gf.Component:
     """Returns the IHP pnpMPA BJT transistor as a gdsfactory Component.
 
@@ -2445,14 +2466,6 @@ def pnpMPA(length: float = 2, width: float = 0.7) -> gf.Component:
         orientation=270.0,
         port_type="electrical",
     )
-
-    c.info["vlsir"] = {
-        "model": "pnpMPA",
-        "spice_type": "SUBCKT",
-        "spice_lib": "sg13g2_hbt_mod.lib",
-        "port_order": ["c", "b", "e"],
-        "port_map": {"MINUS": "c", "TIE": "b", "PLUS": "e"},
-    }
 
     return c
 
