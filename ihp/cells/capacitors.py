@@ -649,6 +649,7 @@ def rfcmim(
         layer_topmetal1label=layer_topmetal1label,
     )
     c.info = cap.info
+    c.info["model"] = "cap_rfcmim"
     c.add_ref(cap)
     c.ports = cap.ports
     # add pwell block

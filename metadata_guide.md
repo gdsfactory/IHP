@@ -17,6 +17,11 @@
 - `port_order` uses symbol port names (uppercase), matching the positional order from the `.subckt` definition
 - `params` values are **string expressions** over the function's kwargs (e.g. `"width * 1e-6"`)
 
+## Wrapper cells (e.g. rfcmim wrapping cmim)
+- When a cell copies `c.info` from an inner cell (`c.info = inner.info`), the model name from the inner cell will overwrite the outer cell's identity
+- Always reset `c.info["model"]` after copying: `c.info["model"] = "cap_rfcmim"`
+- Check that labels and any other references to `model` are updated to use the correct name
+
 ## Removed
 - `model` parameter from function signature — was dead code (never referenced in body, vlsir dict hardcoded the name)
 - `c.info["vlsir"]` block — replaced entirely by `@gf.cell()` kwargs
