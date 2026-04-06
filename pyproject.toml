@@ -29,6 +29,7 @@ version = "0.2.7"
 
 [project.optional-dependencies]
 dev = [
+  "gdsfactoryplus",
   "pytest",
   "pytest-cov",
   "pytest_regressions",
