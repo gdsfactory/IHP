@@ -29,7 +29,9 @@ def all_cells() -> gf.Component:
         size=(cell_matrix.xsize + 20, cell_matrix.ysize + 20),
         layer=LAYER.Recogdrawing,
     )
-    floorplan.dcenter = cell_matrix.dcenter
+    floorplan.center = cell_matrix.center
+    floorplan.add_ports(cell_matrix.ports)
+
     return c
 
 

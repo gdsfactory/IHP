@@ -1143,8 +1143,8 @@ topmetal2_routing = partial(
     radius=None,
 )
 
-strip = topmetal2_routing
-metal_routing = topmetal2_routing
+strip = metal1_routing
+metal_routing = metal1_routing
 
 cross_sections = get_cross_sections(sys.modules[__name__])
 
