@@ -61,6 +61,7 @@ def esd(
         gf.add_ports.add_ports_from_boxes(
             c,
             pin_layer=(tech.LAYER.Metal1pin),
+            port_layer=(tech.LAYER.Metal1drawing),
             port_type="electrical",
             ports_on_short_side=True,
         )
@@ -69,6 +70,7 @@ def esd(
         gf.add_ports.add_ports_from_boxes(
             c,
             pin_layer=(tech.LAYER.Metal2pin),
+            port_layer=(tech.LAYER.Metal2drawing),
             port_type="electrical",
             ports_on_short_side=True,
             auto_rename_ports=False,
@@ -82,6 +84,7 @@ def esd(
         gf.add_ports.add_ports_from_boxes(
             c,
             pin_layer=(tech.LAYER.Metal1pin),
+            port_layer=(tech.LAYER.Metal1drawing),
             port_type="electrical",
             ports_on_short_side=True,
         )
@@ -90,6 +93,7 @@ def esd(
         gf.add_ports.add_ports_from_boxes(
             c,
             pin_layer=(tech.LAYER.Metal2pin),
+            port_layer=(tech.LAYER.Metal2drawing),
             port_type="electrical",
             ports_on_short_side=True,
             auto_rename_ports=False,
@@ -103,6 +107,7 @@ def esd(
         gf.add_ports.add_ports_from_boxes(
             c,
             pin_layer=(tech.LAYER.Metal1pin),
+            port_layer=(tech.LAYER.Metal1drawing),
             port_type="electrical",
             ports_on_short_side=True,
         )
@@ -111,6 +116,7 @@ def esd(
         gf.add_ports.add_ports_from_boxes(
             c,
             pin_layer=(tech.LAYER.Metal2pin),
+            port_layer=(tech.LAYER.Metal2drawing),
             port_type="electrical",
             ports_on_short_side=True,
             auto_rename_ports=False,
@@ -124,6 +130,7 @@ def esd(
         gf.add_ports.add_ports_from_boxes(
             c,
             pin_layer=(tech.LAYER.Metal3pin),
+            port_layer=(tech.LAYER.Metal3drawing),
             port_type="electrical",
             ports_on_short_side=True,
         )
@@ -181,6 +188,7 @@ def ptap1(
     gf.add_ports.add_ports_from_boxes(
         c,
         pin_layer=(tech.LAYER.Metal1pin),
+        port_layer=(tech.LAYER.Metal1drawing),
         port_type="electrical",
         ports_on_short_side=True,
     )
@@ -231,6 +239,7 @@ def ntap1(
     gf.add_ports.add_ports_from_boxes(
         c,
         pin_layer=(tech.LAYER.Metal1pin),
+        port_layer=(tech.LAYER.Metal1drawing),
         port_type="electrical",
         ports_on_short_side=True,
     )

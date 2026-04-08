@@ -77,6 +77,7 @@ def inductor2(
     gf.add_ports.add_ports_from_boxes(
         c,
         pin_layer=(tech.LAYER.TopMetal2pin),
+        port_layer=(tech.LAYER.TopMetal2drawing),
         port_type="electrical",
         ports_on_short_side=True,
     )
@@ -158,6 +159,7 @@ def inductor3(
     gf.add_ports.add_ports_from_boxes(
         c,
         pin_layer=(tech.LAYER.TopMetal1pin),
+        port_layer=(tech.LAYER.TopMetal1drawing),
         port_type="electrical",
         ports_on_short_side=True,
     )
@@ -166,6 +168,7 @@ def inductor3(
     gf.add_ports.add_ports_from_boxes(
         c,
         pin_layer=(tech.LAYER.TopMetal2pin),
+        port_layer=(tech.LAYER.TopMetal2drawing),
         port_type="electrical",
         ports_on_short_side=True,
         auto_rename_ports=False,

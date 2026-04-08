@@ -146,8 +146,6 @@ def _mos_core(
     layer_thickgateox: LayerSpec = "ThickGateOxdrawing",
     layer_heattrans: LayerSpec = "HeatTransdrawing",
     layer_substrate: LayerSpec = "Substratedrawing",
-    layer_metal1_pin: LayerSpec = "Metal1pin",
-    layer_gatpoly_pin: LayerSpec = "GatPolypin",
 ) -> Component:
     """Core MOS transistor layout matching IHP PyCell geometry.
 
@@ -259,8 +257,8 @@ def _mos_core(
     )
 
     # Pin sublayer for pin markers and ports.
-    pin_layer_m1 = layer_metal1_pin
-    pin_layer_poly = layer_gatpoly_pin
+    pin_layer_m1 = layer_metal1
+    pin_layer_poly = layer_gatpoly
 
     # Source pin marker
     _add_rect(
@@ -479,7 +477,7 @@ def _mos_core(
         center=(src_x, src_y),
         width=_even_dbu(port_height),
         orientation=180,
-        layer=layer_metal1_pin,
+        layer=layer_metal1,
         port_type="electrical",
     )
     c.add_port(
@@ -487,7 +485,7 @@ def _mos_core(
         center=(drain_x, drain_y),
         width=_even_dbu(port_height),
         orientation=0,
-        layer=layer_metal1_pin,
+        layer=layer_metal1,
         port_type="electrical",
     )
     c.add_port(
@@ -495,7 +493,7 @@ def _mos_core(
         center=(gate_x, gate_y),
         width=_even_dbu(gate_height),
         orientation=270,
-        layer=layer_gatpoly_pin,
+        layer=layer_gatpoly,
         port_type="electrical",
     )
 

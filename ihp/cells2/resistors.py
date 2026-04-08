@@ -94,6 +94,7 @@ def rhigh(
     gf.add_ports.add_ports_from_boxes(
         c,
         pin_layer=(tech.LAYER.Metal1pin),
+        port_layer=(tech.LAYER.Metal1drawing),
         port_type="electrical",
         ports_on_short_side=False,
     )
@@ -183,6 +184,7 @@ def rppd(
     gf.add_ports.add_ports_from_boxes(
         c,
         pin_layer=(tech.LAYER.Metal1pin),
+        port_layer=(tech.LAYER.Metal1drawing),
         port_type="electrical",
         ports_on_short_side=False,
     )
@@ -269,6 +271,7 @@ def rsil(
     gf.add_ports.add_ports_from_boxes(
         c,
         pin_layer=(tech.LAYER.Metal1pin),
+        port_layer=(tech.LAYER.Metal1drawing),
         port_type="electrical",
         ports_on_short_side=False,
     )

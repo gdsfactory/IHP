@@ -187,15 +187,6 @@ def via_stack(
     layer_metal5: LayerSpec = "Metal5drawing",
     layer_topmetal1: LayerSpec = "TopMetal1drawing",
     layer_topmetal2: LayerSpec = "TopMetal2drawing",
-    layer_activ_pin: LayerSpec = "Activpin",
-    layer_gatpoly_pin: LayerSpec = "GatPolypin",
-    layer_metal1_pin: LayerSpec = "Metal1pin",
-    layer_metal2_pin: LayerSpec = "Metal2pin",
-    layer_metal3_pin: LayerSpec = "Metal3pin",
-    layer_metal4_pin: LayerSpec = "Metal4pin",
-    layer_metal5_pin: LayerSpec = "Metal5pin",
-    layer_topmetal1_pin: LayerSpec = "TopMetal1pin",
-    layer_topmetal2_pin: LayerSpec = "TopMetal2pin",
     layer_cont: LayerSpec = "Contdrawing",
     layer_via1: LayerSpec = "Via1drawing",
     layer_via2: LayerSpec = "Via2drawing",
@@ -251,18 +242,6 @@ def via_stack(
         "Metal5": layer_metal5,
         "TopMetal1": layer_topmetal1,
         "TopMetal2": layer_topmetal2,
-    }
-
-    pin_layer_map = {
-        "Activ": layer_activ_pin,
-        "GatPoly": layer_gatpoly_pin,
-        "Metal1": layer_metal1_pin,
-        "Metal2": layer_metal2_pin,
-        "Metal3": layer_metal3_pin,
-        "Metal4": layer_metal4_pin,
-        "Metal5": layer_metal5_pin,
-        "TopMetal1": layer_topmetal1_pin,
-        "TopMetal2": layer_topmetal2_pin,
     }
 
     # Build effective layer order based on bottom_layer
@@ -364,7 +343,7 @@ def via_stack(
         center=(0, 0),
         width=width,
         orientation=0,
-        layer=pin_layer_map[bottom_layer],
+        layer=layer_map[bottom_layer],
         port_type="electrical",
     )
 
@@ -373,7 +352,7 @@ def via_stack(
         center=(0, 0),
         width=width,
         orientation=0,
-        layer=pin_layer_map[top_layer],
+        layer=layer_map[top_layer],
         port_type="electrical",
     )
 
@@ -403,15 +382,6 @@ def via_stack_with_pads(
     layer_metal5: LayerSpec = "Metal5drawing",
     layer_topmetal1: LayerSpec = "TopMetal1drawing",
     layer_topmetal2: LayerSpec = "TopMetal2drawing",
-    layer_activ_pin: LayerSpec = "Activpin",
-    layer_gatpoly_pin: LayerSpec = "GatPolypin",
-    layer_metal1_pin: LayerSpec = "Metal1pin",
-    layer_metal2_pin: LayerSpec = "Metal2pin",
-    layer_metal3_pin: LayerSpec = "Metal3pin",
-    layer_metal4_pin: LayerSpec = "Metal4pin",
-    layer_metal5_pin: LayerSpec = "Metal5pin",
-    layer_topmetal1_pin: LayerSpec = "TopMetal1pin",
-    layer_topmetal2_pin: LayerSpec = "TopMetal2pin",
     layer_cont: LayerSpec = "Contdrawing",
     layer_via1: LayerSpec = "Via1drawing",
     layer_via2: LayerSpec = "Via2drawing",
@@ -447,18 +417,6 @@ def via_stack_with_pads(
         "TopMetal2": layer_topmetal2,
     }
 
-    pin_layer_map = {
-        "Activ": layer_activ_pin,
-        "GatPoly": layer_gatpoly_pin,
-        "Metal1": layer_metal1_pin,
-        "Metal2": layer_metal2_pin,
-        "Metal3": layer_metal3_pin,
-        "Metal4": layer_metal4_pin,
-        "Metal5": layer_metal5_pin,
-        "TopMetal1": layer_topmetal1_pin,
-        "TopMetal2": layer_topmetal2_pin,
-    }
-
     # Create via stack
     stack = via_stack(
         bottom_layer=bottom_layer,
@@ -473,15 +431,6 @@ def via_stack_with_pads(
         layer_metal5=layer_metal5,
         layer_topmetal1=layer_topmetal1,
         layer_topmetal2=layer_topmetal2,
-        layer_activ_pin=layer_activ_pin,
-        layer_gatpoly_pin=layer_gatpoly_pin,
-        layer_metal1_pin=layer_metal1_pin,
-        layer_metal2_pin=layer_metal2_pin,
-        layer_metal3_pin=layer_metal3_pin,
-        layer_metal4_pin=layer_metal4_pin,
-        layer_metal5_pin=layer_metal5_pin,
-        layer_topmetal1_pin=layer_topmetal1_pin,
-        layer_topmetal2_pin=layer_topmetal2_pin,
         layer_cont=layer_cont,
         layer_via1=layer_via1,
         layer_via2=layer_via2,
@@ -531,7 +480,7 @@ def via_stack_with_pads(
         center=(-pad_spacing / 2, 0),
         width=pad_size[1],
         orientation=180,
-        layer=pin_layer_map[bottom_layer],
+        layer=layer_map[bottom_layer],
         port_type="electrical",
     )
 
@@ -540,7 +489,7 @@ def via_stack_with_pads(
         center=(pad_spacing / 2, 0),
         width=pad_size[1],
         orientation=0,
-        layer=pin_layer_map[top_layer],
+        layer=layer_map[top_layer],
         port_type="electrical",
     )
 

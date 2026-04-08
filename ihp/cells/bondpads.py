@@ -27,7 +27,6 @@ def bondpad(
     shape: Literal["octagon", "square", "circle"] = "octagon",
     diameter: float = 80.0,
     layer_top_metal: LayerSpec = "TopMetal2drawing",
-    layer_top_metal_pin: LayerSpec = "TopMetal2pin",
     layer_passiv: LayerSpec = "Passivpillar",
     layer_dfpad: LayerSpec = "dfpaddrawing",
     bbox_offsets: tuple[float, ...] | None = (-2.1, 0),
@@ -93,7 +92,7 @@ def bondpad(
         center=(0, 0),
         width=d,
         orientation=0,
-        layer=layer_top_metal_pin,
+        layer=layer_top_metal,
         port_type="electrical",
     )
 
@@ -126,7 +125,6 @@ def bondpad_array(
     pad_diameter: float = 80.0,
     shape: Literal["octagon", "square", "circle"] = "octagon",
     layer_top_metal: LayerSpec = "TopMetal2drawing",
-    layer_top_metal_pin: LayerSpec = "TopMetal2pin",
     layer_passiv: LayerSpec = "Passivpillar",
     layer_dfpad: LayerSpec = "dfpaddrawing",
     bbox_offsets: tuple[float, ...] | None = (-2.1, 0),
@@ -153,7 +151,6 @@ def bondpad_array(
             shape=shape,
             diameter=pad_diameter,
             layer_top_metal=layer_top_metal,
-            layer_top_metal_pin=layer_top_metal_pin,
             layer_passiv=layer_passiv,
             layer_dfpad=layer_dfpad,
             bbox_offsets=bbox_offsets,

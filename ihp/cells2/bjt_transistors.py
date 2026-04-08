@@ -82,6 +82,7 @@ def npn13G2(
     gf.add_ports.add_ports_from_boxes(
         c,
         pin_layer=(tech.LAYER.Metal1pin),
+        port_layer=(tech.LAYER.Metal1drawing),
         port_type="electrical",
         ports_on_short_side=True,
         auto_rename_ports=False,
@@ -91,6 +92,7 @@ def npn13G2(
     gf.add_ports.add_ports_from_boxes(
         c,
         pin_layer=(tech.LAYER.Metal2pin),
+        port_layer=(tech.LAYER.Metal2drawing),
         port_name_prefix="E",
         port_type="electrical",
         ports_on_short_side=True,
@@ -151,12 +153,14 @@ def npn13G2L(
     gf.add_ports.add_ports_from_boxes(
         c,
         pin_layer=(tech.LAYER.Metal1pin),
+        port_layer=(tech.LAYER.Metal1drawing),
         port_type="electrical",
         ports_on_short_side=True,
     )
     gf.add_ports.add_ports_from_boxes(
         c,
         pin_layer=(tech.LAYER.Metal2pin),
+        port_layer=(tech.LAYER.Metal2drawing),
         port_name_prefix="E",
         port_type="electrical",
         ports_on_short_side=True,
@@ -215,12 +219,14 @@ def npn13G2V(
     gf.add_ports.add_ports_from_boxes(
         c,
         pin_layer=(tech.LAYER.Metal1pin),
+        port_layer=(tech.LAYER.Metal1drawing),
         port_type="electrical",
         ports_on_short_side=True,
     )
     gf.add_ports.add_ports_from_boxes(
         c,
         pin_layer=(tech.LAYER.Metal2pin),
+        port_layer=(tech.LAYER.Metal2drawing),
         port_name_prefix="E",
         port_type="electrical",
         ports_on_short_side=True,
@@ -276,6 +282,7 @@ def pnpMPA(
     gf.add_ports.add_ports_from_boxes(
         c,
         pin_layer=(tech.LAYER.Metal1pin),
+        port_layer=(tech.LAYER.Metal1drawing),
         port_type="electrical",
         ports_on_short_side=True,
     )

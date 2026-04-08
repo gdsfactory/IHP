@@ -83,8 +83,6 @@ def npn13G2(
     layer_activmask: LayerSpec = "Activmask"
     layer_activ: LayerSpec = "Activdrawing"
     layer_metal1: LayerSpec = "Metal1drawing"
-    layer_metal1_pin: LayerSpec = "Metal1pin"
-    layer_metal2_pin: LayerSpec = "Metal2pin"
     layer_metal2: LayerSpec = "Metal2drawing"
     layer_nSDblock: LayerSpec = "nSDblock"
     layer_text: LayerSpec = "TEXTdrawing"
@@ -610,7 +608,7 @@ def npn13G2(
                         right - left,
                         top - bottom,
                     ),
-                    layer=layer_metal1_pin,
+                    layer=layer_metal1,
                 )
             ).move((left, bottom))
             c.add_label(
@@ -632,7 +630,7 @@ def npn13G2(
                         right - left,
                         top - bottom,
                     ),
-                    layer=layer_metal1_pin,
+                    layer=layer_metal1,
                 )
             ).move((left, bottom))
             c.add_label(
@@ -648,7 +646,7 @@ def npn13G2(
             "C",
             center=(0.5 * (left + right), 0.5 * (top + bottom)),
             width=_snap_width_to_grid(top - bottom),
-            layer=layer_metal1_pin,
+            layer=layer_metal1,
             orientation=180.0,
             port_type="electrical",
         )
@@ -663,7 +661,7 @@ def npn13G2(
                     right - left,
                     top - bottom,
                 ),
-                layer=layer_metal1_pin,
+                layer=layer_metal1,
             )
         ).move((left, bottom))
         c.add_label(
@@ -680,7 +678,7 @@ def npn13G2(
             "B",
             center=(0.5 * (left + right), 0.5 * (top + bottom)),
             width=_snap_width_to_grid(top - bottom),
-            layer=layer_metal1_pin,
+            layer=layer_metal1,
             orientation=180.0,
             port_type="electrical",
         )
@@ -695,7 +693,7 @@ def npn13G2(
                     right - left,
                     top - bottom,
                 ),
-                layer=layer_metal2_pin,
+                layer=layer_metal2,
             )
         ).move((left, bottom))
         c.add_label(
@@ -715,7 +713,7 @@ def npn13G2(
             "E",
             center=(0.5 * (left + right), 0.5 * (top + bottom)),
             width=_snap_width_to_grid(top - bottom),
-            layer=layer_metal2_pin,
+            layer=layer_metal2,
             orientation=180.0,
             port_type="electrical",
         )
@@ -776,9 +774,9 @@ def npn13G2L(
     layer_via1: LayerSpec = "Via1drawing"
     layer_cont: LayerSpec = "Contdrawing"
     layer_metal1: LayerSpec = "Metal1drawing"
-    layer_metal1_pin: LayerSpec = "Metal1pin"
+
     layer_metal2: LayerSpec = "Metal2drawing"
-    layer_metal2_pin: LayerSpec = "Metal2pin"
+
     layer_trans: LayerSpec = "TRANSdrawing"
     layer_text: LayerSpec = "TEXTdrawing"
     layer_pSD: LayerSpec = "pSDdrawing"
@@ -1019,7 +1017,7 @@ def npn13G2L(
                 2 * Col_Metal1_distance + we + 2 * Col_Metal1_width,
                 0.65,
             ),
-            layer=layer_metal1_pin,
+            layer=layer_metal1,
         ),
         columns=Nx,
         column_pitch=column_pitch,
@@ -1074,7 +1072,7 @@ def npn13G2L(
                 2 * Bas_Metal1_distance + we + 2 * Bas_Metal1_width,
                 0.65,
             ),
-            layer=layer_metal1_pin,
+            layer=layer_metal1,
         ),
         columns=Nx,
         column_pitch=column_pitch,
@@ -1120,7 +1118,7 @@ def npn13G2L(
                 we + 2 * Col_Metal1_distance + 2 * Col_Metal1_width,
                 le + 0.4,
             ),
-            layer=layer_metal2_pin,
+            layer=layer_metal2,
         ),
         columns=Nx,
         column_pitch=column_pitch,
@@ -1224,7 +1222,7 @@ def npn13G2L(
                     1.77,
                     0.65,
                 ),
-                layer=layer_metal1_pin,
+                layer=layer_metal1,
             ),
             columns=Nx - 1,
             column_pitch=column_pitch,
@@ -1239,7 +1237,7 @@ def npn13G2L(
             0.5 * (collector_pin_ymin + collector_pin_ymax),
         ),
         width=_snap_width_to_grid(collector_pin_ymax - collector_pin_ymin),
-        layer=layer_metal1_pin,
+        layer=layer_metal1,
         orientation=180.0,
         port_type="electrical",
     )
@@ -1261,7 +1259,7 @@ def npn13G2L(
             0.5 * (base_pin_ymin + base_pin_ymax),
         ),
         width=_snap_width_to_grid(base_pin_ymax - base_pin_ymin),
-        layer=layer_metal1_pin,
+        layer=layer_metal1,
         orientation=180.0,
         port_type="electrical",
     )
@@ -1282,7 +1280,7 @@ def npn13G2L(
             0.5 * (emitter_pin_ymin + emitter_pin_ymax),
         ),
         width=_snap_width_to_grid(emitter_pin_ymax - emitter_pin_ymin),
-        layer=layer_metal2_pin,
+        layer=layer_metal2,
         orientation=180.0,
         port_type="electrical",
     )
@@ -1347,9 +1345,9 @@ def npn13G2V(
     layer_via1: LayerSpec = "Via1drawing"
     layer_cont: LayerSpec = "Contdrawing"
     layer_metal1: LayerSpec = "Metal1drawing"
-    layer_metal1_pin: LayerSpec = "Metal1pin"
+
     layer_metal2: LayerSpec = "Metal2drawing"
-    layer_metal2_pin: LayerSpec = "Metal2pin"
+
     layer_trans: LayerSpec = "TRANSdrawing"
     layer_text: LayerSpec = "TEXTdrawing"
     layer_pSD: LayerSpec = "pSDdrawing"
@@ -1611,7 +1609,7 @@ def npn13G2V(
                 2 * Col_Metal1_distance + we + 2 * Col_Metal1_width,
                 0.65,
             ),
-            layer=layer_metal1_pin,
+            layer=layer_metal1,
         ),
         columns=Nx,
         column_pitch=column_pitch,
@@ -1666,7 +1664,7 @@ def npn13G2V(
                 2 * Bas_Metal1_distance + we + 2 * Bas_Metal1_width,
                 0.65,
             ),
-            layer=layer_metal1_pin,
+            layer=layer_metal1,
         ),
         columns=Nx,
         column_pitch=column_pitch,
@@ -1712,7 +1710,7 @@ def npn13G2V(
                 we + 2 * Col_Metal1_distance + 2 * Col_Metal1_width,
                 le + 0.56,
             ),
-            layer=layer_metal2_pin,
+            layer=layer_metal2,
         ),
         columns=Nx,
         column_pitch=column_pitch,
@@ -1816,7 +1814,7 @@ def npn13G2V(
                     1.3,
                     0.65,
                 ),
-                layer=layer_metal1_pin,
+                layer=layer_metal1,
             ),
             columns=Nx - 1,
             column_pitch=column_pitch,
@@ -1831,7 +1829,7 @@ def npn13G2V(
             0.5 * (collector_pin_ymin + collector_pin_ymax),
         ),
         width=_snap_width_to_grid(collector_pin_ymax - collector_pin_ymin),
-        layer=layer_metal1_pin,
+        layer=layer_metal1,
         orientation=180.0,
         port_type="electrical",
     )
@@ -1853,7 +1851,7 @@ def npn13G2V(
             0.5 * (base_pin_ymin + base_pin_ymax),
         ),
         width=_snap_width_to_grid(base_pin_ymax - base_pin_ymin),
-        layer=layer_metal1_pin,
+        layer=layer_metal1,
         orientation=180.0,
         port_type="electrical",
     )
@@ -1874,7 +1872,7 @@ def npn13G2V(
             0.5 * (emitter_pin_ymin + emitter_pin_ymax),
         ),
         width=_snap_width_to_grid(emitter_pin_ymax - emitter_pin_ymin),
-        layer=layer_metal2_pin,
+        layer=layer_metal2,
         orientation=180.0,
         port_type="electrical",
     )
@@ -2059,7 +2057,6 @@ def pnpMPA(length: float = 2, width: float = 0.7) -> gf.Component:
     activLayer: LayerSpec = "Activdrawing"  # 1
     contLayer: LayerSpec = "Contdrawing"  # 6
     metal1Layer: LayerSpec = "Metal1drawing"  # 8
-    metal1_pin_Layer: LayerSpec = "Metal1pin"  # 8
     pSdLayer: LayerSpec = "pSDdrawing"  # 14
     nwellLayer: LayerSpec = "NWelldrawing"  # 31
     nBuLayer: LayerSpec = "nBuLaydrawing"  # 32
@@ -2300,7 +2297,7 @@ def pnpMPA(length: float = 2, width: float = 0.7) -> gf.Component:
         if idtie == 0:
             # Assigning reference to idtie, so that it is not used again in the next if statements.
             idtie = c << gf.components.rectangle(
-                size=(2 * (w3act + d3act), d3act), layer=metal1_pin_Layer
+                size=(2 * (w3act + d3act), d3act), layer=metal1Layer
             )
             idtie.move((-w3act - d3act, h3act))
 
@@ -2331,7 +2328,7 @@ def pnpMPA(length: float = 2, width: float = 0.7) -> gf.Component:
         )
         if idtie == 0:
             idtie = c << gf.components.rectangle(
-                size=(2 * (w3act + d3act), d3act), layer=metal1_pin_Layer
+                size=(2 * (w3act + d3act), d3act), layer=metal1Layer
             )
             idtie.move((-w3act - d3act, -h3act - d3act))
 
@@ -2363,7 +2360,7 @@ def pnpMPA(length: float = 2, width: float = 0.7) -> gf.Component:
         )
         if idtie == 0:
             idtie = c << gf.components.rectangle(
-                size=(d3act, 2 * h3act), layer=metal1_pin_Layer
+                size=(d3act, 2 * h3act), layer=metal1Layer
             )
             idtie.move((-w3act - d3act, -h3act))
 
@@ -2394,7 +2391,7 @@ def pnpMPA(length: float = 2, width: float = 0.7) -> gf.Component:
         )
         if idtie == 0:
             idtie = c << gf.components.rectangle(
-                size=(d3act, 2 * h3act), layer=metal1_pin_Layer
+                size=(d3act, 2 * h3act), layer=metal1Layer
             )
             idtie.move((w3act, -h3act))
 
@@ -2407,23 +2404,23 @@ def pnpMPA(length: float = 2, width: float = 0.7) -> gf.Component:
             c.add_label(text="TIE", layer=textLayer, position=(w3act + d3act / 2, 0))
 
     c.add_ref(
-        gf.components.rectangle(size=(2 * w1m1, 2 * h1m1), layer=metal1_pin_Layer)
+        gf.components.rectangle(size=(2 * w1m1, 2 * h1m1), layer=metal1Layer)
     ).move((-w1m1, -h1m1))
 
     c.add_ref(
         gf.components.rectangle(size=(2 * w1m1, 2 * h1m1), layer=metal1Layer)
     ).move((-w1m1, -h1m1))
 
-    c.add_ref(
-        gf.components.rectangle(size=(dw2m1, 2 * h2m1), layer=metal1_pin_Layer)
-    ).move((-w2m1 - dw2m1, -h2m1))
+    c.add_ref(gf.components.rectangle(size=(dw2m1, 2 * h2m1), layer=metal1Layer)).move(
+        (-w2m1 - dw2m1, -h2m1)
+    )
 
     if idtie != 0:
         c.add_port(
             "TIE",
             center=(0.5 * (idtie_xmin + idtie_xmax), 0.5 * (idtie_ymin + idtie_ymax)),
             width=_snap_width_to_grid(idtie_ymax - idtie_ymin),
-            layer=metal1_pin_Layer,
+            layer=metal1Layer,
             orientation=180.0,
             port_type="electrical",
         )
@@ -2432,7 +2429,7 @@ def pnpMPA(length: float = 2, width: float = 0.7) -> gf.Component:
         "PLUS",
         center=(0, 0),
         width=_snap_width_to_grid(2 * w1m1),
-        layer=metal1_pin_Layer,
+        layer=metal1Layer,
         orientation=270.0,
         port_type="electrical",
     )
@@ -2441,7 +2438,7 @@ def pnpMPA(length: float = 2, width: float = 0.7) -> gf.Component:
         "MINUS",
         center=(-w2m1 - dw2m1 / 2, 0),
         width=_snap_width_to_grid(dw2m1),
-        layer=metal1_pin_Layer,
+        layer=metal1Layer,
         orientation=270.0,
         port_type="electrical",
     )

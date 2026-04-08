@@ -174,7 +174,6 @@ def _rf_mos_core(
     layer_psd: LayerSpec = "pSDdrawing",
     layer_nwell: LayerSpec = "NWelldrawing",
     layer_thickgateox: LayerSpec = "ThickGateOxdrawing",
-    layer_metal1_pin: LayerSpec = "Metal1pin",
 ) -> Component:
     """Core RF-MOS transistor layout matching IHP PyCell rfmosfet_base geometry.
 
@@ -501,7 +500,7 @@ def _rf_mos_core(
     # -- Source pin --
     _add_rect(
         c,
-        layer_metal1_pin,
+        layer_metal1,
         ox + sd_mx,
         oy + sd_my,
         ox + (W - sd_mx),
@@ -511,7 +510,7 @@ def _rf_mos_core(
     # -- Drain pin --
     _add_rect(
         c,
-        layer_metal1_pin,
+        layer_metal1,
         ox + sd_mx,
         oy + (sd_my + y_step),
         ox + (W - sd_mx),
@@ -594,7 +593,7 @@ def _rf_mos_core(
     gat_pin_y1 = oy + p1_y_gc
     gat_pin_x2 = ox + (p2_x + gat_pin_hw)
     gat_pin_y2 = oy + p2_y_gc
-    _add_rect(c, layer_metal1_pin, gat_pin_x1, gat_pin_y1, gat_pin_x2, gat_pin_y2)
+    _add_rect(c, layer_metal1, gat_pin_x1, gat_pin_y1, gat_pin_x2, gat_pin_y2)
 
     # Right side
     p1_x = W + dgatx + wgat * 0.5
@@ -647,7 +646,7 @@ def _rf_mos_core(
         tie_pin_y1 = oy + (p1_y_gr - wguard / 4)
         tie_pin_x2 = ox + p2_x_gr
         tie_pin_y2 = oy + (p2_y_gr + wguard / 4)
-        _add_rect(c, layer_metal1_pin, tie_pin_x1, tie_pin_y1, tie_pin_x2, tie_pin_y2)
+        _add_rect(c, layer_metal1, tie_pin_x1, tie_pin_y1, tie_pin_x2, tie_pin_y2)
 
         # Top horizontal contact row
         p1_y_gr = yt - wguard * 0.5
@@ -837,7 +836,7 @@ def _rf_mos_core(
         center=(s_cx, s_cy),
         width=_even_dbu(s_w),
         orientation=270,
-        layer=layer_metal1_pin,
+        layer=layer_metal1,
         port_type="electrical",
     )
 
@@ -850,7 +849,7 @@ def _rf_mos_core(
         center=(d_cx, d_cy),
         width=_even_dbu(d_w),
         orientation=270,
-        layer=layer_metal1_pin,
+        layer=layer_metal1,
         port_type="electrical",
     )
 
@@ -863,7 +862,7 @@ def _rf_mos_core(
         center=(g_cx, g_cy),
         width=_even_dbu(g_h),
         orientation=180,
-        layer=layer_metal1_pin,
+        layer=layer_metal1,
         port_type="electrical",
     )
 
@@ -874,7 +873,7 @@ def _rf_mos_core(
             center=((tie_pin_x1 + tie_pin_x2) / 2, (tie_pin_y1 + tie_pin_y2) / 2),
             width=_even_dbu(tie_pin_y2 - tie_pin_y1),
             orientation=270,
-            layer=layer_metal1_pin,
+            layer=layer_metal1,
             port_type="electrical",
         )
 

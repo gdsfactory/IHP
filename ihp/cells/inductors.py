@@ -104,7 +104,7 @@ def inductor2(
             center=(-w / 2 - s / 2, 0),
             width=w,
             orientation=270,
-            layer=layer_metal_2_pin,
+            layer=layer_metal_2,
             port_type="electrical",
         )
 
@@ -121,7 +121,7 @@ def inductor2(
             center=(w / 2 + s / 2, 0),
             width=w,
             orientation=270,
-            layer=layer_metal_2_pin,
+            layer=layer_metal_2,
             port_type="electrical",
         )
 
@@ -138,7 +138,7 @@ def inductor2(
             center=(0, 0),
             width=w,
             orientation=270,
-            layer=layer_metal_2_pin,
+            layer=layer_metal_2,
             port_type="electrical",
         )
 
@@ -155,7 +155,7 @@ def inductor2(
             center=(-(w + s), 0),
             width=w,
             orientation=270,
-            layer=layer_metal_1_pin,
+            layer=layer_metal_1,
             port_type="electrical",
         )
 
@@ -172,7 +172,7 @@ def inductor2(
             center=(w + s, 0),
             width=w,
             orientation=270,
-            layer=layer_metal_1_pin,
+            layer=layer_metal_1,
             port_type="electrical",
         )
 

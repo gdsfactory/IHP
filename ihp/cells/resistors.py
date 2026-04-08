@@ -32,7 +32,6 @@ def rsil(
     layer_gate: LayerSpec = "GatPolydrawing",
     layer_contact: LayerSpec = "Contdrawing",
     layer_metal1: LayerSpec = "Metal1drawing",
-    layer_metal1_pin: LayerSpec = "Metal1pin",
     layer_res_mark: LayerSpec = "RESdrawing",
     layer_block: LayerSpec = "EXTBlockdrawing",
 ) -> Component:
@@ -48,7 +47,6 @@ def rsil(
         layer_gate: Gate polysilicon layer.
         layer_contact: Contact layer.
         layer_metal1: Metal1 layer.
-        layer_metal1_pin: Metal1 pin layer.
         layer_res_mark: Resistor marker layer.
         layer_block: Blocking layer.
 
@@ -130,8 +128,8 @@ def rsil(
     add_rect(c, size=gate_size, layer=layer_gate, origin=(0.0, dy))
     add_rect(c, size=gate_size, layer=layer_gate, origin=(0.0, -GAT_DY))
 
-    # Metal pads (pin then metal1)
-    for ly in (layer_metal1_pin, layer_metal1):
+    # Metal pads
+    for ly in (layer_metal1,):
         add_rect(
             c,
             size=(metal_pad_dx, metal_pad_dy),
@@ -172,7 +170,7 @@ def rsil(
         center=(pad_center_x, pad_upper_center_y),
         width=metal_pad_dx,
         orientation=90,
-        layer=layer_metal1_pin,
+        layer=layer_metal1,
         port_type="electrical",
     )
 
@@ -181,7 +179,7 @@ def rsil(
         center=(pad_center_x, pad_lower_center_y),
         width=metal_pad_dx,
         orientation=270,
-        layer=layer_metal1_pin,
+        layer=layer_metal1,
         port_type="electrical",
     )
 
@@ -221,7 +219,6 @@ def rppd(
     layer_gate: LayerSpec = "GatPolydrawing",
     layer_contact: LayerSpec = "Contdrawing",
     layer_metal1: LayerSpec = "Metal1drawing",
-    layer_metal1_pin: LayerSpec = "Metal1pin",
     layer_pSD: LayerSpec = "pSDdrawing",
     layer_block: LayerSpec = "EXTBlockdrawing",
     layer_sal_block: LayerSpec = "SalBlockdrawing",
@@ -238,7 +235,6 @@ def rppd(
         layer_gate: Gate polysilicon layer.
         layer_contact: Contact layer.
         layer_metal1: Metal1 layer.
-        layer_metal1_pin: Metal1 pin layer.
         layer_pSD: PSD layer.
         layer_block: Blocking layer.
         layer_sal_block: Salicide block layer.
@@ -343,8 +339,8 @@ def rppd(
         origin=(contact_left_x, contact_lower_y),
     )
 
-    # Metal pads (pin + metal1)
-    for ly in (layer_metal1_pin, layer_metal1):
+    # Metal pads
+    for ly in (layer_metal1,):
         add_rect(
             c,
             size=(metal_pad_dx, metal_pad_dy),
@@ -375,7 +371,7 @@ def rppd(
         center=(metal_pad_center_x, metal_pad_upper_center_y),
         width=metal_pad_dx,
         orientation=90,
-        layer=layer_metal1_pin,
+        layer=layer_metal1,
         port_type="electrical",
     )
 
@@ -384,7 +380,7 @@ def rppd(
         center=(metal_pad_center_x, metal_pad_lower_center_y),
         width=metal_pad_dx,
         orientation=270,
-        layer=layer_metal1_pin,
+        layer=layer_metal1,
         port_type="electrical",
     )
 
@@ -424,7 +420,6 @@ def rhigh(
     layer_gate: LayerSpec = "GatPolydrawing",
     layer_contact: LayerSpec = "Contdrawing",
     layer_metal1: LayerSpec = "Metal1drawing",
-    layer_metal1_pin: LayerSpec = "Metal1pin",
     layer_pSD: LayerSpec = "pSDdrawing",
     layer_nSD: LayerSpec = "nSDdrawing",
     layer_block: LayerSpec = "EXTBlockdrawing",
@@ -442,7 +437,6 @@ def rhigh(
         layer_gate: Gate polysilicon layer.
         layer_contact: Contact layer.
         layer_metal1: Metal1 layer.
-        layer_metal1_pin: Metal1 pin layer.
         layer_pSD: PSD layer.
         layer_nSD: NSD layer
         layer_block: Blocking layer.
@@ -547,7 +541,7 @@ def rhigh(
     )
 
     # Metal pads
-    for ly in (layer_metal1_pin, layer_metal1):
+    for ly in (layer_metal1,):
         add_rect(
             c,
             (metal_pad_dx, metal_pad_dy),
@@ -579,7 +573,7 @@ def rhigh(
         center=(metal_pad_center_x, metal_pad_upper_center_y),
         width=metal_pad_dx,
         orientation=90,
-        layer=layer_metal1_pin,
+        layer=layer_metal1,
         port_type="electrical",
     )
 
@@ -588,7 +582,7 @@ def rhigh(
         center=(metal_pad_center_x, metal_pad_lower_center_y),
         width=metal_pad_dx,
         orientation=270,
-        layer=layer_metal1_pin,
+        layer=layer_metal1,
         port_type="electrical",
     )
 

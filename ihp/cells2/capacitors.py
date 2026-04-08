@@ -134,6 +134,7 @@ def rfcmim(
     gf.add_ports.add_ports_from_boxes(
         c,
         pin_layer=(tech.LAYER.Metal5pin),
+        port_layer=(tech.LAYER.Metal5drawing),
         port_type="electrical",
         ports_on_short_side=False,
         auto_rename_ports=False,
@@ -142,6 +143,7 @@ def rfcmim(
     gf.add_ports.add_ports_from_boxes(
         c,
         pin_layer=(tech.LAYER.TopMetal1pin),
+        port_layer=(tech.LAYER.TopMetal1drawing),
         port_type="electrical",
         ports_on_short_side=False,
         auto_rename_ports=False,
@@ -150,6 +152,7 @@ def rfcmim(
     gf.add_ports.add_ports_from_boxes(
         c,
         pin_layer=(tech.LAYER.Metal1pin),
+        port_layer=(tech.LAYER.Metal1drawing),
         port_type="electrical",
         ports_on_short_side=True,
         auto_rename_ports=False,
@@ -206,6 +209,7 @@ def svaricap(
     gf.add_ports.add_ports_from_boxes(
         c,
         pin_layer=(tech.LAYER.Metal1pin),
+        port_layer=(tech.LAYER.Metal1drawing),
         port_type="electrical",
         ports_on_short_side=True,
     )

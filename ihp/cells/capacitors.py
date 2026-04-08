@@ -68,11 +68,6 @@ def cmom(
     layer_metal3: LayerSpec = "Metal3drawing",
     layer_metal4: LayerSpec = "Metal4drawing",
     layer_metal5: LayerSpec = "Metal5drawing",
-    layer_metal1pin: LayerSpec = "Metal1pin",
-    layer_metal2pin: LayerSpec = "Metal2pin",
-    layer_metal3pin: LayerSpec = "Metal3pin",
-    layer_metal4pin: LayerSpec = "Metal4pin",
-    layer_metal5pin: LayerSpec = "Metal5pin",
     layer_metal1label: LayerSpec = "Metal1label",
     layer_metal2label: LayerSpec = "Metal2label",
     layer_metal3label: LayerSpec = "Metal3label",
@@ -103,11 +98,6 @@ def cmom(
         layer_metal3: Metal3 drawing layer.
         layer_metal4: Metal4 drawing layer.
         layer_metal5: Metal5 drawing layer.
-        layer_metal1pin: Metal1 pin logic layer.
-        layer_metal2pin: Metal2 pin logic layer.
-        layer_metal3pin: Metal3 pin logic layer.
-        layer_metal4pin: Metal4 pin logic layer.
-        layer_metal5pin: Metal5 pin logic layer.
         layer_metal1label: Metal1 label logic layer.
         layer_metal2label: Metal2 label logic layer.
         layer_metal3label: Metal3 label logic layer.
@@ -141,14 +131,6 @@ def cmom(
         "Metal3": layer_metal3label,
         "Metal4": layer_metal4label,
         "Metal5": layer_metal5label,
-    }
-
-    pins = {
-        "Metal1": layer_metal1pin,
-        "Metal2": layer_metal2pin,
-        "Metal3": layer_metal3pin,
-        "Metal4": layer_metal4pin,
-        "Metal5": layer_metal5pin,
     }
 
     nofills = {
@@ -244,20 +226,20 @@ def cmom(
     # add ports
     # pin_layer: LayerSpec = metal_layer.capitalize()+'pin'
     # label_layer: LayerSpec = metal_layer.capitalize()+'label'
-    pin_layer = pins[metal_layer.capitalize()]
+    drawing_layer = metals[metal_layer.capitalize()]
     label_layer = labels[metal_layer.capitalize()]
     c.add_port(
         "PLUS",
         center=(top_pad_ref.x, top_pad_ref.y),
         width=min_width,
-        layer=pin_layer,
+        layer=drawing_layer,
         port_type="electrical",
     )
     c.add_port(
         "MINUS",
         center=(bot_pad_ref.x, bot_pad_ref.y),
         width=min_width,
-        layer=pin_layer,
+        layer=drawing_layer,
         port_type="electrical",
     )
 
@@ -327,8 +309,6 @@ def cmim(
     layer_text: LayerSpec = "TEXTdrawing",
     layer_metal5label: LayerSpec = "Metal5label",
     layer_topmetal1label: LayerSpec = "TopMetal1label",
-    layer_metal5pin: LayerSpec = "Metal5pin",
-    layer_topmetal1pin: LayerSpec = "TopMetal1pin",
     model: str = "cmim",
     **kwargs,
 ) -> Component:
@@ -351,8 +331,6 @@ def cmim(
         layer_text: TEXT drawing layer.
         layer_metal5label: Metal5 label logic layer.
         layer_topmetal1label: TopMetal1 label logic layer.
-        layer_metal5pin: Metal5 pin logic layer.
-        layer_topmetal1pin: TopMetal1 pin logic layer.
 
         model: Device model name.
 
@@ -466,7 +444,7 @@ def cmim(
         center=(bot.xmin + mim_drc["m5_min_width"] / 2, bot.y),
         width=mim_drc["m5_min_width"],
         orientation=180,
-        layer=layer_metal5pin,
+        layer=layer_metal5,
         port_type="electrical",
     )
 
@@ -475,13 +453,13 @@ def cmim(
         center=(top.xmax - mim_drc["topmetal1_width"] / 2, top.y),
         width=mim_drc["topmetal1_width"],
         orientation=0,
-        layer=layer_topmetal1pin,
+        layer=layer_topmetal1,
         port_type="electrical",
     )
 
     pin_minus = gf.components.rectangle(
         size=(mim_drc["topmetal1_width"], 2 * mim_drc["topmetal1_width"]),
-        layer=layer_metal5pin,
+        layer=layer_metal5,
         centered=True,
     )
     pin_minus_ref = c.add_ref(pin_minus)
@@ -490,7 +468,7 @@ def cmim(
 
     pin_plus = gf.components.rectangle(
         size=(mim_drc["topmetal1_width"], 2 * mim_drc["topmetal1_width"]),
-        layer=layer_topmetal1pin,
+        layer=layer_topmetal1,
         centered=True,
     )
     pin_plus_ref = c.add_ref(pin_plus)
@@ -564,9 +542,6 @@ def rfcmim(
     layer_metal5noqrc: LayerSpec = "Metal5noqrc",
     layer_topmetal1noqrc: LayerSpec = "TopMetal1noqrc",
     layer_text: LayerSpec = "TEXTdrawing",
-    layer_metal1pin: LayerSpec = "Metal1pin",
-    layer_metal5pin: LayerSpec = "Metal5pin",
-    layer_topmetal1pin: LayerSpec = "TopMetal1pin",
     layer_metal5label: LayerSpec = "Metal5label",
     layer_topmetal1label: LayerSpec = "TopMetal1label",
     layer_metal1label: LayerSpec = "Metal1label",
@@ -591,8 +566,6 @@ def rfcmim(
         layer_text: TEXT drawing layer.
         layer_metal5label: Metal5 label logic layer.
         layer_topmetal1label: TopMetal1 label logic layer.
-        layer_metal5pin: Metal5 pin logic layer.
-        layer_topmetal1pin: TopMetal1 pin logic layer.
 
         model: Device model name.
 
@@ -626,8 +599,6 @@ def rfcmim(
         layer_tm1nofill=layer_tm1nofill,
         layer_tm2nofill=layer_tm2nofill,
         layer_text=layer_text,
-        layer_metal5pin=layer_metal5pin,
-        layer_topmetal1pin=layer_topmetal1pin,
         layer_metal5label=layer_metal5label,
         layer_topmetal1label=layer_topmetal1label,
         model=model,
@@ -696,7 +667,7 @@ def rfcmim(
     # add TIE LOW pin
     tie_low = gf.components.rectangle(
         size=(size[0] - 2 * gr_drc["active_min_enclose_pp"], pguardring_width),
-        layer=layer_metal1pin,
+        layer=layer_metal1,
         centered=True,
     )
     xmin, ymin = c.xmin, c.ymin
@@ -709,7 +680,7 @@ def rfcmim(
         center=(tie_low_ref.x, tie_low_ref.y),
         width=pguardring_width,
         orientation=0,
-        layer=layer_metal1pin,
+        layer=layer_metal1,
         port_type="electrical",
     )
     c.add_label(text="TIE_LOW", position=(tie.x, tie.y), layer=layer_metal1label)
