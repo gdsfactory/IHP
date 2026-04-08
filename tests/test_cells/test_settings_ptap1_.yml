@@ -15,13 +15,12 @@ info:
     spice_lib: resistors_mod.lib
     spice_type: SUBCKT
   width: 1
-name: ptap1_W1_L1_R1_C1_LAActivdrawing_LPpSDdrawing_LCContdra_b14a891f
+name: ptap1_W1_L1_R1_C1_LAActivdrawing_LPpSDdrawing_LCContdra_18266bb0
 settings:
   cols: 1
   layer_activ: Activdrawing
   layer_cont: Contdrawing
   layer_metal1: Metal1drawing
-  layer_metal1_pin: Metal1pin
   layer_psd: pSDdrawing
   length: 1
   rows: 1

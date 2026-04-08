@@ -20,7 +20,7 @@ info:
     - bn
     spice_lib: resistors_mod.lib
     spice_type: SUBCKT
-name: rppd_D0p5_D0p5_RNone_Mrppd_LPPolyResdrawing_LHHeatResdr_f26b8519
+name: rppd_D0p5_D0p5_RNone_Mrppd_LPPolyResdrawing_LHHeatResdr_f92b7e45
 settings:
   dx: 0.5
   dy: 0.5
@@ -29,7 +29,6 @@ settings:
   layer_gate: GatPolydrawing
   layer_heat: HeatResdrawing
   layer_metal1: Metal1drawing
-  layer_metal1_pin: Metal1pin
   layer_pSD: pSDdrawing
   layer_poly: PolyResdrawing
   layer_sal_block: SalBlockdrawing

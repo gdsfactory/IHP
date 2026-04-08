@@ -14,7 +14,7 @@ info:
     - PAD
     spice_lib: sg13g2_bondpad.lib
     spice_type: SUBCKT
-name: bondpad_Soctagon_D80_LTMTopMetal2drawing_LTMPTopMetal2p_e907fbed
+name: bondpad_Soctagon_D80_LTMTopMetal2drawing_LPPassivpillar_65fd9125
 settings:
   bbox_offsets:
   - -2.1
@@ -24,5 +24,4 @@ settings:
   layer_dfpad: dfpaddrawing
   layer_passiv: Passivpillar
   layer_top_metal: TopMetal2drawing
-  layer_top_metal_pin: TopMetal2pin
   shape: octagon

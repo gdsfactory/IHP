@@ -20,7 +20,7 @@ info:
     - bn
     spice_lib: resistors_mod.lib
     spice_type: SUBCKT
-name: rsil_D0p5_D0p5_RNone_Mrsil_LPPolyResdrawing_LHHeatResdr_0d134d2b
+name: rsil_D0p5_D0p5_RNone_Mrsil_LPPolyResdrawing_LHHeatResdr_37c74fa2
 settings:
   dx: 0.5
   dy: 0.5
@@ -29,7 +29,6 @@ settings:
   layer_gate: GatPolydrawing
   layer_heat: HeatResdrawing
   layer_metal1: Metal1drawing
-  layer_metal1_pin: Metal1pin
   layer_poly: PolyResdrawing
   layer_res_mark: RESdrawing
   model: rsil

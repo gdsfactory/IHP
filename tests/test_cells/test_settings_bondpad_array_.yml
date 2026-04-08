@@ -2,7 +2,7 @@ info:
   n_pads: 4
   pad_diameter: 80
   pad_pitch: 100
-name: bondpad_array_NP4_PP100_PD80_Soctagon_LTMTopMetal2drawi_bfd7fae8
+name: bondpad_array_NP4_PP100_PD80_Soctagon_LTMTopMetal2drawi_d73de954
 settings:
   bbox_offsets:
   - -2.1
@@ -10,7 +10,6 @@ settings:
   layer_dfpad: dfpaddrawing
   layer_passiv: Passivpillar
   layer_top_metal: TopMetal2drawing
-  layer_top_metal_pin: TopMetal2pin
   n_pads: 4
   pad_diameter: 80
   pad_pitch: 100

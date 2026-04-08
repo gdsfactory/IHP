@@ -11,16 +11,14 @@ info:
     - VSS
     spice_lib: sg13g2_moslv_mod.lib
     spice_type: SUBCKT
-name: esd_nmos_W50_L0p5_N10_Mnmoscl_2_LPPWelldrawing_LAActivd_f58b4bf2
+name: esd_nmos_W50_L0p5_N10_Mnmoscl_2_LPPWelldrawing_LAActivd_fa755f41
 settings:
   layer_activ: Activdrawing
   layer_cont: Contdrawing
   layer_esd: Recogesd
   layer_gatpoly: GatPolydrawing
   layer_metal1: Metal1drawing
-  layer_metal1_pin: Metal1pin
   layer_metal2: Metal2drawing
-  layer_metal2_pin: Metal2pin
   layer_nsd: nSDdrawing
   layer_pwell: PWelldrawing
   length: 0.5

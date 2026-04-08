@@ -20,7 +20,7 @@ info:
     - bn
     spice_lib: resistors_mod.lib
     spice_type: SUBCKT
-name: rhigh_D0p96_D0p5_RNone_Mrhigh_LPPolyResdrawing_LHHeatRe_f86e6d72
+name: rhigh_D0p96_D0p5_RNone_Mrhigh_LPPolyResdrawing_LHHeatRe_c9539946
 settings:
   dx: 0.5
   dy: 0.96
@@ -29,7 +29,6 @@ settings:
   layer_gate: GatPolydrawing
   layer_heat: HeatResdrawing
   layer_metal1: Metal1drawing
-  layer_metal1_pin: Metal1pin
   layer_nSD: nSDdrawing
   layer_pSD: pSDdrawing
   layer_poly: PolyResdrawing
