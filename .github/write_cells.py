@@ -5,6 +5,7 @@ from gdsfactory.get_factories import get_cells
 
 from ihp import PDK
 from ihp import cells2 as cells2_module
+from ihp import cells_fixed as cells_fixed_module
 from ihp.config import PATH
 from ihp.tech import LAYER_STACK, LAYER_VIEWS
 
@@ -141,13 +142,15 @@ Here are the parametric components available in the PDK.
     )
 
     for name in sorted(cells.keys()):
-        if name in skip or name.startswith("_") or name.endswith("_fixed"):
+        if name in skip or name.startswith("_"):
             continue
         print(name)
         write_cell_entry(f, name, cells, "ihp.cells", "cells")
 
 
 # Write deprecated fixed cells page
+cells_fixed = get_cells(cells_fixed_module)
+
 with open(filepath_fixed, "w+") as f:
     f.write(
         """
@@ -161,11 +164,13 @@ Fixed Cells (Deprecated)
 """
     )
 
-    for name in sorted(cells.keys()):
-        if name in skip or name.startswith("_") or not name.endswith("_fixed"):
+    for name in sorted(cells_fixed.keys()):
+        if name in skip or name.startswith("_"):
             continue
         print(name)
-        write_cell_entry(f, name, cells, "ihp.cells", "cells")
+        write_cell_entry(
+            f, name, cells_fixed, "ihp.cells_fixed", "cells_fixed"
+        )
 
 
 # Write cells2 PyCell reference page

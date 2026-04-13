@@ -6,7 +6,6 @@ from .bondpads import *
 from .capacitors import *
 from .containers import *
 from .fet_transistors import *
-from .fixed import *
 from .inductors import *
 from .passives import *
 from .resistors import *
