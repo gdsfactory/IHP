@@ -5,18 +5,18 @@ build-backend = "setuptools.build_meta"
 requires = ["setuptools", "wheel", "ruff"]
 
 [project]
-authors = [{name = "gdsfactory", email = "contact@gdsfactory.com"}]
+authors = [{name = "gdsfactory~=9.40.2", email = "contact@gdsfactory.com"}]
 classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13"
 ]
 dependencies = [
-  "gdsfactory>=9.39.3",
+  "gdsfactory~=9.40.2",
   "gplugins[sax]~=2.0.0",
   "doroutes>=0.2.1",
   "scikit-rf>=1.0.0",
-  "gdsfactoryplus"
+  "gdsfactory~=9.40.2"
 ]
 description = "IHP pdk"
 keywords = ["python"]
@@ -149,7 +149,7 @@ regex = '''
 directory = ".changelog.d"
 filename = "CHANGELOG.md"
 issue_format = "[#{issue}](https://github.com/gdsfactory/ihp/issues/{issue})"
-package = "gdsfactory"
+package = "gdsfactory~=9.40.2"
 start_string = "<!-- towncrier release notes start -->\n"
 template = ".changelog.d/changelog_template.jinja"
 title_format = "## [{version}](https://github.com/gdsfactory/ihp/releases/tag/v{version}) - {project_date}"
