@@ -1,5 +1,17 @@
 # IHP GDSFactory PDK
 
+<!-- BADGES:START -->
+[![Docs](https://github.com/gdsfactory/ihp/actions/workflows/pages.yml/badge.svg)](https://github.com/gdsfactory/ihp/actions/workflows/pages.yml)
+[![Tests](https://github.com/gdsfactory/ihp/actions/workflows/test_code.yml/badge.svg)](https://github.com/gdsfactory/ihp/actions/workflows/test_code.yml)
+[![DRC](https://github.com/gdsfactory/ihp/actions/workflows/drc.yml/badge.svg)](https://github.com/gdsfactory/ihp/actions/workflows/drc.yml)
+[![Model Regression](https://github.com/gdsfactory/ihp/actions/workflows/model_regression.yml/badge.svg)](https://github.com/gdsfactory/ihp/actions/workflows/model_regression.yml)
+[![Test Coverage](https://github.com/gdsfactory/ihp/raw/badges/coverage.svg)](https://github.com/gdsfactory/ihp/actions/workflows/test_coverage.yml)
+[![Model Coverage](https://github.com/gdsfactory/ihp/raw/badges/model_coverage.svg)](https://github.com/gdsfactory/ihp/actions/workflows/model_coverage.yml)
+[![Issues](https://github.com/gdsfactory/ihp/raw/badges/issues.svg)](https://github.com/gdsfactory/ihp/issues)
+[![PRs](https://github.com/gdsfactory/ihp/raw/badges/prs.svg)](https://github.com/gdsfactory/ihp/pulls)
+<!-- BADGES:END -->
+
+
 [![Test code](https://github.com/gdsfactory/ihp/actions/workflows/test_code.yml/badge.svg)](https://github.com/gdsfactory/ihp/actions/workflows/test_code.yml)
 [![Build docs](https://github.com/gdsfactory/ihp/actions/workflows/pages.yml/badge.svg)](https://github.com/gdsfactory/ihp/actions/workflows/pages.yml)
 [![PyPI](https://img.shields.io/pypi/v/ihp-gdsfactory)](https://pypi.org/project/ihp-gdsfactory/)
