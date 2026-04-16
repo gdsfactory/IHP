@@ -896,7 +896,7 @@ def guard_ring(
     width: float = 0.5,
     guardRingSpacing: float = 0.14,
     guardRingType: Literal["psub", "nwell"] = "psub",
-    bbox: tuple[Point, Point] | None = None,
+    bbox: tuple[Point, Point] | None = ((-5, -5), (5, 5)),
     path: list[tuple[Point, Point]] | None = None,
     layer_activ: LayerSpec = "Activdrawing",
     layer_cont: LayerSpec = "Contdrawing",
