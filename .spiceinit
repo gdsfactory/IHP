@@ -1,0 +1,6 @@
+* IHP SG13G2 PDK initialization
+* Load OSDI compact models
+osdi ihp/models/ngspice/osdi/psp103.osdi
+osdi ihp/models/ngspice/osdi/psp103_nqs.osdi
+osdi ihp/models/ngspice/osdi/r3_cmc.osdi
+osdi ihp/models/ngspice/osdi/mosvar.osdi

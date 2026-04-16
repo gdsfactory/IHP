@@ -32,7 +32,6 @@ docs/components_plot.rst
 *.pkl
 .idea/
 poetry.lock
-uv.lock
 Pipfile
 modes/
 docs/_autosummary

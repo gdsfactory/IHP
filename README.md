@@ -10,6 +10,10 @@
 [![Issues](https://github.com/gdsfactory/ihp/raw/badges/issues.svg)](https://github.com/gdsfactory/ihp/issues)
 [![PRs](https://github.com/gdsfactory/ihp/raw/badges/prs.svg)](https://github.com/gdsfactory/ihp/pulls)
 <!-- BADGES:END -->
+
+
+[![Test code](https://github.com/gdsfactory/ihp/actions/workflows/test_code.yml/badge.svg)](https://github.com/gdsfactory/ihp/actions/workflows/test_code.yml)
+[![Build docs](https://github.com/gdsfactory/ihp/actions/workflows/pages.yml/badge.svg)](https://github.com/gdsfactory/ihp/actions/workflows/pages.yml)
 [![PyPI](https://img.shields.io/pypi/v/ihp-gdsfactory)](https://pypi.org/project/ihp-gdsfactory/)
 [![Python](https://img.shields.io/pypi/pyversions/ihp-gdsfactory)](https://pypi.org/project/ihp-gdsfactory/)
 [![License](https://img.shields.io/github/license/gdsfactory/ihp)](https://github.com/gdsfactory/ihp/blob/main/LICENSE)
