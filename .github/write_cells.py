@@ -168,9 +168,7 @@ Fixed Cells (Deprecated)
         if name in skip or name.startswith("_"):
             continue
         print(name)
-        write_cell_entry(
-            f, name, cells_fixed, "ihp.cells_fixed", "cells_fixed"
-        )
+        write_cell_entry(f, name, cells_fixed, "ihp.cells_fixed", "cells_fixed")
 
 
 # Write cells2 PyCell reference page
