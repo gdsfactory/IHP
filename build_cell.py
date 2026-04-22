@@ -44,7 +44,7 @@ if cell_name == "all_cells":
 
         try:
             c.add_ref(func())
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             print(f"Error instantiating cell {name}: {e}")
     c.write_gds(f"build/gds/{cell_name}.gds")
 else:
