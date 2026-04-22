@@ -5,6 +5,34 @@ info:
   model: cap_rfcmim
   width: 7
 name: rfcmim_W7_L7_LPPWellblock_LMMetal5drawing_LMMIMdrawing__5095ef1b
+ports:
+  MINUS:
+    center:
+    - -4.36
+    - 0
+    layer: Metal5pin
+    name: MINUS
+    orientation: 180
+    port_type: electrical
+    width: 0.2
+  PLUS:
+    center:
+    - 3
+    - 0
+    layer: TopMetal1pin
+    name: PLUS
+    orientation: 0
+    port_type: electrical
+    width: 1
+  TIE_LOW:
+    center:
+    - 0
+    - -8.46
+    layer: Metal1pin
+    name: TIE_LOW
+    orientation: 0
+    port_type: electrical
+    width: 2
 settings:
   layer_activ: Activdrawing
   layer_activnoqrc: Activnoqrc

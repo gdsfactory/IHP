@@ -3,6 +3,16 @@ info:
   shape: octagon
   top_metal: TopMetal2drawing
 name: bondpad_Soctagon_D80_LTMTopMetal2drawing_LTMPTopMetal2p_e907fbed
+ports:
+  pad:
+    center:
+    - 0
+    - 0
+    layer: TopMetal2pin
+    name: pad
+    orientation: 0
+    port_type: electrical
+    width: 80
 settings:
   bbox_offsets:
   - -2.1

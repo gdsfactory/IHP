@@ -5,6 +5,25 @@ info:
   nfingers: 1
   spacing: 0.26
 name: cmom_N1_L4_S0p26_BMetal1_TMetal3_LMMetal1drawing_LMMeta_e389502b
+ports:
+  MINUS:
+    center:
+    - 0.47
+    - -0.21
+    layer: Metal3pin
+    name: MINUS
+    orientation: 0
+    port_type: electrical
+    width: 0.14
+  PLUS:
+    center:
+    - 0.47
+    - 4.47
+    layer: Metal3pin
+    name: PLUS
+    orientation: 0
+    port_type: electrical
+    width: 0.14
 settings:
   botmetal: Metal1
   layer_cap_mark: MemCapdrawing

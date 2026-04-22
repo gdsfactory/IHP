@@ -7,6 +7,7 @@ info:
   rows: 2
   via_type: Via1
 name: via_array_VTVia1_C2_R2_VSNone_VSNone_VENone_LCContdrawi_5baa5773
+ports: {}
 settings:
   columns: 2
   layer_cont: Contdrawing

@@ -7,6 +7,25 @@ info:
   turns: 1
   width: 2
 name: inductor2_W2_S2p1_D25p35_VW0p9_R0p5777_I3p3303em11_T1L3_b7ab4e17
+ports:
+  P1:
+    center:
+    - -2.05
+    - 0
+    layer: TopMetal2pin
+    name: P1
+    orientation: 270
+    port_type: electrical
+    width: 2
+  P2:
+    center:
+    - 2.05
+    - 0
+    layer: TopMetal2pin
+    name: P2
+    orientation: 270
+    port_type: electrical
+    width: 2
 settings:
   diameter: 25.35
   inductance: 0.0

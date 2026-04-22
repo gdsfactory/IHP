@@ -5,6 +5,25 @@ info:
   top_layer: Metal2
   width: 10
 name: via_stack_BLMetal1_TLMetal2_S10_10_VC2_VR2_VC1_VR1_VC1__fd26eaf7
+ports:
+  bottom:
+    center:
+    - 0
+    - 0
+    layer: Metal1pin
+    name: bottom
+    orientation: 0
+    port_type: electrical
+    width: 10
+  top:
+    center:
+    - 0
+    - 0
+    layer: Metal2pin
+    name: top
+    orientation: 0
+    port_type: electrical
+    width: 10
 settings:
   bottom_layer: Metal1
   layer_activ: Activdrawing

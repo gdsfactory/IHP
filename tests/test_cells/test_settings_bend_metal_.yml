@@ -10,6 +10,25 @@ info:
   route_info_weight: 3.139
   width: 2
 name: bend_metal_RNone_A90_WNone_CSmetal_routing
+ports:
+  e1:
+    center:
+    - 0
+    - 0
+    layer: TopMetal2drawing
+    name: e1
+    orientation: 180
+    port_type: electrical
+    width: 2
+  e2:
+    center:
+    - 2
+    - 2
+    layer: TopMetal2drawing
+    name: e2
+    orientation: 90
+    port_type: electrical
+    width: 2
 settings:
   angle: 90
   cross_section: metal_routing

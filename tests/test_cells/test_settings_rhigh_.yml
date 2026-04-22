@@ -6,6 +6,25 @@ info:
   resistance: 576
   sheet_resistance: 300
 name: rhigh_D0p96_D0p5_RNone_Mrhigh_LPPolyResdrawing_LHHeatRe_f86e6d72
+ports:
+  P1:
+    center:
+    - 0.25
+    - 1.24
+    layer: Metal1pin
+    name: P1
+    orientation: 90
+    port_type: electrical
+    width: 0.46
+  P2:
+    center:
+    - 0.25
+    - -0.28
+    layer: Metal1pin
+    name: P2
+    orientation: 270
+    port_type: electrical
+    width: 0.46
 settings:
   dx: 0.5
   dy: 0.96

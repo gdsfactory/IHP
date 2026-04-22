@@ -3,6 +3,43 @@ info:
   pad_diameter: 80
   pad_pitch: 100
 name: bondpad_array_NP4_PP100_PD80_Soctagon_LTMTopMetal2drawi_bfd7fae8
+ports:
+  pad_1:
+    center:
+    - 0
+    - 0
+    layer: TopMetal2pin
+    name: pad_1
+    orientation: 0
+    port_type: electrical
+    width: 80
+  pad_2:
+    center:
+    - 100
+    - 0
+    layer: TopMetal2pin
+    name: pad_2
+    orientation: 0
+    port_type: electrical
+    width: 80
+  pad_3:
+    center:
+    - 200
+    - 0
+    layer: TopMetal2pin
+    name: pad_3
+    orientation: 0
+    port_type: electrical
+    width: 80
+  pad_4:
+    center:
+    - 300
+    - 0
+    layer: TopMetal2pin
+    name: pad_4
+    orientation: 0
+    port_type: electrical
+    width: 80
 settings:
   bbox_offsets:
   - -2.1

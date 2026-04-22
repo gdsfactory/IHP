@@ -1,5 +1,33 @@
 info: {}
 name: npn13G2_B0p3_B0p07_B0p1_E0p15_E0p18_S0p44_EL0p9_EW0p7_N_5249a3d6
+ports:
+  B:
+    center:
+    - 0
+    - -1.14
+    layer: Metal1pin
+    name: B
+    orientation: 180
+    port_type: electrical
+    width: 0.24
+  C:
+    center:
+    - 0
+    - 1.13
+    layer: Metal1pin
+    name: C
+    orientation: 180
+    port_type: electrical
+    width: 0.24
+  E:
+    center:
+    - 0
+    - -0.008
+    layer: Metal2pin
+    name: E
+    orientation: 180
+    port_type: electrical
+    width: 1.556
 settings:
   CMetY1: 0
   CMetY2: 0

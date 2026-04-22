@@ -1,5 +1,42 @@
 info: {}
 name: rfnmos_W1_L0p13_N1_M1_CR1_MCTrue_GRTrue_GRYes_Msg13_lv_nmos
+ports:
+  D:
+    center:
+    - 1.64
+    - 1.92
+    layer: Metal1pin
+    name: D
+    orientation: 270
+    port_type: electrical
+    width: 0.9
+  G:
+    center:
+    - 0.86
+    - 1.66
+    layer: Metal1pin
+    name: G
+    orientation: 180
+    port_type: electrical
+    width: 0.64
+  S:
+    center:
+    - 1.64
+    - 1.4
+    layer: Metal1pin
+    name: S
+    orientation: 270
+    port_type: electrical
+    width: 0.9
+  TIE:
+    center:
+    - 1.64
+    - 0.19
+    layer: Metal1pin
+    name: TIE
+    orientation: 270
+    port_type: electrical
+    width: 0.16
 settings:
   cnt_rows: 1
   gat_ring: true

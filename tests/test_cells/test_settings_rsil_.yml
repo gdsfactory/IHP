@@ -6,6 +6,25 @@ info:
   resistance: 7
   sheet_resistance: 7
 name: rsil_D0p5_D0p5_RNone_Mrsil_LPPolyResdrawing_LHHeatResdr_0d134d2b
+ports:
+  P1:
+    center:
+    - 0.25
+    - 0.7
+    layer: Metal1pin
+    name: P1
+    orientation: 90
+    port_type: electrical
+    width: 0.46
+  P2:
+    center:
+    - 0.25
+    - -0.2
+    layer: Metal1pin
+    name: P2
+    orientation: 270
+    port_type: electrical
+    width: 0.46
 settings:
   dx: 0.5
   dy: 0.5

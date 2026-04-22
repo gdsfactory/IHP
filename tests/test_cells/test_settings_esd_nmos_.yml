@@ -1,5 +1,24 @@
 info: {}
 name: esd_nmos_W50_L0p5_N10_Mnmoscl_2_LPPWelldrawing_LAActivd_f58b4bf2
+ports:
+  GND:
+    center:
+    - 0
+    - -2.5
+    layer: Metal1pin
+    name: GND
+    orientation: 270
+    port_type: electrical
+    width: 16
+  PAD:
+    center:
+    - 0
+    - 4
+    layer: Metal2pin
+    name: PAD
+    orientation: 90
+    port_type: electrical
+    width: 16
 settings:
   layer_activ: Activdrawing
   layer_cont: Contdrawing

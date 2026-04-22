@@ -6,6 +6,25 @@ info:
   resistance: 300
   sheet_resistance: 300
 name: rppd_D0p5_D0p5_RNone_Mrppd_LPPolyResdrawing_LHHeatResdr_f26b8519
+ports:
+  P1:
+    center:
+    - 0.25
+    - 0.78
+    layer: Metal1pin
+    name: P1
+    orientation: 90
+    port_type: electrical
+    width: 0.46
+  P2:
+    center:
+    - 0.25
+    - -0.28
+    layer: Metal1pin
+    name: P2
+    orientation: 270
+    port_type: electrical
+    width: 0.46
 settings:
   dx: 0.5
   dy: 0.5
