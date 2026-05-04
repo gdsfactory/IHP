@@ -1,0 +1,161 @@
+# https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html
+
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["ruff", "setuptools", "wheel"]
+
+[project]
+authors = [{name = "gdsfactory", email = "contact@gdsfactory.com"}]
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.12"
+]
+dependencies = [
+  "doroutes>=0.2",
+  "gdsfactory~=9.20.7",
+  "gdsfactoryplus",
+  "gplugins[sax]~=1.4.2"
+]
+description = "IHP pdk"
+keywords = ["python"]
+license = {file = "LICENSE"}
+name = "ihp"
+readme = "README.md"
+requires-python = "~=3.12.0"
+version = "0.0.6"
+optional-dependencies.dev = [
+  "pre-commit",
+  "pytest",
+  "pytest-cov",
+  "jsondiff",
+  "pytest-github-actions-annotate-failures",
+  "pytest-regressions"
+]
+optional-dependencies.docs = [
+  "autodoc-pydantic",
+  "jupyter-book==1.0.3",
+  "jupytext"
+]
+
+[tool.basedpyright]
+pythonPlatform = "Linux"
+reportMissingImports = true
+reportMissingTypeStubs = false
+reportUnknownMemberType = false
+reportUnusedCallResult = false
+
+[tool.codespell]
+ignore-words-list = "te,fpr,nd,donot,schem"
+
+[tool.gdsfactoryplus]
+name = "ihp"
+pdk.name = "ihp"
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+
+[tool.pydocstyle]
+add-ignore = ["D100", "D101", "D102", "D103", "D104", "D203", "D405", "D417"]
+convention = "google"
+inherit = false
+match = "(?!test).*\\.py"
+
+[tool.pylsp-mypy]
+enabled = true
+live_mode = true
+strict = true
+
+[tool.pytest]
+# testpaths = ["IHP/samples", "tests"]
+# addopts = --tb=no
+# addopts = '--tb=short'
+# python_files = ["IHP/samples*.py", "tests/*.py"]
+ini_options.python_files = ["tests/*.py"]
+ini_options.testpaths = ["tests"]
+
+[tool.ruff]
+fix = true
+lint.ignore = [
+  "B008",  # do not perform function calls in argument defaults
+  "B905",  # `zip()` without an explicit `strict=` parameter
+  "C408",  # C408 Unnecessary `dict` call (rewrite as a literal)
+  "C901",  # too complex
+  "E501"
+]
+lint.select = [
+  "B",  # flake8-bugbear
+  "C",  # flake8-comprehensions
+  "E",  # pycodestyle errors
+  "F",  # pyflakes
+  "I",  # isort
+  "UP",
+  "W"
+]
+lint.per-file-ignores."ihp/cells/__init__.py" = [
+  "F403"
+]  # allowing star imports to aggregate cells
+lint.per-file-ignores."ihp/models/__init__.py" = [
+  "F403"
+]  # allowing star imports to aggregate cells
+
+[tool.setuptools]
+include-package-data = true
+package-data."*" = [
+  "*.csv",
+  "*.yaml",
+  "*.yml",
+  "*.gds",
+  "*.lyp",
+  "*.oas",
+  "*.lyt",
+  "*.dat",
+  "*.nc",
+  "*.svg",
+  "*.GDS",
+  "*.json",
+  "*.txt",
+  "*.md",
+  "*.OAS"
+]
+packages.find.include = ["ihp"]
+packages.find.where = ["."]
+
+[tool.tbump]
+before_commit = [
+  {cmd = "towncrier build --yes --version {new_version}", name = "create & check changelog"},
+  {cmd = "git add CHANGELOG.md", name = "create & check changelog"},
+  {cmd = "grep -q -F {new_version} CHANGELOG.md", name = "create & check changelog"}
+]
+file = [
+  {src = "README.md"},
+  {src = "pyproject.toml"},
+  {src = "ihp/__init__.py"}
+]
+git.message_template = "Bump to {new_version}"
+git.tag_template = "v{new_version}"
+version.current = "0.0.6"
+version.regex = '''  (?P<major>\d+)
+  \.
+  (?P<minor>\d+)
+  \.
+  (?P<patch>\d+)
+  '''
+
+[tool.towncrier]
+directory = ".changelog.d"
+filename = "CHANGELOG.md"
+issue_format = "[#{issue}](https://github.com/gdsfactory/ihp/issues/{issue})"
+package = "gdsfactory"
+start_string = "<!-- towncrier release notes start -->\n"
+template = ".changelog.d/changelog_template.jinja"
+title_format = "## [{version}](https://github.com/gdsfactory/ihp/releases/tag/v{version}) - {project_date}"
+type = [
+  {directory = "security", name = "Security", showcontent = true},
+  {directory = "removed", name = "Removed", showcontent = true},
+  {directory = "deprecated", name = "Deprecated", showcontent = true},
+  {directory = "added", name = "Added", showcontent = true},
+  {directory = "changed", name = "Changed", showcontent = true},
+  {directory = "fixed", name = "Fixed", showcontent = true}
+]
+underlines = ["", "", ""]
