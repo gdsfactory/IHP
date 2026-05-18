@@ -1,10 +1,43 @@
 import os
 
 import gdsfactory as gf  # to have gf.Component
+import gdsfactory.add_ports as _gf_add_ports
 import pya  # KLayout Python API
 
 from cni.dlo import PCellWrapper  # to wrap the PyCell
 from cni.tech import Tech  # to get the technology
+
+# Workaround: gdsfactory 9.43 _register_ports checks `port in component.ports`
+# which uses kfactory BasePort.__eq__ that only compares transforms, not names
+# or layers.  IHP transistors have pin-marker boxes on different layers at
+# overlapping positions, so the position-equality check falsely rejects them.
+# Patch _register_ports to check only by name.
+_orig_register = _gf_add_ports._register_ports
+
+
+def _name_only_register_ports(
+    component, ports, auto_rename_ports=False, allow_none_names=False
+):
+    from gdsfactory.add_ports import sort_ports_clockwise
+
+    ports = sort_ports_clockwise(ports)
+    for port in ports:
+        _port_name = port.name
+        if allow_none_names and _port_name is None:
+            continue
+        if _port_name is not None and _port_name in component.ports:
+            component_ports = [p.name for p in component.ports]
+            raise ValueError(
+                f"port {_port_name!r} already in {component_ports}. "
+                "You can pass a port_name_prefix to add it with a different name."
+            )
+        component.add_port(name=_port_name, port=port)
+    if auto_rename_ports:
+        component.auto_rename_ports()
+    return component
+
+
+_gf_add_ports._register_ports = _name_only_register_ports
 
 
 def generate_gf_from_ihp(cell_name, cell_params, function_name) -> gf.Component:
