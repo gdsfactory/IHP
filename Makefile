@@ -1,4 +1,5 @@
 install:
+	uv venv --python 3.12
 	uv sync --extra docs --extra dev --extra simulation
 
 rm-samples:
@@ -17,7 +18,7 @@ tech:
 test:
 	uv run pytest -s
 
-test-force:
+test-force: install
 	uv run pytest -s --force-regen
 
 git-rm-merged:
