@@ -1,10 +1,52 @@
 import os
 
 import gdsfactory as gf  # to have gf.Component
+import kfactory.port as _kfport
 import pya  # KLayout Python API
 
 from cni.dlo import PCellWrapper  # to wrap the PyCell
 from cni.tech import Tech  # to get the technology
+
+# Workaround for kfactory BasePort.__eq__ operator precedence bug:
+# When both ports have trans=None (as with DPorts), the original code
+# short-circuits to True, making all DPorts compare as equal regardless
+# of position, name, or layer.  Fix: require dcplx_trans also be None
+# before matching on clause A, so DPorts fall through to clause C which
+# checks identity fields.
+_orig_eq = _kfport.BasePort.__eq__
+
+
+def _fixed_baseport_eq(self, other):
+    if not isinstance(other, _kfport.BasePort):
+        return False
+    return (
+        (
+            self.trans is None
+            and other.trans is None
+            and self.dcplx_trans is None
+            and other.dcplx_trans is None
+        )
+        or (
+            self.trans is not None
+            and other.trans is not None
+            and self.trans == other.trans
+            and self.dcplx_trans is None
+            and other.dcplx_trans is None
+        )
+        or (
+            self.dcplx_trans is not None
+            and other.dcplx_trans is not None
+            and self.dcplx_trans == other.dcplx_trans
+            and self.name == other.name
+            and self.kcl == other.kcl
+            and self.cross_section == other.cross_section
+            and self.port_type == other.port_type
+            and self.info == other.info
+        )
+    )
+
+
+_kfport.BasePort.__eq__ = _fixed_baseport_eq
 
 
 def generate_gf_from_ihp(cell_name, cell_params, function_name) -> gf.Component:
