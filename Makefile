@@ -45,17 +45,17 @@ mask:
 
 docs-pdf:
 	uv run python .github/write_cells.py
-	cp CHANGELOG.md docs/changelog.md
+	uv run python -c "import re; from pathlib import Path; t=Path('CHANGELOG.md').read_text(); Path('docs/changelog.md').write_text(re.sub(r'\[([^\]]*)\]\([^)]*\)', r'\1', t))"
 	uv run mkdocs build -f mkdocs-pdf.yml
 
 docs:
 	uv run python .github/write_cells.py
-	cp CHANGELOG.md docs/changelog.md
+	uv run python -c "import re; from pathlib import Path; t=Path('CHANGELOG.md').read_text(); Path('docs/changelog.md').write_text(re.sub(r'\[([^\]]*)\]\([^)]*\)', r'\1', t))"
 	uv run --extra docs zensical build
 
 docs-serve:
 	uv run python .github/write_cells.py
-	cp CHANGELOG.md docs/changelog.md
+	uv run python -c "import re; from pathlib import Path; t=Path('CHANGELOG.md').read_text(); Path('docs/changelog.md').write_text(re.sub(r'\[([^\]]*)\]\([^)]*\)', r'\1', t))"
 	uv run --extra docs zensical serve -a localhost:8080
 
 .PHONY: drc drc-sample doc docs docs-pdf build
