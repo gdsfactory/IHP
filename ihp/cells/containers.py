@@ -52,7 +52,7 @@ def add_pads_top(
         kwargs: additional arguments.
 
     Example:
-        ```python    
+        ```python
         import gdsfactory as gf
         c = gf.c.nxn(
             xsize=600,
