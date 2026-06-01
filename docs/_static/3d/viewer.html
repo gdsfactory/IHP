@@ -1,23 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>3D Cell Viewer</title>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { overflow: hidden; background: #1a1a2e; }
-  canvas { display: block; width: 100%; height: 100%; }
-  #info {
-    position: absolute; top: 8px; left: 8px;
-    color: #888; font: 12px monospace;
-    pointer-events: none;
-  }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>3D Cell Viewer</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      overflow: hidden;
+      background: #e3dfdf;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    #info {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      color: #888;
+      font: 12px monospace;
+      pointer-events: none;
+    }
+  </style>
 </head>
+
 <body>
-<div id="info">Loading...</div>
-<script type="importmap">
+  <div id="info">Loading...</div>
+  <script type="importmap">
 {
   "imports": {
     "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
@@ -25,100 +44,113 @@
   }
 }
 </script>
-<script type="module">
-import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-const params = new URLSearchParams(window.location.search);
-const glbFile = params.get('file');
-const info = document.getElementById('info');
+    const params = new URLSearchParams(window.location.search);
+    const glbFile = params.get('file');
+    const info = document.getElementById('info');
 
-if (!glbFile) {
-  info.textContent = 'No ?file= parameter provided';
-} else {
-  let visible = true;
-  let contextLost = false;
+    if (!glbFile) {
+      info.textContent = 'No ?file= parameter provided';
+    } else {
+      let visible = true;
+      let contextLost = false;
 
-  const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x1a1a2e);
+      const scene = new THREE.Scene();
+      scene.background = null;
 
-  const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.001, 1000);
-  const canvas = document.createElement('canvas');
-  const gl = canvas.getContext('webgl2', { powerPreference: 'low-power' })
-           || canvas.getContext('webgl', { powerPreference: 'low-power' });
-  const renderer = new THREE.WebGLRenderer({ canvas, context: gl, antialias: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  document.body.appendChild(renderer.domElement);
+      const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.001, 1000);
+      const canvas = document.createElement('canvas');
+      const gl = canvas.getContext('webgl2', { powerPreference: 'low-power' })
+        || canvas.getContext('webgl', { powerPreference: 'low-power' });
+      const renderer = new THREE.WebGLRenderer({ canvas, context: gl, antialias: true, alpha: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.5;  // increase for brighter overall
 
-  // Handle WebGL context loss/restore
-  canvas.addEventListener('webglcontextlost', (e) => {
-    e.preventDefault();
-    contextLost = true;
-    info.textContent = 'WebGL context lost - scroll away and back';
-  });
-  canvas.addEventListener('webglcontextrestored', () => {
-    contextLost = false;
-    info.textContent = '';
-  });
+      document.body.appendChild(renderer.domElement);
 
-  const controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.1;
+      // Handle WebGL context loss/restore
+      canvas.addEventListener('webglcontextlost', (e) => {
+        e.preventDefault();
+        contextLost = true;
+        info.textContent = 'WebGL context lost - scroll away and back';
+      });
+      canvas.addEventListener('webglcontextrestored', () => {
+        contextLost = false;
+        info.textContent = '';
+      });
 
-  scene.add(new THREE.AmbientLight(0xffffff, 0.6));
-  const dir = new THREE.DirectionalLight(0xffffff, 0.8);
-  dir.position.set(5, 10, 7);
-  scene.add(dir);
-  const dir2 = new THREE.DirectionalLight(0xffffff, 0.3);
-  dir2.position.set(-3, -5, -4);
-  scene.add(dir2);
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.1;
 
-  const loader = new GLTFLoader();
-  loader.load(
-    glbFile,
-    (gltf) => {
-      scene.add(gltf.scene);
-      const box = new THREE.Box3().setFromObject(gltf.scene);
-      const center = box.getCenter(new THREE.Vector3());
-      const size = box.getSize(new THREE.Vector3());
-      const maxDim = Math.max(size.x, size.y, size.z);
-      const dist = maxDim * 2;
-      camera.position.set(center.x + dist * 0.5, center.y + dist * 0.7, center.z + dist * 0.5);
-      controls.target.copy(center);
-      controls.update();
-      info.textContent = '';
-    },
-    (progress) => {
-      if (progress.total) {
-        info.textContent = `Loading ${Math.round(progress.loaded / progress.total * 100)}%`;
+      scene.add(new THREE.AmbientLight(0xffffff, 1.9));
+      const dir = new THREE.DirectionalLight(0xffffff, 1.5);
+      dir.position.set(5, 10, 7);
+      scene.add(dir);
+      const dir2 = new THREE.DirectionalLight(0xffffff, 0.9);
+      dir2.position.set(-3, -5, -4);
+      scene.add(dir2);
+
+      const loader = new GLTFLoader();
+      loader.load(
+        glbFile,
+        (gltf) => {
+          scene.add(gltf.scene);
+          const box = new THREE.Box3().setFromObject(gltf.scene);
+          const center = box.getCenter(new THREE.Vector3());
+          const size = box.getSize(new THREE.Vector3());
+          const maxDim = Math.max(size.x, size.y, size.z);
+          const dist = maxDim * 2;
+          camera.position.set(center.x + dist * 0.5, center.y + dist * 0.7, center.z + dist * 0.5);
+          controls.target.copy(center);
+          controls.update();
+          info.textContent = '';
+        },
+        (progress) => {
+          if (progress.total) {
+            info.textContent = `Loading ${Math.round(progress.loaded / progress.total * 100)}%`;
+          }
+        },
+        (error) => {
+          info.textContent = `Failed to load: ${error.message || error}`;
+        }
+      );
+
+      // Pause rendering when iframe is not visible
+      document.addEventListener('visibilitychange', () => {
+        visible = !document.hidden;
+      });
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      // Validate origin before processing background color messages from parent
+      window.addEventListener('message', (e) => {
+        // Only accept messages from parent window (same origin)
+        if (e.origin === window.location.origin && e.data?.bg) {
+          document.body.style.background = e.data.bg;
+        }
+      });
+      window.parent.postMessage({ requestBg: true }, window.location.origin);
+
+      function animate() {
+        requestAnimationFrame(animate);
+        if (!visible || contextLost) return;
+        controls.update();
+        renderer.render(scene, camera);
       }
-    },
-    (error) => {
-      info.textContent = `Failed to load: ${error.message || error}`;
+      animate();
     }
-  );
-
-  // Pause rendering when iframe is not visible
-  document.addEventListener('visibilitychange', () => {
-    visible = !document.hidden;
-  });
-
-  window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  });
-
-  function animate() {
-    requestAnimationFrame(animate);
-    if (!visible || contextLost) return;
-    controls.update();
-    renderer.render(scene, camera);
-  }
-  animate();
-}
-</script>
+  </script>
 </body>
+
 </html>

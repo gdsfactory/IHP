@@ -4,6 +4,9 @@
 build-backend = "setuptools.build_meta"
 requires = ["setuptools", "wheel", "ruff"]
 
+[dependency-groups]
+docs = []
+
 [project]
 authors = [{name = "gdsfactory", email = "contact@gdsfactory.com"}]
 classifiers = [

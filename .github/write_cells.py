@@ -85,8 +85,7 @@ def write_cell_entry(f, name, cell_dict, module_path="ihp.cells", import_alias="
 ## {name}
 
 
-.. autofunction:: {module_path}.{name}
-   :noindex:
+::: {module_path}.{name}
 
 """
         )
@@ -97,8 +96,7 @@ def write_cell_entry(f, name, cell_dict, module_path="ihp.cells", import_alias="
 ## {name}
 
 
-.. autofunction:: {module_path}.{name}
-   :noindex:
+::: {module_path}.{name}
 
 ```python
 import warnings
@@ -121,9 +119,7 @@ c.plot()
         if glb_file:
             f.write(
                 f"""
-.. raw:: html
-
-   <iframe src="_static/3d/viewer.html?file={glb_file}" width="100%" height="500px" frameborder="0" loading="lazy"></iframe>
+<iframe class="viewer-3d" src="_static/3d/viewer.html?file={glb_file}" width="100%" height="500px" frameborder="0" loading="lazy"></iframe>
 
 """
             )

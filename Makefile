@@ -40,7 +40,7 @@ gmsh:
 	sudo apt-get update
 	sudo apt-get install -y python3-gmsh gmsh libglu1-mesa libxi-dev libxmu-dev libglu1-mesa-dev libosmesa6 libegl1
 
-docs-clean: gmsh
+docs-clean:
 	rm -rf docs/_build
 
 mask:
@@ -51,13 +51,17 @@ docs-pdf:
 	cp CHANGELOG.md docs/changelog.md
 	uv run mkdocs build -f mkdocs-pdf.yml
 
-docs:
+cells:
 	uv run python .github/write_cells.py
+
+cp-docs:
+	cp README.md docs/index.md
 	cp CHANGELOG.md docs/changelog.md
+
+docs: cp-docs cells
 	uv run --extra docs zensical build -f docs/zensical.toml
 
-docs-serve:
-	uv run python .github/write_cells.py
+docs-serve: cp-docs cells
 	cp CHANGELOG.md docs/changelog.md
 	uv run --extra docs zensical serve -f docs/zensical.toml -a localhost:8080
 
