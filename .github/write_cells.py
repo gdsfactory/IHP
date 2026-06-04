@@ -13,9 +13,9 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 PDK.activate()
 
-filepath_cells = PATH.repo / "docs" / "cells.rst"
-filepath_fixed = PATH.repo / "docs" / "cells_fixed.rst"
-filepath_cells2 = PATH.repo / "docs" / "cells2_reference.rst"
+filepath_cells = PATH.repo / "docs" / "cells.md"
+filepath_fixed = PATH.repo / "docs" / "cells_fixed.md"
+filepath_cells2 = PATH.repo / "docs" / "cells2_reference.md"
 filepath_3d = PATH.repo / "docs" / "_static" / "3d"
 filepath_3d.mkdir(parents=True, exist_ok=True)
 
@@ -82,11 +82,10 @@ def write_cell_entry(f, name, cell_dict, module_path="ihp.cells", import_alias="
         f.write(
             f"""
 
-{name}
-----------------------------------------------------
+## {name}
 
-.. autofunction:: {module_path}.{name}
-   :noindex:
+
+::: {module_path}.{name}
 
 """
         )
@@ -94,27 +93,24 @@ def write_cell_entry(f, name, cell_dict, module_path="ihp.cells", import_alias="
         f.write(
             f"""
 
-{name}
-----------------------------------------------------
+## {name}
 
-.. autofunction:: {module_path}.{name}
-   :noindex:
 
-.. plot::
-  :include-source:
+::: {module_path}.{name}
 
-  import warnings
-  warnings.filterwarnings("ignore", category=DeprecationWarning)
+```python
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-  from ihp import PDK
-  from ihp import {import_alias}
+from ihp import PDK
+from ihp import {import_alias}
 
-  PDK.activate()
+PDK.activate()
 
-  c = {import_alias}.{name}({kwargs}).copy()
-  c.draw_ports()
-  c.plot()
-
+c = {import_alias}.{name}({kwargs}).copy()
+c.draw_ports()
+c.plot()
+```
 """
         )
 
@@ -123,9 +119,7 @@ def write_cell_entry(f, name, cell_dict, module_path="ihp.cells", import_alias="
         if glb_file:
             f.write(
                 f"""
-.. raw:: html
-
-   <iframe src="_static/3d/viewer.html?file={glb_file}" width="100%" height="500px" frameborder="0" loading="lazy"></iframe>
+<iframe class="viewer-3d" src="_static/3d/viewer.html?file={glb_file}" width="100%" height="500px" frameborder="0" loading="lazy"></iframe>
 
 """
             )

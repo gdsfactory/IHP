@@ -4,6 +4,9 @@
 build-backend = "setuptools.build_meta"
 requires = ["setuptools", "wheel", "ruff"]
 
+[dependency-groups]
+docs = []
+
 [project]
 authors = [{name = "gdsfactory", email = "contact@gdsfactory.com"}]
 classifiers = [
@@ -34,7 +37,14 @@ dev = [
   "pytest-github-actions-annotate-failures",
   "pre-commit"
 ]
-docs = ["autodoc_pydantic", "jupytext", "jupyter-book==1.0.3"]
+docs = [
+  "jupyter",
+  "mkdocs-material",
+  "mkdocs-with-pdf",
+  "nbconvert",
+  "mkdocstrings[python]>=0.27.0",
+  "zensical>=0.0.40,<0.1.0"
+]
 simulation = ["gsim>=0.0.8; python_version>='3.12'"]
 
 [tool.codespell]

@@ -1,0 +1,81 @@
+[project]
+copyright = "&copy; 2026 GDSFactory"
+docs_dir = "."
+extra_javascript = ["_static/extra.js"]
+nav = [
+  {"Home" = "index.md"},
+  {"Reference" = [
+    {"Cells" = "cells.md"},
+    {"Changelog" = "changelog.md"}
+  ]}
+]
+repo_name = "gdsfactory/IHP"
+repo_url = "https://github.com/gdsfactory/IHP"
+site_dir = "_build/html"
+site_name = "IHP pdk"
+site_url = "https://gdsfactory.github.io/ihp"
+
+[[project.extra.social]]
+icon = "fontawesome/solid/home"
+link = "https://gdsfactory.com"
+name = "GDSFactory website"
+
+[[project.extra.social]]
+icon = "fontawesome/brands/github"
+link = "https://github.com/gdsfactory"
+name = "Github"
+
+[[project.extra.social]]
+icon = "fontawesome/brands/linkedin"
+link = "https://www.linkedin.com/company/gdsfactory"
+name = "Linkedin"
+
+[[project.extra.social]]
+icon = "fontawesome/brands/slack"
+link = "https://join.slack.com/t/gdsfactory-community/shared_invite/zt-3aoygv7cg-r5BH6yvL4YlHfY8~UXp0Wg"
+name = "Slack channel"
+
+[project.plugins.autorefs]
+
+[project.plugins.mkdocstrings.handlers.python]
+inventories = ["https://docs.python.org/3/objects.inv"]
+preload_modules = ["math"]
+
+[project.plugins.mkdocstrings.handlers.python.options]
+force_inspection = true
+show_submodules = false
+
+[project.plugins.search]
+
+[project.theme]
+favicon = "favicon.ico"
+features = [
+  "navigation.footer"
+]
+logo = "logo.svg"
+name = "material"
+
+# Palette toggle for automatic mode
+[[project.theme.palette]]
+accent = "red"
+media = "(prefers-color-scheme)"
+primary = "red"
+toggle.icon = "lucide/sun-moon"
+toggle.name = "Switch to light mode"
+
+# Palette toggle for dark mode
+[[project.theme.palette]]
+accent = "red"
+media = "(prefers-color-scheme: light)"
+primary = "red"
+scheme = "default"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+
+[[project.theme.palette]]
+accent = "red"
+media = "(prefers-color-scheme: dark)"
+primary = "red"
+scheme = "slate"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to system preference"

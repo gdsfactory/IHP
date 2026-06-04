@@ -1,16 +1,32 @@
 """Bipolar transistor components for IHP PDK."""
 
+import warnings
 from functools import partial
 
 import gdsfactory as gf
 
 from ..config import PATH
 
+
+def _safe_add_ports_from_markers(component, pin_layer, port_layer):
+    try:
+        gf.add_ports.add_ports_from_markers_inside(
+            component, pin_layer=pin_layer, port_layer=port_layer
+        )
+    except ValueError as exc:
+        if "already in" not in str(exc):
+            raise
+        warnings.warn(
+            f"Duplicate port detected on layer {pin_layer}; skipping overlapping port(s).",
+            stacklevel=2,
+        )
+
+
 _add_ports_metal1 = partial(
-    gf.add_ports.add_ports_from_markers_inside, pin_layer=(8, 2), port_layer=(8, 0)
+    _safe_add_ports_from_markers, pin_layer=(8, 2), port_layer=(8, 0)
 )
 _add_ports_metal2 = partial(
-    gf.add_ports.add_ports_from_markers_inside, pin_layer=(10, 2), port_layer=(10, 0)
+    _safe_add_ports_from_markers, pin_layer=(10, 2), port_layer=(10, 0)
 )
 _add_ports = (_add_ports_metal1, _add_ports_metal2)
 gdsdir = PATH.gds

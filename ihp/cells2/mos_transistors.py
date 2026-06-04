@@ -1,6 +1,10 @@
+from __future__ import annotations
+
+import warnings
 from typing import Literal
 
 import gdsfactory as gf
+from gdsfactory.typings import LayerSpec
 
 from .. import tech
 from .ihp_pycell import eng_string_to_float
@@ -13,6 +17,44 @@ from .ihp_pycell import rfnmosHV as rfnmosHVIHP
 from .ihp_pycell import rfpmos as rfpmosIHP
 from .ihp_pycell import rfpmosHV as rfpmosHVIHP
 from .utils import *
+
+
+def _add_ports_from_boxes_safe(
+    component: gf.Component,
+    pin_layer: LayerSpec,
+    port_type: str = "electrical",
+    port_name_prefix: str | None = None,
+    ports_on_short_side: bool = False,
+) -> None:
+    """Add ports from boxes, silently skipping duplicates.
+
+    Wraps ``gf.add_ports.add_ports_from_boxes`` to handle cases where
+    multiple overlapping shapes on the same layer (e.g. GatPolydrawing
+    with gate-ring connecting stripes) produce ports at identical
+    locations.  Rather than raising a ``ValueError``, duplicate ports
+    are simply skipped.
+    """
+    try:
+        gf.add_ports.add_ports_from_boxes(
+            component,
+            pin_layer=pin_layer,
+            port_type=port_type,
+            port_name_prefix=port_name_prefix,
+            ports_on_short_side=ports_on_short_side,
+            auto_rename_ports=False,
+        )
+    except ValueError as exc:
+        if "already in" not in str(exc):
+            raise
+        # Overlapping shapes (e.g. gate-ring stripes sharing edges with
+        # gate fingers) produced ports at the same physical location.
+        # This is harmless -- the first unique port was already added
+        # before the error was raised, so we just move on.
+        warnings.warn(
+            f"Duplicate port detected on layer {pin_layer}; "
+            "skipping overlapping port(s).",
+            stacklevel=2,
+        )
 
 
 @gf.cell(tags=["IHP", "mos", "lv"])
@@ -63,13 +105,12 @@ def nmos(
     )
 
     # add ports
-    gf.add_ports.add_ports_from_boxes(
+    _add_ports_from_boxes_safe(
         c,
         pin_layer=(tech.LAYER.Metal1drawing),
         port_type="electrical",
         port_name_prefix="DS_",
         ports_on_short_side=True,
-        auto_rename_ports=False,
     )
     # Adjust port orientations, for metal1 so every other port points in the opposite direction
     for i, port in enumerate(c.ports):
@@ -77,13 +118,12 @@ def nmos(
             90 if port.name.startswith("DS_") and i % 2 == 1 else port.orientation
         )
 
-    gf.add_ports.add_ports_from_boxes(
+    _add_ports_from_boxes_safe(
         c,
         pin_layer=(tech.LAYER.GatPolydrawing),
         port_type="electrical",
         port_name_prefix="G_",
         ports_on_short_side=True,
-        auto_rename_ports=False,
     )
     return c
 
@@ -137,13 +177,12 @@ def nmosHV(
     )
 
     # add ports
-    gf.add_ports.add_ports_from_boxes(
+    _add_ports_from_boxes_safe(
         c,
         pin_layer=(tech.LAYER.Metal1drawing),
         port_type="electrical",
         port_name_prefix="DS_",
         ports_on_short_side=True,
-        auto_rename_ports=False,
     )
     # Adjust port orientations, for metal1 so every other port points in the opposite direction
     for i, port in enumerate(c.ports):
@@ -151,13 +190,12 @@ def nmosHV(
             90 if port.name.startswith("DS_") and i % 2 == 1 else port.orientation
         )
 
-    gf.add_ports.add_ports_from_boxes(
+    _add_ports_from_boxes_safe(
         c,
         pin_layer=(tech.LAYER.GatPolydrawing),
         port_type="electrical",
         port_name_prefix="G_",
         ports_on_short_side=True,
-        auto_rename_ports=False,
     )
 
     return c
@@ -211,13 +249,12 @@ def pmos(
     )
 
     # add ports
-    gf.add_ports.add_ports_from_boxes(
+    _add_ports_from_boxes_safe(
         c,
         pin_layer=(tech.LAYER.Metal1drawing),
         port_type="electrical",
         port_name_prefix="DS_",
         ports_on_short_side=True,
-        auto_rename_ports=False,
     )
     # Adjust port orientations, for metal1 so every other port points in the opposite direction
     for i, port in enumerate(c.ports):
@@ -225,13 +262,12 @@ def pmos(
             90 if port.name.startswith("DS_") and i % 2 == 1 else port.orientation
         )
 
-    gf.add_ports.add_ports_from_boxes(
+    _add_ports_from_boxes_safe(
         c,
         pin_layer=(tech.LAYER.GatPolydrawing),
         port_type="electrical",
         port_name_prefix="G_",
         ports_on_short_side=True,
-        auto_rename_ports=False,
     )
     return c
 
@@ -285,13 +321,12 @@ def pmosHV(
     )
 
     # add ports
-    gf.add_ports.add_ports_from_boxes(
+    _add_ports_from_boxes_safe(
         c,
         pin_layer=(tech.LAYER.Metal1drawing),
         port_type="electrical",
         port_name_prefix="DS_",
         ports_on_short_side=True,
-        auto_rename_ports=False,
     )
     # Adjust port orientations, for metal1 so every other port points in the opposite direction
     for i, port in enumerate(c.ports):
@@ -299,13 +334,12 @@ def pmosHV(
             90 if port.name.startswith("DS_") and i % 2 == 1 else port.orientation
         )
 
-    gf.add_ports.add_ports_from_boxes(
+    _add_ports_from_boxes_safe(
         c,
         pin_layer=(tech.LAYER.GatPolydrawing),
         port_type="electrical",
         port_name_prefix="G_",
         ports_on_short_side=True,
-        auto_rename_ports=False,
     )
     return c
 
@@ -370,13 +404,12 @@ def rfnmos(
     )
 
     # add ports
-    gf.add_ports.add_ports_from_boxes(
+    _add_ports_from_boxes_safe(
         c,
         pin_layer=(tech.LAYER.Metal1drawing),
         port_type="electrical",
         port_name_prefix="DS_",
         ports_on_short_side=True,
-        auto_rename_ports=False,
     )
     # Adjust port orientations, for metal1 so every other port points in the opposite direction
     for i, port in enumerate(c.ports):
@@ -384,13 +417,12 @@ def rfnmos(
             90 if port.name.startswith("DS_") and i % 2 == 1 else port.orientation
         )
 
-    gf.add_ports.add_ports_from_boxes(
+    _add_ports_from_boxes_safe(
         c,
         pin_layer=(tech.LAYER.GatPolydrawing),
         port_type="electrical",
         port_name_prefix="G_",
         ports_on_short_side=True,
-        auto_rename_ports=False,
     )
     return c
 

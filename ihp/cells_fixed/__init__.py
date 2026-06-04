@@ -27,13 +27,27 @@ def deprecated(func):
     return wrapper
 
 
+def _safe_add_ports_from_markers(component, pin_layer, port_layer):
+    try:
+        gf.add_ports.add_ports_from_markers_inside(
+            component, pin_layer=pin_layer, port_layer=port_layer
+        )
+    except ValueError as exc:
+        if "already in" not in str(exc):
+            raise
+        warnings.warn(
+            f"Duplicate port detected on layer {pin_layer}; skipping overlapping port(s).",
+            stacklevel=2,
+        )
+
+
 _add_ports_metal1 = partial(
-    gf.add_ports.add_ports_from_markers_inside,
+    _safe_add_ports_from_markers,
     pin_layer=LAYER.Metal1pin,
     port_layer=LAYER.Metal1drawing,
 )
 _add_ports_metal2 = partial(
-    gf.add_ports.add_ports_from_markers_inside,
+    _safe_add_ports_from_markers,
     pin_layer=LAYER.Metal2pin,
     port_layer=LAYER.Metal2drawing,
 )

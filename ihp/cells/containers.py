@@ -49,9 +49,8 @@ def add_pads_top(
         route_width: width of the route.
         kwargs: additional arguments.
 
-    .. plot::
-        :include-source:
-
+    Example:
+        ```python
         import gdsfactory as gf
         c = gf.c.nxn(
             xsize=600,
@@ -64,6 +63,7 @@ def add_pads_top(
         )
         cc = gf.routing.add_pads_top(component=c, port_names=("e1", "e4"), fanout_length=50)
         cc.plot()
+        ```
 
     """
     return gf.routing.add_pads_top(

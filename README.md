@@ -172,15 +172,15 @@ make pre-commit
 
 1. Bump the version:
 
-```bash
-tbump 0.0.1
-```
+    ```bash
+    tbump 0.0.1
+    ```
 
 2. Push the tag:
 
-```bash
-git push --tags
-```
-This triggers the release workflow that builds wheels and uploads them.
+    ```bash
+    git push --tags
+    ```
+    This triggers the release workflow that builds wheels and uploads them.
 
 3. Create a pull request with the updated changelog since last release.

@@ -1,0 +1,47 @@
+info: {}
+name: directional_coupler_CL100_F10000000000_CF3_SCStopmetal2_d5fd9a44
+ports:
+  e1:
+    center:
+    - -100
+    - 1.108
+    layer: TopMetal2drawing
+    name: e1
+    orientation: 180
+    port_type: electrical
+    width: 1.68
+  e2:
+    center:
+    - 3834.391
+    - 1.108
+    layer: TopMetal2drawing
+    name: e2
+    orientation: 0
+    port_type: electrical
+    width: 1.68
+  e3:
+    center:
+    - 3735.231
+    - -101.948
+    layer: TopMetal2drawing
+    name: e3
+    orientation: 270
+    port_type: electrical
+    width: 1.68
+  e4:
+    center:
+    - -0.84
+    - -101.948
+    layer: TopMetal2drawing
+    name: e4
+    orientation: 270
+    port_type: electrical
+    width: 1.68
+settings:
+  Z0: 50
+  connection_length: 100
+  coupling_factor: 3
+  e_r: 4.1
+  frequency: 10000000000
+  ground_cross_section: topmetal1_routing
+  signal_cross_section: topmetal2_routing

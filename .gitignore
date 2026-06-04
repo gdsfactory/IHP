@@ -1,7 +1,7 @@
 ihp-klayout/
-docs/cells.rst
-docs/cells_fixed.rst
-docs/cells2_reference.rst
+docs/cells.md
+docs/cells_fixed.md
+docs/cells2_reference.md
 *.glb
 
 # Simulation outputs
@@ -106,6 +106,8 @@ instance/
 
 # Sphinx documentation
 docs/_build/
+docs/changelog.md
+docs/index.md
 
 # PyBuilder
 .pybuilder/

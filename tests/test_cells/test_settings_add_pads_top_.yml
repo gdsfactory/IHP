@@ -5,7 +5,7 @@ info:
   route_info_type: metal_routing
   route_info_weight: 10
   width: 2
-name: add_pads_top_Cstraight_PNNone_CNNone_CSmetal_routing_PP_c26840c8
+name: add_pads_top_Cstraight_PNNone_CSmetal_routing_PPNe1_PCu_f0e0c4e1
 ports:
   e1:
     center:

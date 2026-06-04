@@ -16,7 +16,6 @@ from gdsfactory.typings import (
 def add_pads_top(
     component: ComponentSpec = "straight",
     port_names: Strs | None = None,
-    component_name: str | None = None,
     cross_section: CrossSectionSpec = "metal_routing",
     pad_port_name: str = "e1",
     pad: ComponentSpec = "CuPillarPad",
@@ -35,7 +34,6 @@ def add_pads_top(
     Args:
         component: component spec to connect to.
         port_names: list of port names to connect to pads.
-        component_name: optional for the label.
         cross_section: cross_section function.
         pad_port_name: pad port name.
         pad: pad function.
@@ -69,7 +67,6 @@ def add_pads_top(
     return gf.routing.add_pads_top(
         component=component,
         port_names=port_names,
-        component_name=component_name,
         cross_section=cross_section,
         pad_port_name=pad_port_name,
         pad=pad,
