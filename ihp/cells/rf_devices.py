@@ -4,7 +4,7 @@ from gdsfactory.typings import CrossSectionSpec, LayerSpec, Size
 
 from math import cosh, exp, log, pi, sin, sinh, sqrt, asin
 
-import scipy
+from scipy.constants import c
 
 from ihp.cells.waveguides import _calculate_effective_dielectric_constant, _calculate_width_from_Z0, _get_stack_geometry, tline, coupler_tline, tline_corner
 from .. import tech
