@@ -756,7 +756,7 @@ def quarter_wave_transformer(
         ground_cross_section: Cross-section for the ground line.
         e_r: Relative permittivity of the substrate. Defaults to 4.1 for silicon dioxide.
     """
-    wave_length = scipy.constants.c / frequency * 1e6  
+    wave_length = c / frequency * 1e6  
     
     c = gf.Component()
     
