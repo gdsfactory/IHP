@@ -1115,7 +1115,7 @@ def hairpin_coupled_line_bandpass_filter(
         e_r=e_r
     )
     
-    segment_length = scipy.constants.c / frequency * 1e6 / sqrt(e_eff) / 4
+    segment_length = c / frequency * 1e6 / sqrt(e_eff) / 4
     segment_length = segment_length - segment_length % tech.nm  # snap to grid
     
     input_line = c.add_ref(tline(
