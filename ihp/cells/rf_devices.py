@@ -1125,13 +1125,14 @@ def hairpin_coupled_line_bandpass_filter(
         Z0=Z0,
     ))
     
-    first_vertical_line = tline(
-        length=segment_length - 2 * width_Z0,  # adjust length to account for the port at the end
+    first_vertical_line = gf.Component()
+    tline_ref = first_vertical_line.add_ref(tline(
+        length=segment_length - 2 * width_Z0,
         signal_cross_section=signal_cross_section,
         ground_cross_section=ground_cross_section,
         Z0=Z0,
-    ).copy()
-    # copy to be able to add port
+    ))
+    first_vertical_line.add_ports(tline_ref.ports)
     
     # from Microstrip Filters for RF/Microwave Applications by Jia-Sheng Hong, M. J. Lancaster
     t = 2*segment_length/pi * asin(sqrt((fractional_bandwidth)/(g[1])))
