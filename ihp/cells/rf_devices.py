@@ -647,7 +647,7 @@ def directional_coupler(
         Z0: Target characteristic impedance (ohms).
         e_r: Relative permittivity of the substrate. Defaults to 4.1 for silicon dioxide.
     """
-    wave_length = scipy.constants.c / frequency * 1e6  
+    wave_length = c / frequency * 1e6  
     
     c = gf.Component()
     
