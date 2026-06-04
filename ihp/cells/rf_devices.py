@@ -1134,7 +1134,7 @@ def hairpin_coupled_line_bandpass_filter(
     # copy to be able to add port
     
     # from Microstrip Filters for RF/Microwave Applications by Jia-Sheng Hong, M. J. Lancaster
-    t = 2*segment_length/scipy.constants.pi * asin(sqrt((fractional_bandwidth)/(g[1])))
+    t = 2*segment_length/pi * asin(sqrt((fractional_bandwidth)/(g[1])))
     
     first_vertical_line.add_port(
         name="e3",
