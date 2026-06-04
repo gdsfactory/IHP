@@ -9,8 +9,8 @@ from .fet_transistors import *
 from .inductors import *
 from .passives import *
 from .resistors import *
+from .rf_devices import *
 from .rf_transistors import *
 from .text import *
 from .via_stacks import *
 from .waveguides import *
-from .rf_devices import *
