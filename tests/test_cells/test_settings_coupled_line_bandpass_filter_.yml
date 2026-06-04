@@ -1,0 +1,32 @@
+info: {}
+name: coupled_line_bandpass_filter_O3_F10000000000_B100000000_99144afa
+ports:
+  e1:
+    center:
+    - 0
+    - 0
+    layer: TopMetal2drawing
+    name: e1
+    orientation: 180
+    port_type: electrical
+    width: 1.68
+  e2:
+    center:
+    - 15037.564
+    - 25.204
+    layer: TopMetal2drawing
+    name: e2
+    orientation: 0
+    port_type: electrical
+    width: 1.68
+settings:
+  Z0: 50
+  bandwidth: 1000000000
+  connection_length: 50
+  e_r: 4.1
+  filter_type: butter
+  frequency: 10000000000
+  ground_cross_section: topmetal1_routing
+  order: 3
+  ripple_dB: 3
+  signal_cross_section: topmetal2_routing

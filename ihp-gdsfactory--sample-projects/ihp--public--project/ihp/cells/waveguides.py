@@ -32,7 +32,7 @@ def bend_euler(
     p: float = 0.5,
     width: float | None = None,
     cross_section: CrossSectionSpec = "strip",
-    allow_min_radius_violation: bool = False,
+    allow_min_radius_violation: bool = True,
 ) -> gf.Component:
     """Regular degree euler bend.
 
