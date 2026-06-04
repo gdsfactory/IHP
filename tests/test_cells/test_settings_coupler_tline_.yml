@@ -1,0 +1,47 @@
+info: {}
+name: coupler_tline_Z50_Z50_L10_SCStopmetal2_routing_GCStopme_0eb93630
+ports:
+  e1:
+    center:
+    - 0
+    - 13.442
+    layer: TopMetal2drawing
+    name: e1
+    orientation: 180
+    port_type: electrical
+    width: 1.68
+  e2:
+    center:
+    - 10
+    - 13.442
+    layer: TopMetal2drawing
+    name: e2
+    orientation: 0
+    port_type: electrical
+    width: 1.68
+  e3:
+    center:
+    - 10
+    - -13.442
+    layer: TopMetal2drawing
+    name: e3
+    orientation: 0
+    port_type: electrical
+    width: 1.68
+  e4:
+    center:
+    - 0
+    - -13.442
+    layer: TopMetal2drawing
+    name: e4
+    orientation: 180
+    port_type: electrical
+    width: 1.68
+settings:
+  Z0e: 50
+  Z0o: 50
+  e_r: 4.1
+  ground_cross_section: topmetal1_routing
+  length: 10
+  npoints: 2
+  signal_cross_section: topmetal2_routing

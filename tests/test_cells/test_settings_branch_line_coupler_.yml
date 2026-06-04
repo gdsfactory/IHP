@@ -1,0 +1,46 @@
+info: {}
+name: branch_line_coupler_CL100_F10000000000_SCStopmetal2_rou_54bcde66
+ports:
+  e1:
+    center:
+    - -100
+    - 0.84
+    layer: TopMetal2drawing
+    name: e1
+    orientation: 180
+    port_type: electrical
+    width: 1.68
+  e2:
+    center:
+    - 3838.657
+    - 0.84
+    layer: TopMetal2drawing
+    name: e2
+    orientation: 0
+    port_type: electrical
+    width: 1.68
+  e3:
+    center:
+    - 3838.657
+    - -3733.505
+    layer: TopMetal2drawing
+    name: e3
+    orientation: 0
+    port_type: electrical
+    width: 1.68
+  e4:
+    center:
+    - -100
+    - -3733.505
+    layer: TopMetal2drawing
+    name: e4
+    orientation: 180
+    port_type: electrical
+    width: 1.68
+settings:
+  Z0: 50
+  connection_length: 100
+  e_r: 4.1
+  frequency: 10000000000
+  ground_cross_section: topmetal1_routing
+  signal_cross_section: topmetal2_routing
