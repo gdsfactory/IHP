@@ -2,6 +2,8 @@ ihp-klayout/
 docs/cells.md
 docs/cells_fixed.md
 docs/cells2_reference.md
+docs/changelog.md
+docs/index.md
 *.glb
 
 # Simulation outputs
