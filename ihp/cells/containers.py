@@ -26,7 +26,6 @@ def add_pads_top(
     bend: ComponentSpec = "wire_corner",
     straight_separation: float = 15.0,
     pad_pitch: float = 100.0,
-    taper: ComponentSpec | None = None,
     port_type: str = "electrical",
     allow_width_mismatch: bool = True,
     fanout_length: float | None = 80,
@@ -44,7 +43,6 @@ def add_pads_top(
         bend: bend function.
         straight_separation: from edge to edge.
         pad_pitch: spacing between pads.
-        taper: taper function.
         port_type: port type.
         allow_width_mismatch: if True, allows width mismatch.
         fanout_length: length of the fanout.
@@ -77,7 +75,6 @@ def add_pads_top(
         bend=bend,
         straight_separation=straight_separation,
         pad_pitch=pad_pitch,
-        taper=taper,
         port_type=port_type,
         allow_width_mismatch=allow_width_mismatch,
         fanout_length=fanout_length,
