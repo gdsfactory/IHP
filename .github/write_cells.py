@@ -1,6 +1,10 @@
+import base64
 import inspect
 import warnings
 
+import kwasm.embed
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 from gdsfactory.get_factories import get_cells
 
 from ihp import PDK
@@ -9,6 +13,7 @@ from ihp import cells_fixed as cells_fixed_module
 from ihp.config import PATH
 from ihp.tech import LAYER_STACK, LAYER_VIEWS
 
+mpl.use("Agg")
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 PDK.activate()
@@ -18,6 +23,9 @@ filepath_fixed = PATH.repo / "docs" / "cells_fixed.md"
 filepath_cells2 = PATH.repo / "docs" / "cells2_reference.md"
 filepath_3d = PATH.repo / "docs" / "_static" / "3d"
 filepath_3d.mkdir(parents=True, exist_ok=True)
+
+kwasm_dir = PATH.repo / "docs" / "kwasm"
+gds_dir = kwasm_dir / "gds"
 
 skip = {
     "LIBRARY",
@@ -39,6 +47,24 @@ skip_plot: tuple[str, ...] = ("",)
 skip_settings: tuple[str, ...] = ("flatten", "safe_cell_names")
 
 cells = PDK.cells
+
+
+def _setup_kwasm_viewer() -> None:
+    gds_dir.mkdir(parents=True, exist_ok=True)
+    viewer_path = kwasm_dir / "viewer.html"
+    if viewer_path.exists():
+        return
+    template = kwasm.embed._read_artifacts()
+    template = template.replace("KWASM_GDS_B64", "")
+    lyp_path = PATH.lyp
+    if lyp_path.exists():
+        lyp_b64 = base64.b64encode(lyp_path.read_bytes()).decode("ascii")
+        template = template.replace("KWASM_LYP_B64", lyp_b64)
+    else:
+        template = template.replace("KWASM_LYP_B64", "")
+    template = template.replace("KWASM_LYRDB_B64", "")
+    template = template.replace("KWASM_NETLIST_B64", "")
+    viewer_path.write_text(template)
 
 
 def make_3d_glb(name, cell_dict):
@@ -98,7 +124,40 @@ def write_cell_entry(f, name, cell_dict, module_path="ihp.cells", import_alias="
 
 ::: {module_path}.{name}
 
-```python
+"""
+        )
+
+        # Write GDS and save PNG for Static/Dynamic tabs
+        try:
+            c = cell_dict[name]()
+            c.write_gds(gds_dir / f"{name}.gds")
+            c.plot()
+            plt.savefig(gds_dir / f"{name}.png")
+            plt.close()
+
+            f.write('=== "Static"\n\n')
+            f.write(f"    ![{name}](kwasm/gds/{name}.png)\n\n")
+            f.write('=== "Dynamic"\n\n')
+            f.write(
+                f'    <iframe src="kwasm/viewer.html?url=gds/{name}.gds"'
+                f' loading="lazy" width="100%" height="400"'
+                f' style="border:none"></iframe>\n\n'
+            )
+        except Exception as e:
+            print(f"  [kwasm skip] {name}: {e}")
+
+        # Generate 3D GLB and embed via shared viewer
+        glb_file = make_3d_glb(name, cell_dict)
+        if glb_file:
+            f.write(
+                f"""
+<iframe class="viewer-3d" src="_static/3d/viewer.html?file={glb_file}" width="100%" height="500px" frameborder="0" loading="lazy"></iframe>
+
+"""
+            )
+
+        f.write(
+            f"""```python
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -114,15 +173,8 @@ c.plot()
 """
         )
 
-        # Generate 3D GLB and embed via shared viewer
-        glb_file = make_3d_glb(name, cell_dict)
-        if glb_file:
-            f.write(
-                f"""
-<iframe class="viewer-3d" src="_static/3d/viewer.html?file={glb_file}" width="100%" height="500px" frameborder="0" loading="lazy"></iframe>
 
-"""
-            )
+_setup_kwasm_viewer()
 
 
 # Write parametric cells page
