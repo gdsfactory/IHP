@@ -45,8 +45,14 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
 # Dev/maintenance inputs only -- nothing at PDK runtime depends on these paths.
-VACASK_DIR = Path(os.environ.get("VACASK_DIR", "/home/pepijn/code/nyanodide/VACASK"))
-PDK_ROOT = Path(os.environ.get("PDK_ROOT", "/home/pepijn/code/nyanodide/IHP-Open-PDK"))
+VACASK_DIR_ENV = os.environ.get("VACASK_DIR")
+PDK_ROOT_ENV = os.environ.get("PDK_ROOT")
+
+if not VACASK_DIR_ENV or not PDK_ROOT_ENV:
+    raise ValueError("Both VACASK_DIR and PDK_ROOT environment variables must be set.")
+
+VACASK_DIR = Path(VACASK_DIR_ENV)
+PDK_ROOT = Path(PDK_ROOT_ENV)
 PDK = os.environ.get("PDK", "ihp-sg13g2")
 
 OUT_DIR = REPO_ROOT / "ihp" / "models" / "vacask" / "models"
