@@ -39,13 +39,24 @@ def rsil_schematic(
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "rsil",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerRES.lib",
             "sections": ["res_typ", "res_bcs", "res_wcs"],
             "port_order": ["P1", "P2", "BN"],
             "params": {"w": "dx * 1e-6", "l": "dy * 1e-6", "m": "1"},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "rsil",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerRES.lib",
+            "sections": ["res_typ", "res_bcs", "res_wcs"],
+            "port_order": ["P1", "P2", "BN"],
+            "params": {"w": "dx * 1e-6", "l": "dy * 1e-6", "m": "1"},
+        },
     ]
     s.create_port(name="P1", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="P2", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -247,13 +258,24 @@ def rppd_schematic(
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "rppd",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerRES.lib",
             "sections": ["res_typ", "res_bcs", "res_wcs"],
             "port_order": ["P1", "P2", "BN"],
             "params": {"w": "dx * 1e-6", "l": "dy * 1e-6", "m": "1"},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "rppd",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerRES.lib",
+            "sections": ["res_typ", "res_bcs", "res_wcs"],
+            "port_order": ["P1", "P2", "BN"],
+            "params": {"w": "dx * 1e-6", "l": "dy * 1e-6", "m": "1"},
+        },
     ]
     s.create_port(name="P1", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="P2", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -469,13 +491,24 @@ def rhigh_schematic(
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "rhigh",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerRES.lib",
             "sections": ["res_typ", "res_bcs", "res_wcs"],
             "port_order": ["P1", "P2", "BN"],
             "params": {"w": "dx * 1e-6", "l": "dy * 1e-6", "m": "1"},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "rhigh",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerRES.lib",
+            "sections": ["res_typ", "res_bcs", "res_wcs"],
+            "port_order": ["P1", "P2", "BN"],
+            "params": {"w": "dx * 1e-6", "l": "dy * 1e-6", "m": "1"},
+        },
     ]
     s.create_port(name="P1", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="P2", cross_section=_XS, x=0, y=-1, orientation=270)

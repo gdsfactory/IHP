@@ -58,6 +58,7 @@ def npn13G2_schematic(
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "npn13G2",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerHBT.lib",
@@ -69,7 +70,22 @@ def npn13G2_schematic(
                 "we": "emitter_width * 1e-6",
                 "le": "emitter_length * 1e-6",
             },
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "npn13G2",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerHBT.lib",
+            "sections": ["hbt_typ", "hbt_bcs", "hbt_wcs"],
+            "port_order": ["C", "B", "E", "BN"],
+            "params": {
+                "Nx": "Nx",
+                "Ny": "Ny",
+                "we": "emitter_width * 1e-6",
+                "le": "emitter_length * 1e-6",
+            },
+        },
     ]
     s.create_port(name="C", cross_section=_XS, x=1, y=0, orientation=0)
     s.create_port(name="B", cross_section=_XS, x=-1, y=0, orientation=180)
@@ -790,6 +806,7 @@ def npn13G2L_schematic(
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "npn13G2l",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerHBT.lib",
@@ -799,7 +816,20 @@ def npn13G2L_schematic(
                 "we": "emitter_width * 1e-6",
                 "le": "emitter_length * 1e-6",
             },
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "npn13G2l",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerHBT.lib",
+            "sections": ["hbt_typ", "hbt_bcs", "hbt_wcs"],
+            "port_order": ["C", "B", "E", "BN"],
+            "params": {
+                "we": "emitter_width * 1e-6",
+                "le": "emitter_length * 1e-6",
+            },
+        },
     ]
     s.create_port(name="C", cross_section=_XS, x=1, y=0, orientation=0)
     s.create_port(name="B", cross_section=_XS, x=-1, y=0, orientation=180)
@@ -1382,6 +1412,7 @@ def npn13G2V_schematic(
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "npn13G2v",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerHBT.lib",
@@ -1391,7 +1422,20 @@ def npn13G2V_schematic(
                 "we": "emitter_width * 1e-6",
                 "le": "emitter_length * 1e-6",
             },
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "npn13G2v",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerHBT.lib",
+            "sections": ["hbt_typ", "hbt_bcs", "hbt_wcs"],
+            "port_order": ["C", "B", "E", "BN"],
+            "params": {
+                "we": "emitter_width * 1e-6",
+                "le": "emitter_length * 1e-6",
+            },
+        },
     ]
     s.create_port(name="C", cross_section=_XS, x=1, y=0, orientation=0)
     s.create_port(name="B", cross_section=_XS, x=-1, y=0, orientation=180)
@@ -2079,13 +2123,24 @@ def pnpMPA_schematic(length: float = 2, width: float = 0.7) -> DSchematic:
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "pnpMPA",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerHBT.lib",
             "sections": ["hbt_typ", "hbt_bcs", "hbt_wcs"],
             "port_order": ["C", "B", "E"],
             "params": {},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "pnpMPA",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerHBT.lib",
+            "sections": ["hbt_typ", "hbt_bcs", "hbt_wcs"],
+            "port_order": ["C", "B", "E"],
+            "params": {},
+        },
     ]
     s.create_port(name="C", cross_section=_XS, x=1, y=0, orientation=0)
     s.create_port(name="B", cross_section=_XS, x=-1, y=0, orientation=180)

@@ -15,6 +15,9 @@ update-pre:
 tech:
 	python install_tech.py
 
+vacask-models:
+	python scripts/convert_vacask_models.py
+
 test:
 	uv run pytest -s
 

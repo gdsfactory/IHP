@@ -36,6 +36,7 @@ def bondpad_schematic(
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "bondpad",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/sg13g2_bondpad.lib",
@@ -46,7 +47,21 @@ def bondpad_schematic(
                 "shape": str(_shape_map[shape]),
                 "padtype": "0",
             },
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "bondpad",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/sg13g2_bondpad.lib",
+            "sections": [],
+            "port_order": ["PAD"],
+            "params": {
+                "size": "diameter * 1e-6",
+                "shape": str(_shape_map[shape]),
+                "padtype": "0",
+            },
+        },
     ]
     s.create_port(name="PAD", cross_section=_XS, x=0, y=1, orientation=90)
     return s
