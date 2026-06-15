@@ -150,7 +150,7 @@ parameters pre_layout=1
 //*
 //*******************************************************************************
 
-model sg13g2_hv_nmos_psp psp103va ( 
+model sg13g2_hv_nmos_psp psp103va (
   type=+1 level=103.60 tr=27.0 dta=0.0 swgeo=1.0 swigate=1.0 swimpact=1.0
   swgidl=0.0 swjuncap=3.0 swjunasym=0.0 swnud=0.0 swedge=0.0 swdelvtac=0.0
   swign=1.0 qmc=1.0 lvaro=3.499e-08 lvarl=-0.09125 lvarw=0.0 lap=6.3866e-08
@@ -233,7 +233,7 @@ model sg13g2_hv_nmos_psp psp103va (
   vsb_max=1.6
 )
 
-model sg13g2_hv_nmos_psp_rf pspnqs103va ( 
+model sg13g2_hv_nmos_psp_rf pspnqs103va (
   type=+1 level=103.60 tr=27.0 dta=0.0 swgeo=1.0 swigate=1.0 swimpact=1.0
   swgidl=0.0 swjuncap=3.0 swjunasym=0.0 swnud=0.0 swedge=0.0 swdelvtac=0.0
   swign=1.0 qmc=1.0 lvaro=3.499e-08 lvarl=-0.09125 lvarw=0.0 lap=6.3866e-08
@@ -495,7 +495,7 @@ parameters pre_layout=1
 //*
 //*******************************************************************************
 
-model sg13g2_hv_pmos_psp psp103va ( 
+model sg13g2_hv_pmos_psp psp103va (
   type=-1 level=103.60 tr=27.0 dta=0.0 swgeo=1.0 swigate=1.0 swimpact=1.0
   swgidl=1.0 swjuncap=3.0 swjunasym=0.0 swnud=0.0 swedge=0.0 swdelvtac=0.0
   swign=1.0 qmc=1.0 lvaro=-1.735e-09 lvarl=0.0 lvarw=0.0 lap=3.471e-08 wvaro=0.0
@@ -577,7 +577,7 @@ model sg13g2_hv_pmos_psp psp103va (
   vgd_max=3.0 vgb_max=3.0 vds_max=3.0 vdb_max=1.6 vsb_max=1.6
 )
 
-model sg13g2_hv_pmos_psp_rf pspnqs103va ( 
+model sg13g2_hv_pmos_psp_rf pspnqs103va (
   type=-1 level=103.60 tr=27.0 dta=0.0 swgeo=1.0 swigate=1.0 swimpact=1.0
   swgidl=1.0 swjuncap=3.0 swjunasym=0.0 swnud=0.0 swedge=0.0 swdelvtac=0.0
   swign=1.0 qmc=1.0 lvaro=-1.735e-09 lvarl=0.0 lvarw=0.0 lap=3.471e-08 wvaro=0.0

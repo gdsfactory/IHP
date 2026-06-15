@@ -4,16 +4,16 @@
 include "sg13g2_vacask_common.lib"
 
 
-//******************************************************************************* 
-//*                                                                             * 
-//* Library:      SG13G2_dev                                                    * 
+//*******************************************************************************
+//*                                                                             *
+//* Library:      SG13G2_dev                                                    *
 //* Technologies: SG13G2                                                        *
 //*                                                                             *
 //* Model:        PSP 103.6                                                     *
-//* Revision:     200310                                                        * 
-//*                                                                             * 
-//******************************************************************************* 
-//*                                                                             * 
+//* Revision:     200310                                                        *
+//*                                                                             *
+//*******************************************************************************
+//*                                                                             *
 //* Copyright 2023 IHP PDK Authors                                              *
 //*                                                                             *
 //* Licensed under the Apache License, Version 2.0 (the "License");             *
@@ -29,40 +29,40 @@ include "sg13g2_vacask_common.lib"
 //* limitations under the License.                                              *
 //*                                                                             *
 //*******************************************************************************
-//*******************************************************************************   
-//*                                                                             *  
-//*                                                                             *  
-//*              C O M M O N    SG 13  M O S     M O D E L S                    *  
-//*                                                                             *  
-//*                                                                             *  
-//*******************************************************************************   
-//*  
-//* NOTE: do not include this file directly in the netlist, use models.typ, .bcs or .wcs only  
-//*   
-//*  
-//*  
-//*******************************************************************************   
-//* variable C section  
-//*******************************************************************************   
-  
-  
-//*******************************************************************************   
-//* MOS transistor section  
-//*******************************************************************************   
-  
-  
-  
-//* MOS-Subckt with D/S-overlap possibility  
-//*  
-//*       z1              z2            z1  
-//*   ----------------------------------------  
-//*   |          |   |         |   |         |  
-//*   |    S     | G |   D     | G |    S    |  w/ng, >=0.15u   
-//*   |          |   |         |   |         |  
-//*   ----------------------------------------  
-//*   
-//*  z1=0.34u, z2=0.38u           
-//*  
+//*******************************************************************************
+//*                                                                             *
+//*                                                                             *
+//*              C O M M O N    SG 13  M O S     M O D E L S                    *
+//*                                                                             *
+//*                                                                             *
+//*******************************************************************************
+//*
+//* NOTE: do not include this file directly in the netlist, use models.typ, .bcs or .wcs only
+//*
+//*
+//*
+//*******************************************************************************
+//* variable C section
+//*******************************************************************************
+
+
+//*******************************************************************************
+//* MOS transistor section
+//*******************************************************************************
+
+
+
+//* MOS-Subckt with D/S-overlap possibility
+//*
+//*       z1              z2            z1
+//*   ----------------------------------------
+//*   |          |   |         |   |         |
+//*   |    S     | G |   D     | G |    S    |  w/ng, >=0.15u
+//*   |          |   |         |   |         |
+//*   ----------------------------------------
+//*
+//*  z1=0.34u, z2=0.38u
+//*
 //* Parameters as,ad,ps,pd are calculated automatically, if <= 0
 //*
 //* NOTE:
@@ -149,7 +149,7 @@ parameters pre_layout=1
 //*
 //*******************************************************************************
 
-model sg13g2_lv_nmos_psp psp103va ( 
+model sg13g2_lv_nmos_psp psp103va (
   type=+1 level=103.60 tr=27.0 dta=0.0 swgeo=1.0 swigate=1.0 swimpact=1.0
   swgidl=1.0 swjuncap=3.0 swjunasym=0.0 swnud=0.0 swedge=0.0 swdelvtac=0.0
   swign=1.0 qmc=1.0 lvaro=0.0 lvarl=0.0 lvarw=0.0 lap=2.9423e-08 wvaro=0.0
@@ -231,7 +231,7 @@ model sg13g2_lv_nmos_psp psp103va (
   vgb_max=1.6 vds_max=1.6 vdb_max=1.6 vsb_max=1.6
 )
 
-model sg13g2_lv_nmos_psp_rf pspnqs103va ( 
+model sg13g2_lv_nmos_psp_rf pspnqs103va (
   type=+1 level=103.60 tr=27.0 dta=0.0 swgeo=1.0 swigate=1.0 swimpact=1.0
   swgidl=1.0 swjuncap=3.0 swjunasym=0.0 swnud=0.0 swedge=0.0 swdelvtac=0.0
   swign=1.0 qmc=1.0 lvaro=0.0 lvarl=0.0 lvarw=0.0 lap=2.9423e-08 wvaro=0.0
@@ -341,7 +341,7 @@ model sg13g2_lv_nmos_psp_rf pspnqs103va (
 
 
 
-                
+
 
 
 @if (rfmode==0)
@@ -496,7 +496,7 @@ parameters pre_layout=1
 //* - change parameter rint from 1.3323e-26 to 1e-12
 //*******************************************************************************
 
-model sg13g2_lv_pmos_psp psp103va ( 
+model sg13g2_lv_pmos_psp psp103va (
   type=-1 level=103.60 tr=27.0 dta=0.0 swgeo=1.0 swigate=1.0 swimpact=1.0
   swgidl=1.0 swjuncap=3.0 swjunasym=0.0 swnud=0.0 swedge=0.0 swdelvtac=0.0
   swign=1.0 qmc=1.0 lvaro=9.695e-08 lvarl=-0.03438 lvarw=0.0 lap=2.5254e-08
@@ -580,7 +580,7 @@ model sg13g2_lv_pmos_psp psp103va (
 )
 
 
-model sg13g2_lv_pmos_psp_rf pspnqs103va ( 
+model sg13g2_lv_pmos_psp_rf pspnqs103va (
   type=-1 level=103.60 tr=27.0 dta=0.0 swgeo=1.0 swigate=1.0 swimpact=1.0
   swgidl=1.0 swjuncap=3.0 swjunasym=0.0 swnud=0.0 swedge=0.0 swdelvtac=0.0
   swign=1.0 qmc=1.0 lvaro=9.695e-08 lvarl=-0.03438 lvarw=0.0 lap=2.5254e-08
@@ -666,7 +666,7 @@ model sg13g2_lv_pmos_psp_rf pspnqs103va (
   rjunso=rfmode*5000.0*l/w rjundo=rfmode*5000.0*l/w swsoa=swsoa vgs_max=1.6
   vgd_max=1.6 vgb_max=1.6 vds_max=1.6 vdb_max=1.6 vsb_max=1.6
 )
-                
+
 
 
 @if (rfmode==0)
@@ -821,8 +821,8 @@ parameters pre_layout=1
 
 
 
-                
-model nmoscl_psp psp103va ( 
+
+model nmoscl_psp psp103va (
   type=+1 tr=27.0 dta=0.0 swgeo=1.0 swigate=1.0 swimpact=1.0 swgidl=1.0
   swjuncap=3.0 swjunasym=0.0 swnud=0.0 swedge=0.0 swdelvtac=0.0 swign=1.0 qmc=1.0
   lvaro=0.0 lvarl=0.0 lvarw=0.0 lap=2.9423e-08 wvaro=0.0 wvarl=0.0 wvarw=0.0
@@ -903,7 +903,7 @@ model nmoscl_psp psp103va (
   vgb_max=1.6 vds_max=1.6 vdb_max=1.6 vsb_max=1.6
 )
 
-model nmoscl_psp_rf pspnqs103va ( 
+model nmoscl_psp_rf pspnqs103va (
   type=+1 tr=27.0 dta=0.0 swgeo=1.0 swigate=1.0 swimpact=1.0 swgidl=1.0
   swjuncap=3.0 swjunasym=0.0 swnud=0.0 swedge=0.0 swdelvtac=0.0 swign=1.0 qmc=1.0
   lvaro=0.0 lvarl=0.0 lvarw=0.0 lap=2.9423e-08 wvaro=0.0 wvarl=0.0 wvarw=0.0
@@ -1099,8 +1099,8 @@ parameters pre_layout=1
 
 
 
-                
-model nmoscl_psp psp103va ( 
+
+model nmoscl_psp psp103va (
   type=+1 tr=27.0 dta=0.0 swgeo=1.0 swigate=1.0 swimpact=1.0 swgidl=1.0
   swjuncap=3.0 swjunasym=0.0 swnud=0.0 swedge=0.0 swdelvtac=0.0 swign=1.0 qmc=1.0
   lvaro=0.0 lvarl=0.0 lvarw=0.0 lap=2.9423e-08 wvaro=0.0 wvarl=0.0 wvarw=0.0
@@ -1181,7 +1181,7 @@ model nmoscl_psp psp103va (
   vgb_max=1.6 vds_max=1.6 vdb_max=1.6 vsb_max=1.6
 )
 
-model nmoscl_psp_rf pspnqs103va ( 
+model nmoscl_psp_rf pspnqs103va (
   type=+1 tr=27.0 dta=0.0 swgeo=1.0 swigate=1.0 swimpact=1.0 swgidl=1.0
   swjuncap=3.0 swjunasym=0.0 swnud=0.0 swedge=0.0 swdelvtac=0.0 swign=1.0 qmc=1.0
   lvaro=0.0 lvarl=0.0 lvarw=0.0 lap=2.9423e-08 wvaro=0.0 wvarl=0.0 wvarw=0.0

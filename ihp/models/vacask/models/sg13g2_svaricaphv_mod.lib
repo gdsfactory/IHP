@@ -3,8 +3,8 @@
 
 include "sg13g2_vacask_common.lib"
 
-//******************************************************************************* 
-//*                                                                             * 
+//*******************************************************************************
+//*                                                                             *
 //* Copyright 2025 IHP PDK Authors                                              *
 //*                                                                             *
 //* Licensed under the Apache License, Version 2.0 (the "License");             *
@@ -19,7 +19,7 @@ include "sg13g2_vacask_common.lib"
 //* See the License for the specific language governing permissions and         *
 //* limitations under the License.                                              *
 //*                                                                             *
-//******************************************************************************* 
+//*******************************************************************************
 //*******************************************************************************
 //* MOS SVaricap section
 //*******************************************************************************
@@ -82,7 +82,7 @@ nmvcap2 (g2 bi2 w0) sg13_hv_svaricap  l=l w=w $mfactor=nx*ny dta=trise
 
 //* --------- Well Parasitic --------------------
 rww (w w0) sg13g2_default_mod_r (
-  
+
   r=((((rwell0+(rwellvw*(v(2,4))))+((rwellw+(rwellwvw*(v(2,4))))*w))+(((rwellnx+(rwellnxvw*(v(2,4))))*w)/(nx*ny)))*nx)*ny
 )
 dsubw (w1 w) dsubw (
@@ -92,7 +92,7 @@ dsubw (w1 w) dsubw (
 rsubw (w1 bn) sg13g2_default_mod_r (
   r=(rsubw0/(sqrt(pow(nx,rsubwexp))))/(w+rsubwf)
 )
-model dsubw sp_diode ( 
+model dsubw sp_diode (
   is=2.45e-17 jsw=5.959e-10 n=4 ns=1.029 cjo=1.444e-15 vj=0.1 m=0.1052
   cjp=1.117e-09 php=0.457 mjsw=0.2595 fc=0.95 cta=1e-06
 )
@@ -103,7 +103,7 @@ ck_g12 (g1 g2a) sg13g2_default_mod_c (
 )
 rk (g2a g2) sg13g2_default_mod_r  r=(rk0+(rkwnx/w))/(nx*ny)
 
-model sg13_hv_svaricap mosvar ( 
+model sg13_hv_svaricap mosvar (
   version=1.3 subversion=0 revision=0 level=1000 tmin=-100 tmax=500 vmax=1e+04
   tr=27 lmin=2.99e-07 lmax=8.1e-07 wmin=3.7e-06 wmax=9.8e-06 swres=1 swigate=1
   type=-1 typep=-1 toxo=toxo*sg13g2_hv_svaricap_toxo tau=0.1

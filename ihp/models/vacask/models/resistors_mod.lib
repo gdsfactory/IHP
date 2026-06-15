@@ -22,7 +22,7 @@ include "sg13g2_vacask_common.lib"
 //*#######################################################################
 
 //**ptap1 (TIE SUB)
-//* In order to have consistency between the netlisted device format 
+//* In order to have consistency between the netlisted device format
 //* the w and l parameters are defined but not used.
 //* The value of R is calculated by schematic capture tool.
 subckt ptap1(1 2)
@@ -31,7 +31,7 @@ r1 (1 2) sg13g2_default_mod_r  r=r
 ends
 
 //**ntap1 (TIE WELL)
-//* In order to have consistency between the netlisted device format 
+//* In order to have consistency between the netlisted device format
 //* the w and l parameters are defined but not used.
 //* The value of R is calculated by schematic capture tool.
 subckt ntap1(1 2)

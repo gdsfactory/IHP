@@ -175,4 +175,3 @@ parameters sgp_mpa_rc=1.05
 
 include "sg13g2_hbt_mod_mismatch.lib"
 endsection
-
