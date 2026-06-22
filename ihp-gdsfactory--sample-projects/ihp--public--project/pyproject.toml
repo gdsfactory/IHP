@@ -11,7 +11,7 @@ classifiers = [
   "Programming Language :: Python :: 3.12"
 ]
 dependencies = [
-  "gdsfactory~=9.40.1",
+  "gdsfactory~=9.44.0",
   "gdsfactoryplus",
   "gplugins[sax]~=1.4.2"
 ]
