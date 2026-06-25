@@ -327,13 +327,24 @@ def cmim_schematic(
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "cap_cmim",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerCAP.lib",
             "sections": ["cap_typ", "cap_bcs", "cap_wcs"],
             "port_order": ["PLUS", "MINUS"],
             "params": {"w": "width * 1e-6", "l": "length * 1e-6"},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "cap_cmim",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerCAP.lib",
+            "sections": ["cap_typ", "cap_bcs", "cap_wcs"],
+            "port_order": ["PLUS", "MINUS"],
+            "params": {"w": "width * 1e-6", "l": "length * 1e-6"},
+        },
     ]
     s.create_port(name="PLUS", cross_section=_XS, x=1, y=0, orientation=0)
     s.create_port(name="MINUS", cross_section=_XS, x=-1, y=0, orientation=180)
@@ -571,13 +582,24 @@ def rfcmim_schematic(
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "cap_rfcmim",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerCAP.lib",
             "sections": ["cap_typ", "cap_bcs", "cap_wcs"],
             "port_order": ["PLUS", "MINUS", "BN"],
             "params": {"l": "length * 1e-6", "w": "width * 1e-6"},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "cap_rfcmim",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerCAP.lib",
+            "sections": ["cap_typ", "cap_bcs", "cap_wcs"],
+            "port_order": ["PLUS", "MINUS", "BN"],
+            "params": {"l": "length * 1e-6", "w": "width * 1e-6"},
+        },
     ]
     s.create_port(name="PLUS", cross_section=_XS, x=1, y=0, orientation=0)
     s.create_port(name="MINUS", cross_section=_XS, x=-1, y=0, orientation=180)

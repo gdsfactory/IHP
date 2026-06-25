@@ -139,13 +139,24 @@ def dantenna_schematic(
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "dantenna",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerDIO.lib",
             "sections": ["dio_tt", "dio_ss", "dio_ff"],
             "port_order": ["1", "2"],
             "params": {"w": "width * 1e-6", "l": "length * 1e-6"},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "dantenna",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerDIO.lib",
+            "sections": ["dio_tt", "dio_ss", "dio_ff"],
+            "port_order": ["1", "2"],
+            "params": {"w": "width * 1e-6", "l": "length * 1e-6"},
+        },
     ]
     s.create_port(name="1", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="2", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -276,13 +287,24 @@ def dpantenna_schematic(
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "dpantenna",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerDIO.lib",
             "sections": ["dio_tt", "dio_ss", "dio_ff"],
             "port_order": ["1", "2"],
             "params": {"w": "width * 1e-6", "l": "length * 1e-6"},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "dpantenna",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerDIO.lib",
+            "sections": ["dio_tt", "dio_ss", "dio_ff"],
+            "port_order": ["1", "2"],
+            "params": {"w": "width * 1e-6", "l": "length * 1e-6"},
+        },
     ]
     s.create_port(name="1", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="2", cross_section=_XS, x=0, y=-1, orientation=270)

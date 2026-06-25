@@ -10,6 +10,9 @@ docs/index.md
 sim-data-*/
 palace-sim-*/
 
+# VACASK Verilog-A modules compiled on the fly (never committed)
+*.osdi
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
