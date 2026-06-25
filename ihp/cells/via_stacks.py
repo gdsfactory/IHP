@@ -265,6 +265,13 @@ def via_stack(
         "TopMetal2": layer_topmetal2_pin,
     }
 
+    # Normalize layer names (case-insensitive match against known names)
+    _all_names = {n.lower(): n for n in _beol_order + list(_sub_metal1)}
+    bottom_port_label = bottom_layer
+    top_port_label = top_layer
+    bottom_layer = _all_names.get(bottom_layer.lower(), bottom_layer)
+    top_layer = _all_names.get(top_layer.lower(), top_layer)
+
     # Build effective layer order based on bottom_layer
     if bottom_layer in _sub_metal1:
         # Activ or GatPoly -> Cont -> Metal1 -> ... -> top_layer
@@ -284,7 +291,7 @@ def via_stack(
             raise ValueError(f"Invalid top layer: {top_layer}")
         bottom_idx = _beol_order.index(bottom_layer)
         top_idx = _beol_order.index(top_layer)
-        if bottom_idx >= top_idx:
+        if bottom_idx > top_idx:
             raise ValueError(
                 f"Bottom layer must be below top layer: {bottom_layer} -> {top_layer}"
             )
@@ -358,24 +365,29 @@ def via_stack(
             via_ref = c.add_ref(via_array_comp)
             via_ref.move((-array_width / 2, -array_height / 2))
 
-    # Add ports
-    c.add_port(
-        name="bottom",
-        center=(0, 0),
-        width=width,
-        orientation=0,
-        layer=pin_layer_map[bottom_layer],
-        port_type="electrical",
-    )
-
-    c.add_port(
-        name="top",
-        center=(0, 0),
-        width=width,
-        orientation=0,
-        layer=pin_layer_map[top_layer],
-        port_type="electrical",
-    )
+    # Add directional ports per layer (N/S/E/W at bbox edges)
+    hx = width / 2
+    hy = height / 2
+    _port_specs = {
+        "N": ((0, hy), 90, width),
+        "S": ((0, -hy), 270, width),
+        "E": ((hx, 0), 0, height),
+        "W": ((-hx, 0), 180, height),
+    }
+    _port_layers = [(bottom_layer, bottom_port_label)]
+    if top_layer != bottom_layer or top_port_label != bottom_port_label:
+        _port_layers.append((top_layer, top_port_label))
+    for layer_name, port_label in _port_layers:
+        pin_layer = pin_layer_map[layer_name]
+        for direction, (center, orientation, port_width) in _port_specs.items():
+            c.add_port(
+                name=f"{port_label}_{direction}",
+                center=center,
+                width=port_width,
+                orientation=orientation,
+                layer=pin_layer,
+                port_type="electrical",
+            )
 
     # Add metadata
     c.info["bottom_layer"] = bottom_layer

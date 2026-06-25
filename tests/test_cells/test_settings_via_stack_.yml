@@ -6,22 +6,76 @@ info:
   width: 10
 name: via_stack_BLMetal1_TLMetal2_S10_10_VC2_VR2_VC1_VR1_VC1__fd26eaf7
 ports:
-  bottom:
+  Metal1_E:
     center:
-    - 0
+    - 5
     - 0
     layer: Metal1pin
-    name: bottom
+    name: Metal1_E
     orientation: 0
     port_type: electrical
     width: 10
-  top:
+  Metal1_N:
     center:
     - 0
+    - 5
+    layer: Metal1pin
+    name: Metal1_N
+    orientation: 90
+    port_type: electrical
+    width: 10
+  Metal1_S:
+    center:
+    - 0
+    - -5
+    layer: Metal1pin
+    name: Metal1_S
+    orientation: 270
+    port_type: electrical
+    width: 10
+  Metal1_W:
+    center:
+    - -5
+    - 0
+    layer: Metal1pin
+    name: Metal1_W
+    orientation: 180
+    port_type: electrical
+    width: 10
+  Metal2_E:
+    center:
+    - 5
     - 0
     layer: Metal2pin
-    name: top
+    name: Metal2_E
     orientation: 0
+    port_type: electrical
+    width: 10
+  Metal2_N:
+    center:
+    - 0
+    - 5
+    layer: Metal2pin
+    name: Metal2_N
+    orientation: 90
+    port_type: electrical
+    width: 10
+  Metal2_S:
+    center:
+    - 0
+    - -5
+    layer: Metal2pin
+    name: Metal2_S
+    orientation: 270
+    port_type: electrical
+    width: 10
+  Metal2_W:
+    center:
+    - -5
+    - 0
+    layer: Metal2pin
+    name: Metal2_W
+    orientation: 180
     port_type: electrical
     width: 10
 settings:
