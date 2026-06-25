@@ -73,13 +73,24 @@ def _svaricap_fixed_schematic() -> DSchematic:
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "svaricap",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerMOShv.lib",
             "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
             "port_order": ["G1", "W", "G2", "bn"],
             "params": {},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "svaricap",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerMOShv.lib",
+            "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
+            "port_order": ["G1", "W", "G2", "bn"],
+            "params": {},
+        },
     ]
     s.create_port(name="G1", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="W", cross_section=_XS, x=1, y=0, orientation=0)
@@ -95,13 +106,24 @@ def _bondpad_fixed_schematic() -> DSchematic:
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "bondpad",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/sg13g2_bondpad.lib",
             "sections": [],
             "port_order": ["PAD"],
             "params": {},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "bondpad",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/sg13g2_bondpad.lib",
+            "sections": [],
+            "port_order": ["PAD"],
+            "params": {},
+        },
     ]
     s.create_port(name="PAD", cross_section=_XS, x=0, y=1, orientation=90)
     return s
@@ -117,13 +139,24 @@ def _cmim_fixed_schematic() -> DSchematic:
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "cmim",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerCAP.lib",
             "sections": ["cap_typ", "cap_bcs", "cap_wcs"],
             "port_order": ["PLUS", "MINUS"],
             "params": {},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "cmim",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerCAP.lib",
+            "sections": ["cap_typ", "cap_bcs", "cap_wcs"],
+            "port_order": ["PLUS", "MINUS"],
+            "params": {},
+        },
     ]
     s.create_port(name="MINUS", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="PLUS", cross_section=_XS, x=1, y=0, orientation=0)
@@ -140,13 +173,24 @@ def _dantenna_fixed_schematic() -> DSchematic:
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "dantenna",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerDIO.lib",
             "sections": ["dio_tt", "dio_ss", "dio_ff"],
             "port_order": ["1", "2"],
             "params": {},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "dantenna",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerDIO.lib",
+            "sections": ["dio_tt", "dio_ss", "dio_ff"],
+            "port_order": ["1", "2"],
+            "params": {},
+        },
     ]
     s.create_port(name="1", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="2", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -165,13 +209,24 @@ def _esd_diode_fixed_schematic(model_name: str) -> DSchematic:
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": model_name,
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/sg13g2_esd.lib",
             "sections": [],
             "port_order": ["VDD", "PAD", "VSS"],
             "params": {},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": model_name,
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/sg13g2_esd.lib",
+            "sections": [],
+            "port_order": ["VDD", "PAD", "VSS"],
+            "params": {},
+        },
     ]
     s.create_port(name="VDD", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="PAD", cross_section=_XS, x=1, y=0, orientation=0)
@@ -205,13 +260,24 @@ def _dpantenna_fixed_schematic() -> DSchematic:
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "dpantenna",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerDIO.lib",
             "sections": ["dio_tt", "dio_ss", "dio_ff"],
             "port_order": ["1", "2"],
             "params": {},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "dpantenna",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerDIO.lib",
+            "sections": ["dio_tt", "dio_ss", "dio_ff"],
+            "port_order": ["1", "2"],
+            "params": {},
+        },
     ]
     s.create_port(name="1", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="2", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -228,13 +294,24 @@ def _dummy1_fixed_schematic() -> DSchematic:
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "dummy1",
             "spice_type": "RESISTOR",
             "library": "ihp/models/ngspice/models/cornerRES.lib",
             "sections": ["res_typ", "res_bcs", "res_wcs"],
             "port_order": ["W", "2"],
             "params": {},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "dummy1",
+            "spice_type": "RESISTOR",
+            "library": "ihp/models/vacask/models/cornerRES.lib",
+            "sections": ["res_typ", "res_bcs", "res_wcs"],
+            "port_order": ["W", "2"],
+            "params": {},
+        },
     ]
     s.create_port(name="W", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="2", cross_section=_XS, x=1, y=0, orientation=0)
@@ -252,13 +329,24 @@ def _isolbox_fixed_schematic() -> DSchematic:
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "isolbox",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerDIO.lib",
             "sections": ["dio_tt", "dio_ss", "dio_ff"],
             "port_order": ["isoub", "NWell", "bn"],
             "params": {},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "isolbox",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerDIO.lib",
+            "sections": ["dio_tt", "dio_ss", "dio_ff"],
+            "port_order": ["isoub", "NWell", "bn"],
+            "params": {},
+        },
     ]
     s.create_port(name="isoub", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="NWell", cross_section=_XS, x=1, y=0, orientation=0)
@@ -279,13 +367,24 @@ def _lv_mos_fixed_schematic(model_name: str, symbol: str) -> DSchematic:
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": model_name,
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerMOSlv.lib",
             "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
             "port_order": ["d", "g", "s", "b"],
             "params": {},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": model_name,
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerMOSlv.lib",
+            "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
+            "port_order": ["d", "g", "s", "b"],
+            "params": {},
+        },
     ]
     s.create_port(name="d", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="s", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -307,13 +406,24 @@ def _hv_mos_fixed_schematic(model_name: str, symbol: str) -> DSchematic:
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": model_name,
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerMOShv.lib",
             "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
             "port_order": ["d", "g", "s", "b"],
             "params": {},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": model_name,
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerMOShv.lib",
+            "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
+            "port_order": ["d", "g", "s", "b"],
+            "params": {},
+        },
     ]
     s.create_port(name="d", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="s", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -335,13 +445,24 @@ def _rf_lv_mos_fixed_schematic(model_name: str, symbol: str) -> DSchematic:
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": model_name,
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerMOSlv.lib",
             "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
             "port_order": ["d", "g", "s", "b"],
             "params": {"rfmode": "1"},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": model_name,
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerMOSlv.lib",
+            "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
+            "port_order": ["d", "g", "s", "b"],
+            "params": {"rfmode": "1"},
+        },
     ]
     s.create_port(name="d", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="s", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -363,13 +484,24 @@ def _rf_hv_mos_fixed_schematic(model_name: str, symbol: str) -> DSchematic:
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": model_name,
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerMOShv.lib",
             "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
             "port_order": ["d", "g", "s", "b"],
             "params": {"rfmode": "1"},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": model_name,
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerMOShv.lib",
+            "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
+            "port_order": ["d", "g", "s", "b"],
+            "params": {"rfmode": "1"},
+        },
     ]
     s.create_port(name="d", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="s", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -397,13 +529,24 @@ def _nmoscl_lv_fixed_schematic(model_name: str) -> DSchematic:
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": model_name,
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerMOSlv.lib",
             "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
             "port_order": ["VDD", "VSS"],
             "params": {},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": model_name,
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerMOSlv.lib",
+            "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
+            "port_order": ["VDD", "VSS"],
+            "params": {},
+        },
     ]
     s.create_port(name="VDD", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="VSS", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -431,13 +574,24 @@ def _npn_fixed_schematic(model_name: str) -> DSchematic:
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": model_name,
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerHBT.lib",
             "sections": ["hbt_typ", "hbt_bcs", "hbt_wcs"],
             "port_order": ["c", "b", "e", "bn"],
             "params": {},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": model_name,
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerHBT.lib",
+            "sections": ["hbt_typ", "hbt_bcs", "hbt_wcs"],
+            "port_order": ["c", "b", "e", "bn"],
+            "params": {},
+        },
     ]
     s.create_port(name="c", cross_section=_XS, x=1, y=0, orientation=0)
     s.create_port(name="b", cross_section=_XS, x=-1, y=0, orientation=180)
@@ -469,13 +623,24 @@ def _tap_fixed_schematic(model_name: str) -> DSchematic:
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": model_name,
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerRES.lib",
             "sections": ["res_typ", "res_bcs", "res_wcs"],
             "port_order": ["1", "2"],
             "params": {},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": model_name,
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerRES.lib",
+            "sections": ["res_typ", "res_bcs", "res_wcs"],
+            "port_order": ["1", "2"],
+            "params": {},
+        },
     ]
     s.create_port(name="1", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="2", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -509,13 +674,24 @@ def _pnpMPA_fixed_schematic() -> DSchematic:
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "pnpMPA",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerHBT.lib",
             "sections": ["hbt_typ", "hbt_bcs", "hbt_wcs"],
             "port_order": ["c", "b", "e"],
             "params": {},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "pnpMPA",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerHBT.lib",
+            "sections": ["hbt_typ", "hbt_bcs", "hbt_wcs"],
+            "port_order": ["c", "b", "e"],
+            "params": {},
+        },
     ]
     s.create_port(name="c", cross_section=_XS, x=1, y=0, orientation=0)
     s.create_port(name="b", cross_section=_XS, x=-1, y=0, orientation=180)
@@ -534,13 +710,24 @@ def _rfcmim_fixed_schematic() -> DSchematic:
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "cap_rfcmim",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerCAP.lib",
             "sections": ["cap_typ", "cap_bcs", "cap_wcs"],
             "port_order": ["PLUS", "MINUS", "bn"],
             "params": {},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "cap_rfcmim",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerCAP.lib",
+            "sections": ["cap_typ", "cap_bcs", "cap_wcs"],
+            "port_order": ["PLUS", "MINUS", "bn"],
+            "params": {},
+        },
     ]
     s.create_port(name="MINUS", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="PLUS", cross_section=_XS, x=1, y=0, orientation=0)
@@ -576,13 +763,24 @@ def _resistor_3port_fixed_schematic(model_name: str) -> DSchematic:
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": model_name,
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerRES.lib",
             "sections": ["res_typ", "res_bcs", "res_wcs"],
             "port_order": ["1", "3", "bn"],
             "params": {},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": model_name,
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerRES.lib",
+            "sections": ["res_typ", "res_bcs", "res_wcs"],
+            "port_order": ["1", "3", "bn"],
+            "params": {},
+        },
     ]
     s.create_port(name="1", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="3", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -613,13 +811,24 @@ def _schottky_nbl1_fixed_schematic() -> DSchematic:
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "schottky_nbl1",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/sg13g2_dschottky_nbl1_mod.lib",
             "sections": [],
             "port_order": ["A", "C", "S"],
             "params": {},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "schottky_nbl1",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/sg13g2_dschottky_nbl1_mod.lib",
+            "sections": [],
+            "port_order": ["A", "C", "S"],
+            "params": {},
+        },
     ]
     s.create_port(name="A", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="C", cross_section=_XS, x=0, y=-1, orientation=270)

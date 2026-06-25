@@ -525,6 +525,7 @@ def nmos_schematic(
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "sg13_lv_nmos",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerMOSlv.lib",
@@ -536,7 +537,22 @@ def nmos_schematic(
                 "ng": "nf",
                 "m": "m",
             },
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "sg13_lv_nmos",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerMOSlv.lib",
+            "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
+            "port_order": ["D", "G", "S", "B"],
+            "params": {
+                "w": "width * 1e-6",
+                "l": "length * 1e-6",
+                "ng": "nf",
+                "m": "m",
+            },
+        },
     ]
     s.create_port(name="D", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="G", cross_section=_XS, x=-1, y=0, orientation=180)
@@ -600,13 +616,24 @@ def pmos_schematic(
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "sg13_lv_pmos",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerMOSlv.lib",
             "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
             "port_order": ["D", "G", "S", "B"],
             "params": {"w": "width * 1e-6", "l": "length * 1e-6", "ng": "nf", "m": "m"},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "sg13_lv_pmos",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerMOSlv.lib",
+            "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
+            "port_order": ["D", "G", "S", "B"],
+            "params": {"w": "width * 1e-6", "l": "length * 1e-6", "ng": "nf", "m": "m"},
+        },
     ]
     s.create_port(name="D", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="G", cross_section=_XS, x=-1, y=0, orientation=180)
@@ -670,13 +697,24 @@ def nmos_hv_schematic(
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "sg13_hv_nmos",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerMOShv.lib",
             "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
             "port_order": ["D", "G", "S", "B"],
             "params": {"w": "width * 1e-6", "l": "length * 1e-6", "ng": "nf", "m": "m"},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "sg13_hv_nmos",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerMOShv.lib",
+            "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
+            "port_order": ["D", "G", "S", "B"],
+            "params": {"w": "width * 1e-6", "l": "length * 1e-6", "ng": "nf", "m": "m"},
+        },
     ]
     s.create_port(name="D", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="G", cross_section=_XS, x=-1, y=0, orientation=180)
@@ -740,13 +778,24 @@ def pmos_hv_schematic(
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "sg13_hv_pmos",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerMOShv.lib",
             "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
             "port_order": ["D", "G", "S", "B"],
             "params": {"w": "width * 1e-6", "l": "length * 1e-6", "ng": "nf", "m": "m"},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "sg13_hv_pmos",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerMOShv.lib",
+            "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
+            "port_order": ["D", "G", "S", "B"],
+            "params": {"w": "width * 1e-6", "l": "length * 1e-6", "ng": "nf", "m": "m"},
+        },
     ]
     s.create_port(name="D", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="G", cross_section=_XS, x=-1, y=0, orientation=180)

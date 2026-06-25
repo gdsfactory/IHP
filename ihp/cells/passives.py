@@ -33,13 +33,24 @@ def svaricap_schematic(
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "sg13_hv_svaricap",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerMOShv.lib",
             "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
             "port_order": ["G1", "W", "G2", "BN"],
             "params": {"w": "width * 1e-6", "l": "length * 1e-6", "Nx": "nf"},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "sg13_hv_svaricap",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerMOShv.lib",
+            "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
+            "port_order": ["G1", "W", "G2", "BN"],
+            "params": {"w": "width * 1e-6", "l": "length * 1e-6", "Nx": "nf"},
+        },
     ]
     s.create_port(name="G1", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="W", cross_section=_XS, x=1, y=0, orientation=0)
@@ -226,13 +237,24 @@ def esd_nmos_schematic(
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "nmoscl_2",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerMOSlv.lib",
             "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
             "port_order": ["VDD", "VSS"],
             "params": {"w": "width * 1e-6", "l": "length * 1e-6", "ng": "nf"},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "nmoscl_2",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerMOSlv.lib",
+            "sections": ["mos_tt", "mos_ss", "mos_ff", "mos_sf", "mos_fs"],
+            "port_order": ["VDD", "VSS"],
+            "params": {"w": "width * 1e-6", "l": "length * 1e-6", "ng": "nf"},
+        },
     ]
     s.create_port(name="VDD", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="VSS", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -426,13 +448,24 @@ def ptap1_schematic(
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "ptap1",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerRES.lib",
             "sections": ["res_typ", "res_bcs", "res_wcs"],
             "port_order": ["1", "2"],
             "params": {"w": "width * 1e-6", "l": "length * 1e-6"},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "ptap1",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerRES.lib",
+            "sections": ["res_typ", "res_bcs", "res_wcs"],
+            "port_order": ["1", "2"],
+            "params": {"w": "width * 1e-6", "l": "length * 1e-6"},
+        },
     ]
     s.create_port(name="P1", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="P2", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -567,13 +600,24 @@ def ntap1_schematic(
     s.info["models"] = [
         {
             "language": "spice",
+            "implementation": "NgSpice",
             "name": "ntap1",
             "spice_type": "SUBCKT",
             "library": "ihp/models/ngspice/models/cornerRES.lib",
             "sections": ["res_typ", "res_bcs", "res_wcs"],
             "port_order": ["1", "2"],
             "params": {"w": "width * 1e-6", "l": "length * 1e-6"},
-        }
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "ntap1",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/cornerRES.lib",
+            "sections": ["res_typ", "res_bcs", "res_wcs"],
+            "port_order": ["1", "2"],
+            "params": {"w": "width * 1e-6", "l": "length * 1e-6"},
+        },
     ]
     s.create_port(name="P1", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="P2", cross_section=_XS, x=0, y=-1, orientation=270)
