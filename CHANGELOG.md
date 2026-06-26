@@ -3,6 +3,11 @@
 
 <!-- towncrier release notes start -->
 
+## [0.3.0](https://github.com/gdsfactory/ihp/releases/tag/v0.3.0) - 2026-06-26
+
+No significant changes.
+
+
 ## [0.2.8](https://github.com/gdsfactory/ihp/releases/tag/v0.2.8) - 2026-04-19
 
 
