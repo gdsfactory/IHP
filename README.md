@@ -164,8 +164,18 @@ uv run pytest tests/test_xor_transistors.py -v # polygon-exact XOR vs PyCell
 
 ## Pre-commit
 
+Pre-commit hooks are centrally maintained in [pdk-ci-workflow](https://github.com/doplaydo/pdk-ci-workflow). `make dev` fetches the canonical config and installs the git hook.
+
 ```bash
-make pre-commit
+make dev
+```
+
+## Tests
+
+Run the test suite:
+
+```bash
+make test
 ```
 
 ## Release
