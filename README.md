@@ -1,5 +1,7 @@
 # IHP GDSFactory PDK
 
+IHP's SG13G2 is an open-source 130nm SiGe BiCMOS technology for RF/mmWave electronics.
+
 <!-- BADGES:START -->
 [![Docs](https://github.com/gdsfactory/ihp/actions/workflows/pages.yml/badge.svg)](https://github.com/gdsfactory/ihp/actions/workflows/pages.yml)
 [![Tests](https://github.com/gdsfactory/ihp/actions/workflows/test_code.yml/badge.svg)](https://github.com/gdsfactory/ihp/actions/workflows/test_code.yml)
@@ -164,8 +166,10 @@ uv run pytest tests/test_xor_transistors.py -v # polygon-exact XOR vs PyCell
 
 ## Pre-commit
 
+Pre-commit hooks are centrally maintained in [pdk-ci-workflow-public](https://github.com/doplaydo/pdk-ci-workflow-public). `make dev` fetches the canonical config and installs the git hook.
+
 ```bash
-make pre-commit
+make dev
 ```
 
 ## Release
