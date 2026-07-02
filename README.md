@@ -1,5 +1,7 @@
 # IHP GDSFactory PDK
 
+IHP's SG13G2 is an open-source 130nm SiGe BiCMOS technology for RF/mmWave electronics — the fleet's only all-electronic, non-photonic process.
+
 <!-- BADGES:START -->
 [![Docs](https://github.com/gdsfactory/ihp/actions/workflows/pages.yml/badge.svg)](https://github.com/gdsfactory/ihp/actions/workflows/pages.yml)
 [![Tests](https://github.com/gdsfactory/ihp/actions/workflows/test_code.yml/badge.svg)](https://github.com/gdsfactory/ihp/actions/workflows/test_code.yml)
