@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ghcr.io/gdsfactory/gdsfactory:v9.40.2
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Remove samples
         run: make rm-samples
       - name: Install dependencies
