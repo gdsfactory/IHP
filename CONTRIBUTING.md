@@ -42,7 +42,6 @@ make test
 ```
 ihp/
 ├── cells/          # Pure GDSFactory parametric layout cells (@gf.cell functions)
-├── cells2/         # Legacy PyCell reference implementations (CNI-based, read-only)
 ├── models/         # SAX S-parameter models and VLSIR bridge
 ├── gds/            # Pre-built GDS files for complex cells
 ├── tech.py         # Layer map, design rules, layer stack, cross-sections
@@ -50,7 +49,6 @@ ihp/
 └── config.py       # Paths and PDK configuration
 tests/
 ├── test_cells.py           # GDS regression & settings tests
-├── test_xor_transistors.py # Polygon-exact XOR tests (cells/ vs cells2/)
 ├── test_port_layers.py     # Port layer verification
 └── gds_ref/                # Golden reference GDS files
 docs/               # Jupyter Book documentation
@@ -59,8 +57,6 @@ docs/               # Jupyter Book documentation
 ### Key conventions
 
 - **`cells/`** contains the actively developed pure-Python parametric cells. Each cell is a function decorated with `@gf.cell` that builds geometry using `add_polygon` and design rule constants from `tech.py`.
-- **`cells2/`** holds the original IHP PyCell implementations. These are the reference standard — new cells in `cells/` are XOR-verified against them. Do not modify `cells2/` unless you know what you are doing.
-- **`cni/`** is the CNI runtime required by `cells2/`. It is excluded from linting. Do not modify it.
 - Design rule constants live in `tech.py` (the `TechIHP` Pydantic model and `LayerMapIHP` class).
 
 ## Making changes
@@ -78,8 +74,7 @@ docs/               # Jupyter Book documentation
 2. Decorate it with `@gf.cell` and document it with a Google-style docstring.
 3. Export it from `ihp/cells/__init__.py` if it is a new cell.
 4. Add or update tests in `tests/test_cells.py`.
-5. If a reference PyCell implementation exists in `cells2/`, verify your layout matches using XOR tests.
-6. Regenerate golden reference GDS files if needed: `make test-force`.
+5. Regenerate golden reference GDS files if needed: `make test-force`.
 
 ### Adding a simulation model
 
@@ -126,14 +121,12 @@ To run specific subsets:
 
 ```bash
 uv run pytest tests/test_cells.py -v            # GDS regression + settings
-uv run pytest tests/test_xor_transistors.py -v   # polygon-exact XOR vs PyCell
 uv run pytest tests/test_port_layers.py -v       # port layer checks
 ```
 
 ### What the tests cover
 
 - **GDS regression tests** compare generated layouts against golden reference files in `tests/gds_ref/`. If your change intentionally modifies a cell's geometry, regenerate the references with `make test-force` and include the updated `.gds` files in your PR.
-- **XOR tests** verify that `cells/` implementations produce polygon-identical output to the `cells2/` PyCell reference.
 - **Port layer tests** ensure ports use the correct pin sublayers and `port_type="electrical"`.
 
 ## Changelog

@@ -26,12 +26,6 @@ from ihp.cells.fet_transistors import nmos_schematic
 from ihp.cells.passives import svaricap_schematic
 from ihp.cells.resistors import rsil_schematic
 from ihp.cells.rf_transistors import rfnmos_schematic
-from ihp.cells_fixed import (
-    _cmim_fixed_schematic,
-    _dummy1_fixed_schematic,
-    _nmos_fixed_schematic,
-    _npn13G2_fixed_schematic,
-)
 
 ROOT = Path(__file__).resolve().parents[1]
 VACASK_MODELS = ROOT / "ihp" / "models" / "vacask" / "models"
@@ -46,8 +40,6 @@ VA_LOADS = [
     "../../ngspice/va/mosvar/mosvar.va",
 ]
 
-# One directly-callable schematic factory per device family (plain cells +
-# their fixed-GDS counterparts).
 REPRESENTATIVE_FACTORIES = [
     rsil_schematic,
     nmos_schematic,
@@ -57,10 +49,6 @@ REPRESENTATIVE_FACTORIES = [
     bondpad_schematic,
     rfnmos_schematic,
     svaricap_schematic,
-    _nmos_fixed_schematic,
-    _npn13G2_fixed_schematic,
-    _cmim_fixed_schematic,
-    _dummy1_fixed_schematic,
 ]
 
 

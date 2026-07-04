@@ -8,6 +8,8 @@ from gdsfactory import Component
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 
+from ..config import PATH
+
 _XS = "metal1_routing"
 
 
@@ -208,4 +210,24 @@ def bondpad_array(
 
     # TODO: Bondpad array VLSIR Metadata
 
+    return c
+
+
+@gf.cell(tags=["IHP", "bondpad"])
+def CuPillarPad() -> gf.Component:
+    """Returns CuPillarPad copper pillar pad (imported from GDS)."""
+    c = gf.import_gds(PATH.gds / "CuPillarPad.gds")
+    width = 45
+    c.add_port(
+        name="e1", center=(0, 0), width=width, orientation=180, layer="TopMetal2drawing"
+    )
+    c.add_port(
+        name="e2", center=(0, 0), width=width, orientation=0, layer="TopMetal2drawing"
+    )
+    c.add_port(
+        name="e3", center=(0, 0), width=width, orientation=90, layer="TopMetal2drawing"
+    )
+    c.add_port(
+        name="e4", center=(0, 0), width=width, orientation=270, layer="TopMetal2drawing"
+    )
     return c

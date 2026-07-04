@@ -1,7 +1,22 @@
 # [Changelog](https://keepachangelog.com/en/1.0.0/)
-## [Unreleased](https://github.com/gdsfactory/ihp/compare/v0.2.0...main)
+## [Unreleased](https://github.com/gdsfactory/ihp/compare/v2.0.0...main)
 
 <!-- towncrier release notes start -->
+
+## [2.0.0](https://github.com/gdsfactory/ihp/releases/tag/v2.0.0) - 2026-07-04
+
+### Removed
+
+- `ihp.cells2` — CNI-based PyCell reference implementations removed. Use `ihp.cells` pure-Python parametric cells.
+- `ihp.cells_fixed` — deprecated fixed-GDS wrapper cells removed. Equivalent parametric cells exist in `ihp.cells`.
+- `cni` — CNI runtime package removed (was only required by `cells2`).
+- `test_xor_transistors.py` — XOR regression tests against `cells2` removed.
+- `CuPillarPad_fixed` renamed to `CuPillarPad` and moved to `ihp.cells.bondpads`.
+
+### Changed
+
+- `add_pads_top` default pad changed from `CuPillarPad_fixed` to `CuPillarPad`.
+
 
 ## [0.3.0](https://github.com/gdsfactory/ihp/releases/tag/v0.3.0) - 2026-06-26
 
