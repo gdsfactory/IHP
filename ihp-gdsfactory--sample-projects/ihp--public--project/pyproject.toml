@@ -50,6 +50,9 @@ ignore-words-list = "te,fpr,nd,donot,schem"
 name = "ihp"
 pdk.name = "ihp"
 
+[tool.gdsfactoryplus.livewire]
+schematic_scale = 0.1
+
 [tool.mypy]
 python_version = "3.12"
 strict = true
