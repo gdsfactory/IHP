@@ -11,7 +11,7 @@ from gdsfactory.typings import (
     Strs,
 )
 
-from ..cells_fixed import CuPillarPad_fixed
+from .bondpads import CuPillarPad
 
 __all__ = ["add_pads_top", "pack_doe", "pack_doe_grid"]
 
@@ -22,7 +22,7 @@ def add_pads_top(
     port_names: Strs | None = None,
     cross_section: CrossSectionSpec = "metal_routing",
     pad_port_name: str = "e1",
-    pad: ComponentSpec = CuPillarPad_fixed,
+    pad: ComponentSpec = CuPillarPad,
     bend: ComponentSpec = "wire_corner",
     straight_separation: float = 15.0,
     pad_pitch: float = 100.0,

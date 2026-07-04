@@ -5,6 +5,9 @@ build-backend = "setuptools.build_meta"
 requires = ["setuptools", "wheel", "ruff"]
 
 [dependency-groups]
+dev = [
+  "towncrier>=25.8.0"
+]
 docs = []
 
 [project]
@@ -26,7 +29,7 @@ license = {file = "LICENSE"}
 name = "ihp-gdsfactory"
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
-version = "0.3.0"
+version = "2.0.0"
 
 [project.optional-dependencies]
 dev = [
@@ -49,7 +52,7 @@ simulation = ["gsim>=0.0.8; python_version>='3.12'"]
 
 [tool.codespell]
 ignore-words-list = "te,fpr,nd,donot,schem,contnet,Contnet,rady,inout,INOUT,nam,coul,calles,wether,rsource,orginal,delT"
-skip = "*.lock,*.svg,*.gds,*.oas,*.lib,ihp/models/ngspice/va/*,cni/*"
+skip = "*.lock,*.svg,*.gds,*.oas,*.lib,ihp/models/ngspice/va/*"
 
 [tool.gdsfactoryplus]
 name = "ihp"
@@ -81,7 +84,6 @@ python_files = ["tests/*.py"]
 testpaths = ["tests"]
 
 [tool.ruff]
-exclude = ["cni"]
 fix = true
 force-exclude = true
 
@@ -105,9 +107,6 @@ select = [
 
 [tool.ruff.lint.per-file-ignores]
 "ihp/cells/__init__.py" = ["F403"]  # allowing star imports to aggregate cells
-"ihp/cells2/*.py" = ["F403", "F405", "E741"]  # allowing star imports and common variable names
-"ihp/cells2/ihp_pycell/*.py" = ["B007", "B018", "B904", "E402", "E711", "E721", "E722", "E741", "F811", "F821", "F841", "UP008", "UP031"]  # legacy code patterns
-"ihp/cells2/ihp_pycell/__init__.py" = ["F401"]  # explicit re-exports
 "ihp/models/__init__.py" = ["F403"]  # allowing star imports to aggregate cells
 
 [tool.setuptools]
@@ -117,8 +116,8 @@ include-package-data = true
 "*" = ["*.csv", "*.yaml", "*.yml", "*.gds", "*.lyp", "*.oas", "*.lyt", "*.dat", "*.nc", "*.svg", '*.GDS', "*.json", "*.txt", "*.lib", "*.va", "*.include", "*.h"]
 
 [tool.setuptools.packages.find]
-include = ["ihp", "ihp.*", "cni", "cni.*"]
-where = [".", "ihp", "cni"]
+include = ["ihp", "ihp.*"]
+where = ["."]
 
 [tool.tbump]
 
@@ -145,7 +144,7 @@ message_template = "Bump to {new_version}"
 tag_template = "v{new_version}"
 
 [tool.tbump.version]
-current = "0.3.0"
+current = "2.0.0"
 regex = '''
   (?P<major>\d+)
   \.
