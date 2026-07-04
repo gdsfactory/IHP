@@ -57,11 +57,11 @@ skip = "*.lock,*.svg,*.gds,*.oas,*.lib,ihp/models/ngspice/va/*"
 [tool.gdsfactoryplus]
 name = "ihp"
 
-[tool.gdsfactoryplus.pdk]
-name = "ihp"
-
 [tool.gdsfactoryplus.livewire]
 schematic_scale = 0.1
+
+[tool.gdsfactoryplus.pdk]
+name = "ihp"
 
 [tool.mypy]
 python_version = "3.12"
