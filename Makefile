@@ -86,7 +86,8 @@ notebooks:
 	uv run python docs/hooks.py docs/examples/spice_to_yml.md docs/examples/spice_and_gds_to_yml.md
 	uv run --extra docs jupyter nbconvert --to markdown --execute \
 		--ExecutePreprocessor.timeout=600 \
-		--output docs/examples/lna_160ghz.md \
+		--output-dir docs/examples \
+		--output lna_160ghz \
 		examples/design_examples/ihp_160g_lna/design_data/factory/lna_notebook.ipynb
 	uv run python docs/hooks.py docs/examples/lna_160ghz.md
 
