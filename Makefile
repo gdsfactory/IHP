@@ -61,7 +61,6 @@ cp-docs:
 	cp README.md docs/index.md
 	cp CHANGELOG.md docs/changelog.md
 	mkdir -p docs/examples
-	cp examples/design_examples/ihp_160g_lna/README.md docs/examples/lna_160ghz.md
 
 notebooks:
 	@if [ "$$(uname -s)" = "Linux" ]; then sudo apt-get install -y --no-install-recommends libglu1-mesa libgl1 libegl1 libosmesa6 2>/dev/null; fi
@@ -85,6 +84,12 @@ notebooks:
 		/tmp/ihp-notebooks/spice_to_yml.ipynb \
 		/tmp/ihp-notebooks/spice_and_gds_to_yml.ipynb
 	uv run python docs/hooks.py docs/examples/spice_to_yml.md docs/examples/spice_and_gds_to_yml.md
+	uv run --extra docs jupyter nbconvert --to markdown --execute \
+		--ExecutePreprocessor.timeout=600 \
+		--output-dir docs/examples \
+		--output lna_160ghz \
+		examples/design_examples/ihp_160g_lna/design_data/factory/lna_notebook.ipynb
+	uv run python docs/hooks.py docs/examples/lna_160ghz.md
 
 docs: cp-docs cells notebooks
 	uv run --extra docs zensical build -f docs/zensical.toml

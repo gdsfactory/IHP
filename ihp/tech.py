@@ -988,7 +988,7 @@ class TechIHP(BaseModel):
     # Capacitors
     cmim_min_size: float = 1.14
     cmim_max_size: float = 1000.0
-    rfcmim_min_size: float = 7.0
+    rfcmim_min_size: float = 1.14
     rfcmim_max_size: float = 1000.0
 
     # MIM capacitor model parameters (from sg13g2_tech.json)
