@@ -4,6 +4,8 @@ docs/cells_fixed.md
 docs/cells2_reference.md
 docs/changelog.md
 docs/index.md
+docs/palace_demo_cpw.md
+docs/palace_demo_microstrip.md
 *.glb
 
 # Simulation outputs

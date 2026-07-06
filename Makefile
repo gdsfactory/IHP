@@ -44,7 +44,7 @@ gmsh:
 	sudo apt-get install -y python3-gmsh gmsh libglu1-mesa libxi-dev libxmu-dev libglu1-mesa-dev libosmesa6 libegl1
 
 docs-clean:
-	rm -rf docs/_build
+	rm -rf docs/_build docs/palace_demo_cpw.md docs/palace_demo_microstrip.md
 
 mask:
 	python ubcpdk/samples/test_masks.py
@@ -61,13 +61,17 @@ cp-docs:
 	cp README.md docs/index.md
 	cp CHANGELOG.md docs/changelog.md
 
-docs: cp-docs cells
+notebooks:
+	uv run --extra docs jupyter nbconvert --to markdown docs/palace_demo_cpw.ipynb docs/palace_demo_microstrip.ipynb
+	uv run python docs/hooks.py docs/palace_demo_cpw.md docs/palace_demo_microstrip.md
+
+docs: cp-docs cells notebooks
 	uv run --extra docs zensical build -f docs/zensical.toml
 
-docs-serve: cp-docs
+docs-serve: cp-docs notebooks
 	uv run --extra docs zensical serve -f docs/zensical.toml -a localhost:8080
 
 update-changelog:
 	claude -p "remove links and make a user friendly changelog from @CHANGELOG.md to @docs/changelog.md"
 
-.PHONY: drc drc-sample doc docs docs-pdf build update-changelog
+.PHONY: drc drc-sample doc docs docs-pdf build update-changelog notebooks
