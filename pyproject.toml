@@ -58,6 +58,7 @@ ignore-words-list = "te,fpr,nd,donot,schem,contnet,Contnet,rady,inout,INOUT,nam,
 skip = "*.lock,*.svg,*.gds,*.oas,*.lib,ihp/models/ngspice/va/*"
 
 [tool.gdsfactoryplus]
+ignore = ["refs/*.py"]
 name = "ihp"
 
 [tool.gdsfactoryplus.livewire]
@@ -90,6 +91,7 @@ python_files = ["tests/*.py"]
 testpaths = ["tests"]
 
 [tool.ruff]
+exclude = ["cni/", "ihp/refs/"]
 fix = true
 force-exclude = true
 
@@ -122,7 +124,7 @@ include-package-data = true
 "*" = ["*.csv", "*.yaml", "*.yml", "*.gds", "*.lyp", "*.oas", "*.lyt", "*.dat", "*.nc", "*.svg", '*.GDS', "*.json", "*.txt", "*.lib", "*.va", "*.include", "*.h"]
 
 [tool.setuptools.packages.find]
-include = ["ihp", "ihp.*"]
+include = ["ihp", "ihp.*", "cni", "cni.*"]
 where = ["."]
 
 [tool.tbump]

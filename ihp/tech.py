@@ -1179,5 +1179,14 @@ routing_strategies = dict(
     route_bundle_metal_corner=route_bundle_metal_corner,
 )
 
+
+def __getattr__(name: str) -> object:
+    if name == "techParams":
+        from cni.tech import Tech as _CNITech
+
+        return _CNITech.get("SG13_dev").getTechParams()
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
 if __name__ == "__main__":
     LAYER_VIEWS.to_lyp(PATH.lyp)
