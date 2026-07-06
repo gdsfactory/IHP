@@ -1,6 +1,6 @@
 """Passive components (varicaps, ESD, taps, seal rings) for IHP PDK."""
 
-from typing import Literal, TypeAlias
+from typing import Literal
 
 import gdsfactory as gf
 import numpy as np
@@ -13,8 +13,8 @@ from ihp import cells, tech
 
 _XS = "metal1_routing"
 
-FloatLike: TypeAlias = np.float32 | np.float64 | float
-Point: TypeAlias = tuple[FloatLike, FloatLike]
+type FloatLike = np.float32 | np.float64 | float
+type Point = tuple[FloatLike, FloatLike]
 
 
 def svaricap_schematic(
