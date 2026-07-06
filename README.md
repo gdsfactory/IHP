@@ -95,14 +95,14 @@ ihp/
 │   ├── via_stacks.py       #   Via stack generators
 │   └── bondpads.py         #   Bondpad cells
 ├── models/                 # Compact models & SAX S-parameter models
-├── gds/                    # Pre-built GDS files for complex cells
+├── gds/                    # Pre-built GDS files for some cells
 ├── tech.py                 # Layer map, design rules, technology parameters
-├── layers.yaml             # Layer definitions
+├── layers.yaml             # Layer properties and colors for KLayout LYP
 └── config.py               # Paths and PDK configuration
 tests/
 ├── test_cells.py           # GDS regression & settings tests for all cells
 └── gds_ref/                # Golden reference GDS files
-docs/                       # Jupyter Book documentation (Sphinx)
+docs/                       # Documentation
 ```
 
 **Key architectural concepts:**
