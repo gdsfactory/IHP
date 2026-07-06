@@ -122,7 +122,10 @@ def write_cell_entry(f, name, cell_dict, module_path="ihp.cells", import_alias="
 """
         )
 
-        # Write GDS and save PNG for Static/Dynamic tabs
+        # Generate 3D GLB before writing tabs
+        glb_file = make_3d_glb(name, cell_dict)
+
+        # Write GDS and save PNG for Static/Dynamic/3D tabs
         try:
             c = cell_dict[name]()
             c.write_gds(gds_dir / f"{name}.gds")
@@ -138,18 +141,16 @@ def write_cell_entry(f, name, cell_dict, module_path="ihp.cells", import_alias="
                 f' loading="lazy" width="100%" height="400"'
                 f' style="border:none"></iframe>\n\n'
             )
+            if glb_file:
+                f.write('=== "3D"\n\n')
+                f.write(
+                    f'    <iframe class="viewer-3d"'
+                    f' src="_static/3d/viewer.html?file={glb_file}"'
+                    f' width="100%" height="500px" frameborder="0"'
+                    f' loading="lazy"></iframe>\n\n'
+                )
         except Exception as e:
             print(f"  [kwasm skip] {name}: {e}")
-
-        # Generate 3D GLB and embed via shared viewer
-        glb_file = make_3d_glb(name, cell_dict)
-        if glb_file:
-            f.write(
-                f"""
-<iframe class="viewer-3d" src="_static/3d/viewer.html?file={glb_file}" width="100%" height="500px" frameborder="0" loading="lazy"></iframe>
-
-"""
-            )
 
         f.write(
             f"""```python
