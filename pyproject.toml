@@ -28,7 +28,7 @@ keywords = ["python"]
 license = {file = "LICENSE"}
 name = "ihp-gdsfactory"
 readme = "README.md"
-requires-python = ">=3.11,<3.14"
+requires-python = ">=3.12,<3.13"
 version = "2.0.0"
 
 [project.optional-dependencies]
@@ -42,13 +42,16 @@ dev = [
 ]
 docs = [
   "jupyter",
+  "kwasm",
   "mkdocs-material",
   "mkdocs-with-pdf",
   "nbconvert",
   "mkdocstrings[python]>=0.27.0",
   "zensical>=0.0.40,<0.1.0"
 ]
-simulation = ["gsim>=0.0.8; python_version>='3.12'"]
+simulation = [
+  "gsim>=0.0.16; python_version>='3.12'"
+]
 
 [tool.codespell]
 ignore-words-list = "te,fpr,nd,donot,schem,contnet,Contnet,rady,inout,INOUT,nam,coul,calles,wether,rsource,orginal,delT"
