@@ -84,14 +84,10 @@ notebooks:
 		/tmp/ihp-notebooks/spice_to_yml.ipynb \
 		/tmp/ihp-notebooks/spice_and_gds_to_yml.ipynb
 	uv run python docs/hooks.py docs/examples/spice_to_yml.md docs/examples/spice_and_gds_to_yml.md
-	uv run --extra docs jupyter nbconvert --to notebook --execute \
+	uv run --extra docs jupyter nbconvert --to markdown --execute \
 		--ExecutePreprocessor.timeout=600 \
-		--output-dir /tmp/ihp-notebooks \
+		--output docs/examples/lna_160ghz.md \
 		examples/design_examples/ihp_160g_lna/design_data/factory/lna_notebook.ipynb
-	uv run --extra docs jupyter nbconvert --to markdown \
-		--output-dir docs/examples \
-		/tmp/ihp-notebooks/lna_notebook.ipynb
-	mv docs/examples/lna_notebook.md docs/examples/lna_160ghz.md
 	uv run python docs/hooks.py docs/examples/lna_160ghz.md
 
 docs: cp-docs cells notebooks

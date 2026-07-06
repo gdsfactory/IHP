@@ -664,64 +664,11 @@ def npn13G2(
             layer=layer_activ,
         )
 
-        if Nx > 1:
-            left = -0.89 - le / 2
-            bottom = 0.57 + we / 2 - leoffset - bipwinyoffset - empolyyoffset
-            right = stretchX + 0.89 + le / 2
-            top = 1.01 + we / 2 - leoffset - bipwinyoffset - empolyyoffset
-            c.add_ref(
-                gf.components.rectangle(
-                    size=(
-                        right - left,
-                        top - bottom,
-                    ),
-                    layer=layer_metal1_pin,
-                )
-            ).move((left, bottom))
-            c.add_label(
-                text="C",
-                layer=layer_text,
-                position=(
-                    0.5 * (left + right),
-                    0.5 * (top + bottom),
-                ),
-            )
-        else:
-            left = -0.89 - le / 2
-            bottom = 0.56 + we / 2 + leoffset + bipwinyoffset + empolyyoffset
-            right = stretchX + 0.89 + le / 2
-            top = 0.8 + we / 2 + leoffset + bipwinyoffset + empolyyoffset
-            c.add_ref(
-                gf.components.rectangle(
-                    size=(
-                        right - left,
-                        top - bottom,
-                    ),
-                    layer=layer_metal1_pin,
-                )
-            ).move((left, bottom))
-            c.add_label(
-                text="C",
-                layer=layer_text,
-                position=(
-                    0.5 * (left + right),
-                    0.5 * (top + bottom),
-                ),
-            )
-        # Collector port
-        c.add_port(
-            "C",
-            center=(0.5 * (left + right), 0.5 * (top + bottom)),
-            width=_snap_width_to_grid(top - bottom),
-            layer=layer_metal1_pin,
-            orientation=180.0,
-            port_type="electrical",
-        )
-
-        left = -0.94 - le / 2
-        bottom = -0.81 - we / 2 - leoffset - bipwinyoffset - empolyyoffset
-        right = stretchX + 0.94 + le / 2
-        top = -0.57 - we / 2 - leoffset - bipwinyoffset - empolyyoffset
+    if Nx > 1:
+        left = -0.89 - le / 2
+        bottom = 0.57 + we / 2 - leoffset - bipwinyoffset - empolyyoffset
+        right = stretchX + 0.89 + le / 2
+        top = 1.01 + we / 2 - leoffset - bipwinyoffset - empolyyoffset
         c.add_ref(
             gf.components.rectangle(
                 size=(
@@ -732,60 +679,111 @@ def npn13G2(
             )
         ).move((left, bottom))
         c.add_label(
-            text="B",
+            text="C",
             layer=layer_text,
             position=(
                 0.5 * (left + right),
                 0.5 * (top + bottom),
             ),
         )
-
-        # Base port
-        c.add_port(
-            "B",
-            center=(0.5 * (left + right), 0.5 * (top + bottom)),
-            width=_snap_width_to_grid(top - bottom),
-            layer=layer_metal1_pin,
-            orientation=180.0,
-            port_type="electrical",
-        )
-
-        left = -0.71 - le / 2
-        bottom = -0.335 - we / 2 - leoffset - bipwinyoffset - empolyyoffset
-        right = stretchX + 0.71 + le / 2
-        top = 0.32 + we / 2 + leoffset + bipwinyoffset + empolyyoffset
+    else:
+        left = -0.89 - le / 2
+        bottom = 0.56 + we / 2 + leoffset + bipwinyoffset + empolyyoffset
+        right = stretchX + 0.89 + le / 2
+        top = 0.8 + we / 2 + leoffset + bipwinyoffset + empolyyoffset
         c.add_ref(
             gf.components.rectangle(
                 size=(
                     right - left,
                     top - bottom,
                 ),
-                layer=layer_metal2_pin,
+                layer=layer_metal1_pin,
             )
         ).move((left, bottom))
         c.add_label(
-            text="E",
+            text="C",
             layer=layer_text,
             position=(
                 0.5 * (left + right),
                 0.5 * (top + bottom),
             ),
         )
+    # Collector port
+    c.add_port(
+        "C",
+        center=(0.5 * (left + right), 0.5 * (top + bottom)),
+        width=_snap_width_to_grid(top - bottom),
+        layer=layer_metal1_pin,
+        orientation=180.0,
+        port_type="electrical",
+    )
 
-        pcLabelText = f"Ae={int(Nx):d}*{int(Ny):d}*{le:.2f}*{we:.2f}"
-        c.add_label(text=pcLabelText, layer=layer_text, position=(-1.977, -2.546))
-
-        # Emitter port
-        c.add_port(
-            "E",
-            center=(0.5 * (left + right), 0.5 * (top + bottom)),
-            width=_snap_width_to_grid(top - bottom),
-            layer=layer_metal2_pin,
-            orientation=180.0,
-            port_type="electrical",
+    left = -0.94 - le / 2
+    bottom = -0.81 - we / 2 - leoffset - bipwinyoffset - empolyyoffset
+    right = stretchX + 0.94 + le / 2
+    top = -0.57 - we / 2 - leoffset - bipwinyoffset - empolyyoffset
+    c.add_ref(
+        gf.components.rectangle(
+            size=(
+                right - left,
+                top - bottom,
+            ),
+            layer=layer_metal1_pin,
         )
+    ).move((left, bottom))
+    c.add_label(
+        text="B",
+        layer=layer_text,
+        position=(
+            0.5 * (left + right),
+            0.5 * (top + bottom),
+        ),
+    )
 
-        # TODO: Extend to handle empoly, bipwin, cmet
+    # Base port
+    c.add_port(
+        "B",
+        center=(0.5 * (left + right), 0.5 * (top + bottom)),
+        width=_snap_width_to_grid(top - bottom),
+        layer=layer_metal1_pin,
+        orientation=180.0,
+        port_type="electrical",
+    )
+
+    left = -0.71 - le / 2
+    bottom = -0.335 - we / 2 - leoffset - bipwinyoffset - empolyyoffset
+    right = stretchX + 0.71 + le / 2
+    top = 0.32 + we / 2 + leoffset + bipwinyoffset + empolyyoffset
+    c.add_ref(
+        gf.components.rectangle(
+            size=(
+                right - left,
+                top - bottom,
+            ),
+            layer=layer_metal2_pin,
+        )
+    ).move((left, bottom))
+    c.add_label(
+        text="E",
+        layer=layer_text,
+        position=(
+            0.5 * (left + right),
+            0.5 * (top + bottom),
+        ),
+    )
+
+    pcLabelText = f"Ae={int(Nx):d}*{int(Ny):d}*{le:.2f}*{we:.2f}"
+    c.add_label(text=pcLabelText, layer=layer_text, position=(-1.977, -2.546))
+
+    # Emitter port
+    c.add_port(
+        "E",
+        center=(0.5 * (left + right), 0.5 * (top + bottom)),
+        width=_snap_width_to_grid(top - bottom),
+        layer=layer_metal2_pin,
+        orientation=180.0,
+        port_type="electrical",
+    )
 
     return c
 
