@@ -58,6 +58,7 @@ ignore-words-list = "te,fpr,nd,donot,schem,contnet,Contnet,rady,inout,INOUT,nam,
 skip = "*.lock,*.svg,*.gds,*.oas,*.lib,ihp/models/ngspice/va/*"
 
 [tool.gdsfactoryplus]
+ignore = ["refs/*.py"]
 name = "ihp"
 
 [tool.gdsfactoryplus.livewire]
