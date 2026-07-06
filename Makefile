@@ -62,8 +62,8 @@ cp-docs:
 	cp CHANGELOG.md docs/changelog.md
 
 notebooks:
-	@if [ "$$(uname -s)" = "Linux" ]; then sudo apt-get install -y --no-install-recommends libglu1-mesa libgl1 2>/dev/null; fi
-	uv run --extra docs --extra simulation jupyter nbconvert --to notebook --execute \
+	@if [ "$$(uname -s)" = "Linux" ]; then sudo apt-get install -y --no-install-recommends libglu1-mesa libgl1 libegl1 libosmesa6 2>/dev/null; fi
+	VTK_DEFAULT_RENDER_WINDOW_OFFSCREEN=1 uv run --extra docs --extra simulation jupyter nbconvert --to notebook --execute \
 		--ExecutePreprocessor.timeout=600 \
 		--output-dir /tmp/ihp-notebooks \
 		docs/palace_demo_cpw.ipynb docs/palace_demo_microstrip.ipynb
