@@ -62,6 +62,7 @@ cp-docs:
 	cp CHANGELOG.md docs/changelog.md
 
 notebooks:
+	@if [ "$$(uname -s)" = "Linux" ]; then sudo apt-get install -y --no-install-recommends libglu1-mesa libgl1 2>/dev/null; fi
 	uv run --extra docs --extra simulation jupyter nbconvert --to notebook --execute \
 		--ExecutePreprocessor.timeout=600 \
 		--output-dir /tmp/ihp-notebooks \
