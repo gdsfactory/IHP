@@ -1179,5 +1179,9 @@ routing_strategies = dict(
     route_bundle_metal_corner=route_bundle_metal_corner,
 )
 
+from cni.tech import Tech as _CNITech  # noqa: E402
+
+techParams = _CNITech.get("SG13_dev").getTechParams()
+
 if __name__ == "__main__":
     LAYER_VIEWS.to_lyp(PATH.lyp)
