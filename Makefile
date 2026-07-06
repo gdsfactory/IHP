@@ -44,7 +44,7 @@ gmsh:
 	sudo apt-get install -y python3-gmsh gmsh libglu1-mesa libxi-dev libxmu-dev libglu1-mesa-dev libosmesa6 libegl1
 
 docs-clean:
-	rm -rf docs/_build docs/palace_demo_cpw.md docs/palace_demo_microstrip.md
+	rm -rf docs/_build docs/palace_demo_cpw.md docs/palace_demo_microstrip.md docs/examples/
 
 mask:
 	python ubcpdk/samples/test_masks.py
@@ -60,6 +60,8 @@ cells:
 cp-docs:
 	cp README.md docs/index.md
 	cp CHANGELOG.md docs/changelog.md
+	mkdir -p docs/examples
+	cp examples/design_examples/ihp_160g_lna/README.md docs/examples/lna_160ghz.md
 
 notebooks:
 	@if [ "$$(uname -s)" = "Linux" ]; then sudo apt-get install -y --no-install-recommends libglu1-mesa libgl1 libegl1 libosmesa6 2>/dev/null; fi
@@ -72,6 +74,17 @@ notebooks:
 		/tmp/ihp-notebooks/palace_demo_cpw.ipynb \
 		/tmp/ihp-notebooks/palace_demo_microstrip.ipynb
 	uv run python docs/hooks.py docs/palace_demo_cpw.md docs/palace_demo_microstrip.md
+	mkdir -p docs/examples
+	uv run --extra docs jupyter nbconvert --to notebook --execute \
+		--ExecutePreprocessor.timeout=600 \
+		--output-dir /tmp/ihp-notebooks \
+		examples/design_examples/spice_to_yml/spice_to_yml.ipynb \
+		examples/design_examples/spice_and_gds_to_yml/spice_and_gds_to_yml.ipynb
+	uv run --extra docs jupyter nbconvert --to markdown \
+		--output-dir docs/examples \
+		/tmp/ihp-notebooks/spice_to_yml.ipynb \
+		/tmp/ihp-notebooks/spice_and_gds_to_yml.ipynb
+	uv run python docs/hooks.py docs/examples/spice_to_yml.md docs/examples/spice_and_gds_to_yml.md
 
 docs: cp-docs cells notebooks
 	uv run --extra docs zensical build -f docs/zensical.toml
