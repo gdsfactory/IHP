@@ -12,14 +12,24 @@ _LABEL_LAYER = (8, 25)
 _PIN_LAYER = (8, 2)
 _PORT_LAYER = "Metal1drawing"
 
+_layout_cache: kdb.Layout | None = None
+
+
+def _get_layout() -> kdb.Layout:
+    global _layout_cache
+    if _layout_cache is None:
+        layout = kdb.Layout()
+        layout.read(str(_GDS_PATH))
+        _layout_cache = layout
+    return _layout_cache
+
 
 def _snap(val: float, grid: float = 0.002) -> float:
     return round(round(val / grid) * grid, 6)
 
 
 def _add_ports_from_labels(component: gf.Component, cell_name: str) -> None:
-    layout = kdb.Layout()
-    layout.read(str(_GDS_PATH))
+    layout = _get_layout()
     dbu = layout.dbu
 
     li_text = layout.find_layer(*_LABEL_LAYER)
@@ -28,22 +38,21 @@ def _add_ports_from_labels(component: gf.Component, cell_name: str) -> None:
     labels: list[tuple[str, float, float]] = []
     pins: list[tuple[float, float, float, float]] = []
 
-    for ci in range(layout.cells()):
-        cell = layout.cell(ci)
-        if cell.name == cell_name:
-            for s in cell.each_shape(li_text):
-                if s.is_text():
-                    labels.append(
-                        (
-                            s.text_string,
-                            s.text_trans.disp.x * dbu,
-                            s.text_trans.disp.y * dbu,
-                        )
-                    )
-            for s in cell.each_shape(li_pin):
-                b = s.dbbox()
-                pins.append((b.left, b.bottom, b.right, b.top))
-            break
+    ci = layout.cell_by_name(cell_name)
+    cell = layout.cell(ci)
+
+    for s in cell.each_shape(li_text):
+        if s.is_text():
+            labels.append(
+                (
+                    s.text_string,
+                    s.text_trans.disp.x * dbu,
+                    s.text_trans.disp.y * dbu,
+                )
+            )
+    for s in cell.each_shape(li_pin):
+        b = s.dbbox()
+        pins.append((b.left, b.bottom, b.right, b.top))
 
     bb = component.dbbox()
     cell_mid_y = (bb.top + bb.bottom) / 2
