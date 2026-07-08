@@ -247,7 +247,7 @@ def wilkinson_power_divider(
     """Return a Wilkinson power divider coplanar transmission line.
 
     Constructs a two-way Wilkinson divider from quarter-wave transformer
-    branches (impedance $Z_0 / sqrt{2}$) arranged in a loop.  The
+    branches (impedance $Z_0 / \sqrt{2}$) arranged in a loop.  The
     quarter-wave length is derived from *frequency* and the effective
     dielectric constant of the selected cross-section stack.
 
