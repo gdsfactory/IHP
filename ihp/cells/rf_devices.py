@@ -244,7 +244,7 @@ def wilkinson_power_divider(
     shape: str = "C",
     e_r: float = 4.1,
 ) -> gf.Component:
-    """Return a Wilkinson power divider coplanar transmission line.
+    r"""Return a Wilkinson power divider coplanar transmission line.
 
     Constructs a two-way Wilkinson divider from quarter-wave transformer
     branches (impedance $Z_0 / \sqrt{2}$) arranged in a loop.  The
