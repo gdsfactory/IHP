@@ -1,0 +1,22 @@
+info: {}
+name: sg13g2_decap_4
+ports:
+  VDD:
+    center:
+    - 0.96
+    - 3.78
+    layer: Metal1drawing
+    name: VDD
+    orientation: 90
+    port_type: electrical
+    width: 1.92
+  VSS:
+    center:
+    - 0.96
+    - 0
+    layer: Metal1drawing
+    name: VSS
+    orientation: 270
+    port_type: electrical
+    width: 1.92
+settings: {}

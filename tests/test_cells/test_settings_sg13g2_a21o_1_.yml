@@ -1,0 +1,58 @@
+info: {}
+name: sg13g2_a21o_1
+ports:
+  A1:
+    center:
+    - 2.398
+    - 1.762
+    layer: Metal1drawing
+    name: A1
+    orientation: 0
+    port_type: electrical
+    width: 0.294
+  A2:
+    center:
+    - 2.936
+    - 0.684
+    layer: Metal1drawing
+    name: A2
+    orientation: 0
+    port_type: electrical
+    width: 0.35
+  B1:
+    center:
+    - 1.902
+    - 1.762
+    layer: Metal1drawing
+    name: B1
+    orientation: 0
+    port_type: electrical
+    width: 0.294
+  VDD:
+    center:
+    - 1.68
+    - 3.78
+    layer: Metal1drawing
+    name: VDD
+    orientation: 90
+    port_type: electrical
+    width: 3.36
+  VSS:
+    center:
+    - 1.68
+    - 0
+    layer: Metal1drawing
+    name: VSS
+    orientation: 270
+    port_type: electrical
+    width: 3.36
+  X:
+    center:
+    - 0.422
+    - 2.628
+    layer: Metal1drawing
+    name: X
+    orientation: 180
+    port_type: electrical
+    width: 0.276
+settings: {}

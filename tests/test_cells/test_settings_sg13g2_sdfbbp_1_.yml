@@ -1,0 +1,85 @@
+info: {}
+name: sg13g2_sdfbbp_1
+ports:
+  CLK:
+    center:
+    - 4.13
+    - 1.504
+    layer: Metal1drawing
+    name: CLK
+    orientation: 270
+    port_type: electrical
+    width: 0.42
+  Q:
+    center:
+    - 16.34
+    - 1.844
+    layer: Metal1drawing
+    name: Q
+    orientation: 0
+    port_type: electrical
+    width: 0.39
+  Q_N:
+    center:
+    - 14.77
+    - 2.52
+    layer: Metal1drawing
+    name: Q_N
+    orientation: 90
+    port_type: electrical
+    width: 0.36
+  RESET_B:
+    center:
+    - 13.888
+    - 1.584
+    layer: Metal1drawing
+    name: RESET_B
+    orientation: 270
+    port_type: electrical
+    width: 0.294
+  SCD:
+    center:
+    - 0.676
+    - 1.84
+    layer: Metal1drawing
+    name: SCD
+    orientation: 180
+    port_type: electrical
+    width: 0.33
+  SCE:
+    center:
+    - 1.24
+    - 2.02
+    layer: Metal1drawing
+    name: SCE
+    orientation: 180
+    port_type: electrical
+    width: 0.38
+  SET_B:
+    center:
+    - 11.66
+    - 2.12
+    layer: Metal1drawing
+    name: SET_B
+    orientation: 90
+    port_type: electrical
+    width: 0.3
+  VDD:
+    center:
+    - 8.4
+    - 3.78
+    layer: Metal1drawing
+    name: VDD
+    orientation: 90
+    port_type: electrical
+    width: 16.8
+  VSS:
+    center:
+    - 8.4
+    - 0
+    layer: Metal1drawing
+    name: VSS
+    orientation: 270
+    port_type: electrical
+    width: 16.8
+settings: {}

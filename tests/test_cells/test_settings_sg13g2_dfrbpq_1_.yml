@@ -1,0 +1,58 @@
+info: {}
+name: sg13g2_dfrbpq_1
+ports:
+  CLK:
+    center:
+    - 6.72
+    - 1.68
+    layer: Metal1drawing
+    name: CLK
+    orientation: 270
+    port_type: electrical
+    width: 0.54
+  D:
+    center:
+    - 0.428
+    - 1.48
+    layer: Metal1drawing
+    name: D
+    orientation: 180
+    port_type: electrical
+    width: 0.344
+  Q:
+    center:
+    - 12.502
+    - 2.624
+    layer: Metal1drawing
+    name: Q
+    orientation: 0
+    port_type: electrical
+    width: 0.416
+  RESET_B:
+    center:
+    - 2.448
+    - 1.738
+    layer: Metal1drawing
+    name: RESET_B
+    orientation: 270
+    port_type: electrical
+    width: 0.604
+  VDD:
+    center:
+    - 6.48
+    - 3.78
+    layer: Metal1drawing
+    name: VDD
+    orientation: 90
+    port_type: electrical
+    width: 12.96
+  VSS:
+    center:
+    - 6.48
+    - 0
+    layer: Metal1drawing
+    name: VSS
+    orientation: 270
+    port_type: electrical
+    width: 12.96
+settings: {}
