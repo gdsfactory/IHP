@@ -4,9 +4,8 @@ import gdsfactory as gf
 
 from ihp import LAYER, PDK
 
-skip = {
-    "all_cells",
-}
+skip = {"all_cells", "extend_ports"}
+skip.update(gf.gpdk.PDK.cells.keys())
 
 
 @gf.cell
@@ -29,7 +28,7 @@ def all_cells() -> gf.Component:
         size=(cell_matrix.xsize + 20, cell_matrix.ysize + 20),
         layer=LAYER.Recogdrawing,
     )
-    floorplan.dcenter = cell_matrix.dcenter
+    floorplan.center = cell_matrix.center
     return c
 
 
