@@ -11,9 +11,10 @@ classifiers = [
   "Programming Language :: Python :: 3.12"
 ]
 dependencies = [
-  "gdsfactory~=9.44.0",
-  "gdsfactoryplus",
-  "gplugins[sax]~=1.4.2"
+  "gdsfactory~=9.45.0",
+  "gplugins[sax]~=2.1.0",
+  "scikit-rf>=1.0.0",
+  "gdsfactoryplus"
 ]
 description = "IHP pdk"
 keywords = ["python"]
@@ -22,18 +23,27 @@ name = "ihp"
 readme = "README.md"
 requires-python = "~=3.12.0"
 version = "0.0.6"
-optional-dependencies.dev = [
-  "pre-commit",
+
+[project.optional-dependencies]
+dev = [
   "pytest",
   "pytest-cov",
-  "jsondiff",
+  "pytest_regressions",
+  'jsondiff',
   "pytest-github-actions-annotate-failures",
-  "pytest-regressions"
+  "pre-commit"
 ]
-optional-dependencies.docs = [
-  "autodoc-pydantic",
-  "jupyter-book==1.0.3",
-  "jupytext"
+docs = [
+  "jupyter",
+  "kwasm",
+  "mkdocs-material",
+  "mkdocs-with-pdf",
+  "nbconvert",
+  "mkdocstrings[python]>=0.27.0",
+  "zensical>=0.0.40,<0.1.0"
+]
+simulation = [
+  "gsim>=0.0.16; python_version>='3.12'"
 ]
 
 [tool.basedpyright]
