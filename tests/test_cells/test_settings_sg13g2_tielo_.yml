@@ -1,0 +1,31 @@
+info: {}
+name: sg13g2_tielo
+ports:
+  L_LO:
+    center:
+    - 1.44
+    - 0.858
+    layer: Metal1drawing
+    name: L_LO
+    orientation: 0
+    port_type: electrical
+    width: 0.29
+  VDD:
+    center:
+    - 0.96
+    - 3.78
+    layer: Metal1drawing
+    name: VDD
+    orientation: 90
+    port_type: electrical
+    width: 1.92
+  VSS:
+    center:
+    - 0.96
+    - 0
+    layer: Metal1drawing
+    name: VSS
+    orientation: 270
+    port_type: electrical
+    width: 1.92
+settings: {}
