@@ -9,7 +9,7 @@ from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 
 from ..config import PATH
-
+from .._common import _add_pins
 _XS = "metal1_routing"
 
 
@@ -149,6 +149,7 @@ def bondpad(
     c.info["diameter"] = diameter
     c.info["top_metal"] = layer_top_metal
 
+    _add_pins(c)
     return c
 
 
@@ -210,6 +211,7 @@ def bondpad_array(
 
     # TODO: Bondpad array VLSIR Metadata
 
+    _add_pins(c)
     return c
 
 

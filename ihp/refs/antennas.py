@@ -7,6 +7,7 @@ import gdsfactory as gf
 from .. import tech
 from .ihp_pycell import dantenna as dantennaIHP
 from .ihp_pycell import dpantenna as dpantennaIHP
+from .._common import _add_pins
 from .utils import *
 
 
@@ -77,6 +78,7 @@ def dantenna(
         ports_on_short_side=True,
     )
 
+    _add_pins(c)
     return c
 
 
@@ -149,4 +151,5 @@ def dpantenna(
         ports_on_short_side=True,
     )
 
+    _add_pins(c)
     return c

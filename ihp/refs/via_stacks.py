@@ -7,6 +7,7 @@ import gdsfactory as gf
 from .. import tech
 from .ihp_pycell import NoFillerStack as no_filler_stackIHP
 from .ihp_pycell import via_stack as via_stackIHP
+from .._common import _add_pins
 from .utils import *
 
 
@@ -108,6 +109,7 @@ def via_stack(
     )
     c.ports["e1"].name = "top"
 
+    _add_pins(c)
     return c
 
 
@@ -173,6 +175,7 @@ def no_filler_stack(
     # Adjust port orientations, for metal1 so every other port points in the opposite direction
     # for i, port in enumerate(c.ports):
     #     port.orientation = 90 if port.name.startswith("DS_") and i % 2 == 1 else port.orientation
+    _add_pins(c)
     return c
 
 

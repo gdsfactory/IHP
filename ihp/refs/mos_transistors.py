@@ -16,6 +16,7 @@ from .ihp_pycell import rfnmos as rfnmosIHP
 from .ihp_pycell import rfnmosHV as rfnmosHVIHP
 from .ihp_pycell import rfpmos as rfpmosIHP
 from .ihp_pycell import rfpmosHV as rfpmosHVIHP
+from .._common import _add_pins
 from .utils import *
 
 
@@ -125,6 +126,7 @@ def nmos(
         port_name_prefix="G_",
         ports_on_short_side=True,
     )
+    _add_pins(c)
     return c
 
 
@@ -198,6 +200,7 @@ def nmosHV(
         ports_on_short_side=True,
     )
 
+    _add_pins(c)
     return c
 
 
@@ -269,6 +272,7 @@ def pmos(
         port_name_prefix="G_",
         ports_on_short_side=True,
     )
+    _add_pins(c)
     return c
 
 
@@ -341,6 +345,7 @@ def pmosHV(
         port_name_prefix="G_",
         ports_on_short_side=True,
     )
+    _add_pins(c)
     return c
 
 
@@ -424,6 +429,7 @@ def rfnmos(
         port_name_prefix="G_",
         ports_on_short_side=True,
     )
+    _add_pins(c)
     return c
 
 
@@ -488,6 +494,7 @@ def rfnmosHV(
     # Adjust port orientations, for metal1 so every other port points in the opposite direction
     # for i, port in enumerate(c.ports):
     #     port.orientation = 90 if port.name.startswith("DS_") and i % 2 == 1 else port.orientation
+    _add_pins(c)
     return c
 
 
@@ -552,6 +559,7 @@ def rfpmos(
     # Adjust port orientations, for metal1 so every other port points in the opposite direction
     # for i, port in enumerate(c.ports):
     #     port.orientation = 90 if port.name.startswith("DS_") and i % 2 == 1 else port.orientation
+    _add_pins(c)
     return c
 
 
@@ -616,4 +624,5 @@ def rfpmosHV(
     # Adjust port orientations, for metal1 so every other port points in the opposite direction
     # for i, port in enumerate(c.ports):
     #     port.orientation = 90 if port.name.startswith("DS_") and i % 2 == 1 else port.orientation
+    _add_pins(c)
     return c

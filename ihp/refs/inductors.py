@@ -5,6 +5,7 @@ import gdsfactory as gf
 from .. import tech
 from .ihp_pycell import inductor2 as inductor2IHP
 from .ihp_pycell import inductor3 as inductor3IHP
+from .._common import _add_pins
 from .utils import *
 
 
@@ -85,6 +86,7 @@ def inductor2(
     c.ports["e1"].name = "LB"
     c.ports["e2"].name = "LA"
 
+    _add_pins(c)
     return c
 
 
@@ -175,4 +177,5 @@ def inductor3(
     for port in c.ports:
         port.orientation = 270  # all ports should face downwards
 
+    _add_pins(c)
     return c

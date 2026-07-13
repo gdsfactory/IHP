@@ -10,6 +10,7 @@ from .ihp_pycell import esd as esdIHP
 from .ihp_pycell import ntap1 as ntap1IHP
 from .ihp_pycell import ptap1 as ptap1IHP
 from .ihp_pycell import sealring as sealringIHP
+from .._common import _add_pins
 from .utils import *
 
 
@@ -132,6 +133,7 @@ def esd(
         c.ports["e2"].orientation = 90
         c.ports["e2"].name = "VDD"
 
+    _add_pins(c)
     return c
 
 
@@ -185,6 +187,7 @@ def ptap1(
         ports_on_short_side=True,
     )
 
+    _add_pins(c)
     return c
 
 
@@ -235,6 +238,7 @@ def ntap1(
         ports_on_short_side=True,
     )
 
+    _add_pins(c)
     return c
 
 
@@ -282,6 +286,7 @@ def sealring(
     # add ports to the component
     # ports should be added manually if needed
 
+    _add_pins(c)
     return c
 
 

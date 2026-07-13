@@ -9,6 +9,7 @@ from .ihp_pycell import CbCapCalc, eng_string
 from .ihp_pycell import SVaricap as SVaricapIHP
 from .ihp_pycell import cmim as cmimIHP
 from .ihp_pycell import rfcmim as rfcmimIHP
+from .._common import _add_pins
 from .utils import *
 
 
@@ -83,6 +84,7 @@ def cmim(
     c.ports["B"].orientation = 0
     c.ports["T"].orientation = 180
 
+    _add_pins(c)
     return c
 
 
@@ -156,6 +158,7 @@ def rfcmim(
     )
     c.ports["e1"].name = "TIE"
 
+    _add_pins(c)
     return c
 
 
@@ -213,6 +216,7 @@ def svaricap(
     c.ports["e2"].orientation = 270
     c.ports["e3"].orientation = 180
 
+    _add_pins(c)
     return c
 
 

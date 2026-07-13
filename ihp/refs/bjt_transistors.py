@@ -5,6 +5,7 @@ from .ihp_pycell import npn13G2 as npn13G2IHP
 from .ihp_pycell import npn13G2L as npn13G2LIHP
 from .ihp_pycell import npn13G2V as npn13G2VIHP
 from .ihp_pycell import pnpMPA as pnpMPAIHP
+from .._common import _add_pins
 from .utils import *
 
 
@@ -101,6 +102,7 @@ def npn13G2(
     # c.ports["e2"].name = "C"
     # c.ports["e3"].name = "E"
 
+    _add_pins(c)
     return c
 
 
@@ -165,6 +167,7 @@ def npn13G2L(
     c.ports["e2"].name = "E"
     c.ports["e3"].name = "C"
 
+    _add_pins(c)
     return c
 
 
@@ -229,6 +232,7 @@ def npn13G2V(
     c.ports["e2"].name = "C"
     c.ports["e3"].name = "E"
 
+    _add_pins(c)
     return c
 
 
@@ -283,4 +287,5 @@ def pnpMPA(
     c.ports["e2"].name = "PLUS"
     c.ports["e3"].name = "MINUS"
 
+    _add_pins(c)
     return c

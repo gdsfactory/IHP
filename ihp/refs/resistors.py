@@ -9,6 +9,7 @@ from .ihp_pycell import CbResCalc, CbResCurrent, eng_string_to_float
 from .ihp_pycell import rhigh as rhighIHP
 from .ihp_pycell import rppd as rppdIHP
 from .ihp_pycell import rsil as rsilIHP
+from .._common import _add_pins
 from .utils import *
 
 
@@ -98,6 +99,7 @@ def rhigh(
         ports_on_short_side=False,
     )
 
+    _add_pins(c)
     return c
 
 
@@ -187,6 +189,7 @@ def rppd(
         ports_on_short_side=False,
     )
 
+    _add_pins(c)
     return c
 
 
@@ -273,6 +276,7 @@ def rsil(
         ports_on_short_side=False,
     )
 
+    _add_pins(c)
     return c
 
 
