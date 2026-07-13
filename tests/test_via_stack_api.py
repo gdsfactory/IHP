@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 from ihp import PDK
 from ihp.cells.via_stacks import via_stack
 
@@ -17,3 +19,39 @@ def test_default_call_settings_snapshot() -> None:
         for label in ("Metal1", "Metal2")
         for direction in ("N", "S", "E", "W")
     )
+
+
+def test_layers_kwarg_maps_to_bottom_top_layer() -> None:
+    """The gdsfactory-shaped `layers` kwarg should pick bottom/top from its ends.
+
+    gdsfactory's @cell decorator captures settings before the body runs, so
+    we verify the translation by checking the resulting ports rather than
+    d["settings"]["top_layer"] (which reflects the formal parameter default).
+    """
+    PDK.activate()
+    c = via_stack(layers=("Metal1", "Metal3"))
+    port_names = [p.name for p in c.ports]
+    assert any("Metal1" in n for n in port_names), (
+        f"Expected Metal1 ports, got {port_names}"
+    )
+    assert any("Metal3" in n for n in port_names), (
+        f"Expected Metal3 ports, got {port_names}"
+    )
+
+
+@pytest.mark.parametrize(
+    "kwarg,value",
+    [
+        ("vias", ("via1", "via2", None)),
+        ("layer_offsets", (0.0, 0.0)),
+        ("layer_to_port_orientations", {}),
+        ("correct_size", True),
+        ("slot_horizontal", True),
+        ("slot_vertical", True),
+    ],
+)
+def test_unsupported_generic_kwargs_raise_not_implemented(kwarg, value) -> None:
+    """Generic features IHP's via_stack cannot honor must fail loudly, not silently."""
+    PDK.activate()
+    with pytest.raises(NotImplementedError):
+        via_stack(**{kwarg: value})
