@@ -262,6 +262,10 @@ def via_stack(
     if layers is not None:
         if len(layers) < 2:
             raise ValueError(f"layers must contain at least 2 entries, got {layers!r}")
+        if bottom_layer != "Metal1" or top_layer != "Metal2":
+            raise ValueError(
+                "Cannot specify both 'layers' and non-default 'bottom_layer'/'top_layer'."
+            )
         bottom_layer = layers[0]
         top_layer = layers[-1]
 
@@ -281,6 +285,12 @@ def via_stack(
                 "geometry is fully determined by foundry design rules "
                 "(VIA_RULES). Use vn_columns/vn_rows/vt1_*/vt2_* instead."
             )
+
+    if port_orientations is not None and tuple(port_orientations) != (180, 90, 0, -90):
+        raise NotImplementedError(
+            f"port_orientations={port_orientations!r} is not supported by IHP's via_stack. "
+            "Only the default (180, 90, 0, -90) is supported."
+        )
 
     c = Component()
 

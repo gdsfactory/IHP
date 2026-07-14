@@ -48,6 +48,7 @@ def test_layers_kwarg_maps_to_bottom_top_layer() -> None:
         ("correct_size", True),
         ("slot_horizontal", True),
         ("slot_vertical", True),
+        ("port_orientations", (0, 180)),
     ],
 )
 def test_unsupported_generic_kwargs_raise_not_implemented(kwarg, value) -> None:
@@ -55,3 +56,10 @@ def test_unsupported_generic_kwargs_raise_not_implemented(kwarg, value) -> None:
     PDK.activate()
     with pytest.raises(NotImplementedError):
         via_stack(**{kwarg: value})
+
+
+def test_layers_and_explicit_layers_raises_value_error() -> None:
+    """Specifying both layers and explicit bottom_layer/top_layer should raise ValueError."""
+    PDK.activate()
+    with pytest.raises(ValueError):
+        via_stack(layers=("Metal1", "Metal3"), bottom_layer="Metal2")
