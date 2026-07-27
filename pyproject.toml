@@ -49,6 +49,7 @@ docs = [
   "mkdocstrings[python]>=0.27.0",
   "zensical>=0.0.40,<0.1.0"
 ]
+pex = ["gf-pex @ git+https://github.com/doplaydo/gf-pex.git@dev/diogo-main"]
 simulation = [
   "gsim>=0.0.16; python_version>='3.12'"
 ]
@@ -97,7 +98,7 @@ python_files = ["tests/*.py"]
 testpaths = ["tests"]
 
 [tool.ruff]
-exclude = ["cni/", "ihp/refs/"]
+exclude = ["cni/", "ihp/refs/", "ihp/pex/ihp_sg13g2.py"]
 fix = true
 force-exclude = true
 
