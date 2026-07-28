@@ -5,6 +5,7 @@ extra_javascript = ["_static/extra.js"]
 nav = [
   {"Home" = "index.md"},
   {"Reference" = [
+    {"Layer Stack" = "layer_stack.md"},
     {"Cells" = "cells.md"},
     {"Changelog" = "changelog.md"}
   ]},
