@@ -6,6 +6,8 @@ import gdsfactory as gf
 from gdsfactory import Component
 from gdsfactory.typings import LayerSpec, LayerSpecs
 
+from ihp._common import _add_pins
+
 
 def snap_to_grid(p, grid: float = 0.005):
     return round(p / grid) * grid
@@ -302,6 +304,7 @@ def inductor2(
     c.info["space"] = space
     c.info["diameter"] = diameter
 
+    _add_pins(c)
     return c
 
 
