@@ -4,6 +4,8 @@ import gdsfactory as gf
 from gdsfactory import Component
 from gdsfactory.typings import LayerSpec
 
+from ihp._common import _add_pins
+
 # Via design rules (in micrometers)
 VIA_RULES = {
     "Cont": {
@@ -164,6 +166,7 @@ def via_array(
     c.info["enclosure_width"] = array_width + 2 * enclosure
     c.info["enclosure_height"] = array_height + 2 * enclosure
 
+    _add_pins(c)
     return c
 
 
@@ -396,6 +399,7 @@ def via_stack(
     c.info["height"] = height
     c.info["n_layers"] = len(layer_order)
 
+    _add_pins(c)
     return c
 
 
@@ -556,4 +560,5 @@ def via_stack_with_pads(
         port_type="electrical",
     )
 
+    _add_pins(c)
     return c

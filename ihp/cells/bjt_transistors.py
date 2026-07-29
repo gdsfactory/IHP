@@ -6,6 +6,7 @@ import gdsfactory as gf
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 
+from ihp._common import _add_pins
 from ihp.tech import TECH as _TECH
 
 _XS = "metal1_routing"
@@ -785,6 +786,7 @@ def npn13G2(
         port_type="electrical",
     )
 
+    _add_pins(c)
     return c
 
 
@@ -1391,6 +1393,7 @@ def npn13G2L(
         ),
     )
 
+    _add_pins(c)
     return c
 
 
@@ -2018,6 +2021,7 @@ def npn13G2V(
         ),
     )
 
+    _add_pins(c)
     return c
 
 
@@ -2600,4 +2604,5 @@ def pnpMPA(length: float = 2, width: float = 0.7) -> gf.Component:
         port_type="electrical",
     )
 
+    _add_pins(c)
     return c

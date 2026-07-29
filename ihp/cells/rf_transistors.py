@@ -13,6 +13,8 @@ from gdsfactory import Component
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 
+from ihp._common import _add_pins
+
 from ..tech import TECH
 from .fet_transistors import _add_rect, _even_dbu, _fix, _grid_fix
 
@@ -881,6 +883,7 @@ def _rf_mos_core(
             port_type="electrical",
         )
 
+    _add_pins(c)
     return c
 
 
@@ -999,6 +1002,7 @@ def rfnmos(
         is_pmos=False,
         is_hv=False,
     )
+    _add_pins(c)
     return c
 
 
@@ -1114,6 +1118,7 @@ def rfpmos(
         is_pmos=True,
         is_hv=False,
     )
+    _add_pins(c)
     return c
 
 
@@ -1229,6 +1234,7 @@ def rfnmos_hv(
         is_pmos=False,
         is_hv=True,
     )
+    _add_pins(c)
     return c
 
 
@@ -1344,4 +1350,5 @@ def rfpmos_hv(
         is_pmos=True,
         is_hv=True,
     )
+    _add_pins(c)
     return c

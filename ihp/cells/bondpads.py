@@ -8,6 +8,8 @@ from gdsfactory import Component
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 
+from ihp._common import _add_pins
+
 from ..config import PATH
 
 _XS = "metal1_routing"
@@ -149,6 +151,7 @@ def bondpad(
     c.info["diameter"] = diameter
     c.info["top_metal"] = layer_top_metal
 
+    _add_pins(c)
     return c
 
 
@@ -210,6 +213,7 @@ def bondpad_array(
 
     # TODO: Bondpad array VLSIR Metadata
 
+    _add_pins(c)
     return c
 
 
@@ -230,4 +234,5 @@ def CuPillarPad() -> gf.Component:
     c.add_port(
         name="e4", center=(0, 0), width=width, orientation=270, layer="TopMetal2drawing"
     )
+    _add_pins(c)
     return c

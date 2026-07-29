@@ -7,6 +7,7 @@ from kfactory.schematic import DSchematic
 from numpy import floor
 
 from ihp import tech
+from ihp._common import _add_pins
 from ihp.cells.passives import guard_ring
 from ihp.cells.via_stacks import via_array, via_stack
 from ihp.tech import CbCapCalc
@@ -311,6 +312,7 @@ def cmom(
     c.info["spacing"] = spacing
 
     #   return the component
+    _add_pins(c)
     return c
 
 
@@ -565,6 +567,7 @@ def cmim(
     c.info["capacitance_fF"] = capacitance
     c.info["area_um2"] = width * length
 
+    _add_pins(c)
     return c
 
 
@@ -786,4 +789,5 @@ def rfcmim(
     c.add_label(text="TIE_LOW", position=(tie.x, tie.y), layer=layer_metal1label)
     c.add_label(text="TIE_LOW", position=(tie.x, tie.y), layer=layer_text)
 
+    _add_pins(c)
     return c

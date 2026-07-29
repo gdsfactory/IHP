@@ -5,6 +5,7 @@ from gdsfactory import Component
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 
+from ihp._common import _add_pins
 from ihp.tech import TECH as _TECH
 
 _XS = "metal1_routing"
@@ -240,6 +241,7 @@ def rsil(
         }
     )
 
+    _add_pins(c)
     return c
 
 
@@ -473,6 +475,7 @@ def rppd(
         }
     )
 
+    _add_pins(c)
     return c
 
 
@@ -707,4 +710,5 @@ def rhigh(
         }
     )
 
+    _add_pins(c)
     return c

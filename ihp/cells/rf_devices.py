@@ -4,6 +4,7 @@ import gdsfactory as gf
 import scipy
 from gdsfactory.typings import CrossSectionSpec
 
+from ihp._common import _add_pins
 from ihp.cells.waveguides import (
     _calculate_effective_dielectric_constant,
     _calculate_width_from_Z0,
@@ -230,6 +231,7 @@ def branch_line_coupler(
     c.add_port(name="e3", port=connection3.ports["e2"])
     c.add_port(name="e4", port=connection4.ports["e2"])
 
+    _add_pins(c)
     return c
 
 
@@ -632,6 +634,7 @@ def wilkinson_power_divider(
     #     bends=0
     # ))
 
+    _add_pins(c)
     return c
 
 
@@ -756,6 +759,7 @@ def directional_coupler(
     c.add_port(name="e3", port=connection_port3.ports["e2"])
     c.add_port(name="e4", port=connection_port4.ports["e2"])
     c.flatten()
+    _add_pins(c)
     return c
 
 
@@ -838,6 +842,7 @@ def quarter_wave_transformer(
     c.add_port(name="e1", port=connection_port1.ports["e2"])
     c.add_port(name="e2", port=connection_port2.ports["e2"])
 
+    _add_pins(c)
     return c
 
 
@@ -1019,6 +1024,7 @@ def coupled_line_bandpass_filter(
 
     c.flatten()
 
+    _add_pins(c)
     return c
 
 
@@ -1075,6 +1081,7 @@ def _corner_rectangle(
         port_type="electrical",
         layer=gf.get_cross_section(cross_section).layer,
     )
+    _add_pins(c)
     return c
 
 
@@ -1327,4 +1334,5 @@ def hairpin_coupled_line_bandpass_filter(
 
     # c.add_port(name="e1", port=input_line.ports["e1"])
 
+    _add_pins(c)
     return c

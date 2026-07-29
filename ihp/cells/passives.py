@@ -10,6 +10,7 @@ from kfactory.schematic import DSchematic
 from numpy import floor, round
 
 from ihp import cells, tech
+from ihp._common import _add_pins
 
 _XS = "metal1_routing"
 
@@ -220,6 +221,7 @@ def svaricap(
         port_type="electrical",
     )
 
+    _add_pins(c)
     return c
 
 
@@ -430,6 +432,7 @@ def esd_nmos(
         port_type="electrical",
     )
 
+    _add_pins(c)
     return c
 
 
@@ -582,6 +585,7 @@ def ptap1(
     c.info["rows"] = rows
     c.info["cols"] = cols
 
+    _add_pins(c)
     return c
 
 
@@ -745,6 +749,7 @@ def ntap1(
     c.info["rows"] = rows
     c.info["cols"] = cols
 
+    _add_pins(c)
     return c
 
 
@@ -928,6 +933,7 @@ def sealring(
     c.info["height"] = height
     c.info["ring_width"] = ring_width
 
+    _add_pins(c)
     return c
 
 
@@ -1118,4 +1124,5 @@ def guard_ring(
     c.info["rows"] = nrows
     c.info["guardRingSpacing"] = guardRingSpacing
 
+    _add_pins(c)
     return c

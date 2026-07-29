@@ -16,6 +16,8 @@ from gdsfactory import Component
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 
+from ihp._common import _add_pins
+
 from ..tech import TECH
 
 _XS = "metal1_routing"
@@ -502,6 +504,7 @@ def _mos_core(
         port_type="electrical",
     )
 
+    _add_pins(c)
     return c
 
 
@@ -596,6 +599,7 @@ def nmos(
         )
 
     c = _mos_core(width, length, nf, is_pmos=False, is_hv=False)
+    _add_pins(c)
     return c
 
 
@@ -677,6 +681,7 @@ def pmos(
         raise ValueError(f"pmos nf={nf} out of range [1, {TECH.pmos_max_nf}]")
 
     c = _mos_core(width, length, nf, is_pmos=True, is_hv=False)
+    _add_pins(c)
     return c
 
 
@@ -758,6 +763,7 @@ def nmos_hv(
         raise ValueError(f"nmos_hv nf={nf} out of range [1, {TECH.nmos_hv_max_nf}]")
 
     c = _mos_core(width, length, nf, is_pmos=False, is_hv=True)
+    _add_pins(c)
     return c
 
 
@@ -839,4 +845,5 @@ def pmos_hv(
         raise ValueError(f"pmos_hv nf={nf} out of range [1, {TECH.pmos_hv_max_nf}]")
 
     c = _mos_core(width, length, nf, is_pmos=True, is_hv=True)
+    _add_pins(c)
     return c
