@@ -477,6 +477,8 @@ def get_layer_stack(
     thickness_metal1: float = 0.42,  # Metal1 thickness (420 nm from process specs)
     thickness_metal: float = 0.49,  # Metal2-5 thickness (490 nm from process specs)
     thickness_via: float = 0.54,  # Via1-4 thickness (540 nm from process specs)
+    thickness_mim_diel: float = 0.04,  # MIM layer dielectric thickness (40 nm from process specs, see https://github.com/IHP-GmbH/IHP-Open-PDK/blob/main/ihp-sg13g2/libs.tech/klayout/tech/xsect/sg13g2_for_EM.xs)
+    thickness_mim_top: float = 0.15,  # MIM metal layer thickness (150 nm from process specs, see https://github.com/IHP-GmbH/IHP-Open-PDK/blob/main/ihp-sg13g2/libs.tech/klayout/tech/xsect/sg13g2_for_EM.xs)
     thickness_topvia1: float = 0.85,  # TopVia1 thickness (850 nm from process specs)
     thickness_topmetal1: float = 2.0,  # TopMetal1 thickness (2000 nm from process specs)
     thickness_topvia2: float = 2.8,  # TopVia2 thickness (2800 nm from process specs)
@@ -520,6 +522,16 @@ def get_layer_stack(
     z_tm1_top = z_tv1_top + thickness_topmetal1
     z_tv2_top = z_tm1_top + thickness_topvia2
     z_tm2_top = z_tv2_top + thickness_topmetal2
+
+    z_mim_diel_top = z_m5_top + thickness_mim_diel
+
+    mim_top_layer_level = LayerLevel(  # Ensuring backwards compatibility
+        layer=LAYER.MIMdrawing,
+        thickness=thickness_mim_top,  # 150 nm MIM top-plate metal
+        zmin=z_mim_diel_top,
+        material="aluminum",  # conductor (top electrode)
+        info={"mesh_order": 23},
+    )
 
     return LayerStack(
         layers=dict(
@@ -722,18 +734,20 @@ def get_layer_stack(
             ),
             # MIM capacitor - dielectric 40nm (TISMIM) + top plate 150nm (TMIMTOP)
             # Sits on top of Metal5
-            mim=LayerLevel(
+            mim_diel=LayerLevel(
                 layer=LAYER.MIMdrawing,
-                thickness=0.04 + 0.15,
+                thickness=thickness_mim_diel,  # 40 nm MIM dielectric
                 zmin=z_m5_top,
-                material="sio2",
+                material="sin",  # high-k nitride, εᵣ ≈ 7.5
                 info={"mesh_order": 23},
             ),
+            # mim_top=mim_top_layer_level, # Alias, breaks extrusion - extruded layout duplicates MIM layer in its metal section.
+            mim=mim_top_layer_level,  # Ensure backwards compatibility
             # Vmim - MIM via (connects MIM top plate to TopMetal1)
             vmim=LayerLevel(
                 layer=LAYER.Vmimdrawing,
-                thickness=thickness_topvia1 - 0.19,
-                zmin=z_m5_top + 0.19 + 0.01,
+                thickness=thickness_topvia1 - (thickness_mim_diel + thickness_mim_top),
+                zmin=z_m5_top + thickness_mim_diel + thickness_mim_top,  # + 0.01,
                 material="tungsten",
                 info={"mesh_order": 24},
             ),
