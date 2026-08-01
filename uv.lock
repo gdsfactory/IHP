@@ -937,7 +937,7 @@ wheels = [
 
 [[package]]
 name = "gsim"
-version = "0.0.16"
+version = "0.1.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "gdsfactory" },
@@ -952,9 +952,9 @@ dependencies = [
     { name = "trame-vtk" },
     { name = "trame-vuetify" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e0/ee/a60b6fc006d04b5a1e37e5d8d6dcb3fdcee87888846f04abbb77a9e1131f/gsim-0.0.16.tar.gz", hash = "sha256:6f21a755d5a4a71c4a0ab2805e2e08525e4f8eb6fdb9d624feb2cb37afb0a8f8", size = 171677, upload-time = "2026-04-22T19:10:41.354Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/60/1b/a655c808215d826cadba2276e4f1e3d0a25e84a1f4b06f11530b457748b1/gsim-0.1.0.tar.gz", hash = "sha256:b800b11f3dc20201da9f64f475c1a5668d858a4dcd8f1b07bb24e99fec3cc726", size = 235759, upload-time = "2026-07-06T09:33:56.463Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d2/6b/b3a469a9531890f18e2dae677b7ab3a6efd3bfb2ef363587ec668c794db8/gsim-0.0.16-py3-none-any.whl", hash = "sha256:2f6eb09b1f4a67e0da247f92cbc9acf471f315965f6c1b41b935997d90927456", size = 194773, upload-time = "2026-04-22T19:10:39.714Z" },
+    { url = "https://files.pythonhosted.org/packages/ad/e3/65ac7898de6f3f321e24e24ab6a419b705499ad6d824d60f201b424f9266/gsim-0.1.0-py3-none-any.whl", hash = "sha256:257ebf9b893dace5af3986ffed165fb0ec5a421c30062ff863b72abcbaf52e6f", size = 261891, upload-time = "2026-07-06T09:33:55.161Z" },
 ]
 
 [[package]]
