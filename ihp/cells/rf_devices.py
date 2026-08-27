@@ -261,6 +261,9 @@ def wilkinson_power_divider(
             Accepts a single spec for microstrip or a two-element list
             ``[lower, upper]`` for stripline.
         shape: Shape of the Wilkinson divider. Can be either "C" or "U". In a "C" shape, the quarter-wave branches are connected in a loop, while in a "U" shape, the branches are not braught together again
+        e_r: Relative permittivity of the dielectric between signal and
+            ground metals, used to derive the effective dielectric constant
+            and the line widths.
     Returns:
         A Component containing the Wilkinson power divider with ports
         ``e1`` (input), ``e2`` and ``e3`` (outputs).

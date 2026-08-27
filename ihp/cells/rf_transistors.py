@@ -45,8 +45,10 @@ def _metal_cont(
 
     Args:
         c: Component to add geometry to.
-        p1_x, p1_y: Start point of the line (raw coordinates).
-        p2_x, p2_y: End point of the line (raw coordinates).
+        p1_x: X coordinate of the line start point, before shift_x (um).
+        p1_y: Y coordinate of the line start point, before shift_y (um).
+        p2_x: X coordinate of the line end point, before shift_x (um).
+        p2_y: Y coordinate of the line end point, before shift_y (um).
         layer_metal: Metal layer for the covering rectangle (empty string to skip).
         layer_cont: Contact/via layer for sub-rectangles.
         width: Width of the metal strip.

@@ -70,8 +70,10 @@ def _place_contacts(
     Args:
         c: Component to add contacts to.
         layer_cont: Contact layer.
-        xl, yl: Lower-left of bounding box.
-        xh, yh: Upper-right of bounding box.
+        xl: X coordinate of the lower-left corner of the bounding box (um).
+        yl: Y coordinate of the lower-left corner of the bounding box (um).
+        xh: X coordinate of the upper-right corner of the bounding box (um).
+        yh: Y coordinate of the upper-right corner of the bounding box (um).
         ox: X-direction enclosure (0 for transistor S/D contacts).
         oy: Y-direction enclosure (cont_Activ_overRec for transistor S/D).
         ws: Contact size.
