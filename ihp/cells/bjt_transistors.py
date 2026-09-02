@@ -2051,6 +2051,8 @@ def contactArray(
             Length (x-dimension) of the region which contains the pin array.
         width : float
             Width (y-dimension) of the region which contains the pin array.
+        contactLayer : LayerSpec
+            Layer on which each square contact rectangle is drawn.
         xl: float
             Minimum x-coordinate of the array that contains the pins.
         yl: float
