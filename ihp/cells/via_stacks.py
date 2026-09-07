@@ -169,9 +169,18 @@ def via_array(
 
 @gf.cell(tags=["IHP", "via", "stack"])
 def via_stack(
+    size: tuple[float, float] = (10.0, 10.0),
+    layers: tuple[str, ...] | None = None,
+    layer_offsets: tuple[float, ...] | None = None,
+    vias: tuple[str | None, ...] | None = None,
+    layer_to_port_orientations: dict[str, list[int]] | None = None,
+    correct_size: bool = False,
+    slot_horizontal: bool = False,
+    slot_vertical: bool = False,
+    port_orientations: tuple[int, ...] | None = (180, 90, 0, -90),
+    *,
     bottom_layer: str = "Metal1",
     top_layer: str = "Metal2",
-    size: tuple[float, float] = (10.0, 10.0),
     vn_columns: int = 2,
     vn_rows: int = 2,
     vt1_columns: int = 1,
@@ -206,14 +215,40 @@ def via_stack(
 ) -> Component:
     """Create a via stack connecting multiple metal layers.
 
+    Primary arguments (size, layers, layer_offsets, vias,
+    layer_to_port_orientations, correct_size, slot_horizontal,
+    slot_vertical, port_orientations) match the shape of
+    gdsfactory.components.vias.via_stack. IHP's own bottom_layer/top_layer/
+    vn_*/vt*_* convenience arguments come after as keyword-only extras and
+    are the recommended way to call this function, since IHP's via
+    geometry is fully determined by foundry design rules (see VIA_RULES)
+    rather than by an explicit list of via components.
+
     bottom_layer can be Activ, GatPoly, or any metal (Metal1-TopMetal2).
     Activ and GatPoly connect to Metal1 through Cont; they are independent
     paths and must not appear together in the same stack.
 
     Args:
+        size: Size of the metal stack (width, height) in micrometers.
+        layers: Optional gdsfactory-style layer list. Only the first and
+            last entries are used (as bottom_layer/top_layer) -- IHP
+            derives every intermediate layer and via automatically from
+            VIA_RULES, unlike the generic via_stack which requires every
+            layer to be listed explicitly.
+        layer_offsets: Not supported. Raises NotImplementedError if set.
+        vias: Not supported -- IHP infers the via type from each pair of
+            adjacent layers. Raises NotImplementedError if set.
+        layer_to_port_orientations: Not supported. Raises
+            NotImplementedError if set.
+        correct_size: Not supported -- IHP does not auto-grow `size` to
+            fit a via. Raises NotImplementedError if True.
+        slot_horizontal: Not supported. Raises NotImplementedError if True.
+        slot_vertical: Not supported. Raises NotImplementedError if True.
+        port_orientations: Ignored by IHP's port scheme (always emits
+            N/S/E/W ports on bottom_layer and top_layer); kept for
+            signature compatibility only.
         bottom_layer: Bottom layer name (Activ, GatPoly, or Metal1-TopMetal2).
         top_layer: Top metal layer name (Metal1-TopMetal2).
-        size: Size of the metal stack (width, height) in micrometers.
         vn_columns: Number of columns for normal vias (Cont, Via1-Via4).
         vn_rows: Number of rows for normal vias.
         vt1_columns: Number of columns for TopVia1.
@@ -224,6 +259,39 @@ def via_stack(
     Returns:
         Component with via stack.
     """
+    if layers is not None:
+        if len(layers) < 2:
+            raise ValueError(f"layers must contain at least 2 entries, got {layers!r}")
+        if bottom_layer != "Metal1" or top_layer != "Metal2":
+            raise ValueError(
+                "Cannot specify both 'layers' and non-default 'bottom_layer'/'top_layer'."
+            )
+        bottom_layer = layers[0]
+        top_layer = layers[-1]
+
+    _unsupported = {
+        "layer_offsets": layer_offsets,
+        "vias": vias,
+        "layer_to_port_orientations": layer_to_port_orientations,
+        "correct_size": correct_size,
+        "slot_horizontal": slot_horizontal,
+        "slot_vertical": slot_vertical,
+    }
+    for name, value in _unsupported.items():
+        default = False if isinstance(value, bool) else None
+        if value != default:
+            raise NotImplementedError(
+                f"{name}={value!r} is not supported by IHP's via_stack: via "
+                "geometry is fully determined by foundry design rules "
+                "(VIA_RULES). Use vn_columns/vn_rows/vt1_*/vt2_* instead."
+            )
+
+    if port_orientations is not None and tuple(port_orientations) != (180, 90, 0, -90):
+        raise NotImplementedError(
+            f"port_orientations={port_orientations!r} is not supported by IHP's via_stack. "
+            "Only the default (180, 90, 0, -90) is supported."
+        )
+
     c = Component()
 
     # BEOL metal stack (Metal1 and above)
