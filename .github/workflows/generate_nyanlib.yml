@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   generate:
-    uses: doplaydo/pdk-ci-workflow-public/.github/workflows/generate_nyanlib.yml@fix/libexpat-permissions
+    uses: doplaydo/pdk-ci-workflow-public/.github/workflows/generate_nyanlib.yml@main
     secrets:
       GFP_API_KEY: ${{ secrets.GFP_API_KEY }}
       GFP_ECR_IMAGE: ${{ secrets.GFP_ECR_IMAGE }}
