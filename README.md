@@ -3,22 +3,11 @@
 IHP's SG13G2 is an open-source 130nm SiGe BiCMOS technology for RF/mmWave electronics.
 
 <!-- BADGES:START -->
-[![Docs](https://github.com/gdsfactory/ihp/actions/workflows/pages.yml/badge.svg)](https://github.com/gdsfactory/ihp/actions/workflows/pages.yml)
-[![Tests](https://github.com/gdsfactory/ihp/actions/workflows/test_code.yml/badge.svg)](https://github.com/gdsfactory/ihp/actions/workflows/test_code.yml)
-[![DRC](https://github.com/gdsfactory/ihp/raw/badges/drc.svg)](https://github.com/gdsfactory/ihp/actions/workflows/drc.yml)
-[![Model Regression](https://github.com/gdsfactory/ihp/actions/workflows/model_regression.yml/badge.svg)](https://github.com/gdsfactory/ihp/actions/workflows/model_regression.yml)
-[![Test Coverage](https://github.com/gdsfactory/ihp/raw/badges/coverage.svg)](https://github.com/gdsfactory/ihp/actions/workflows/test_coverage.yml)
-[![Model Coverage](https://github.com/gdsfactory/ihp/raw/badges/model_coverage.svg)](https://github.com/gdsfactory/ihp/actions/workflows/model_coverage.svg)
-[![Issues](https://github.com/gdsfactory/ihp/raw/badges/issues.svg)](https://github.com/gdsfactory/ihp/issues)
-[![PRs](https://github.com/gdsfactory/ihp/raw/badges/prs.svg)](https://github.com/gdsfactory/ihp/pulls)
+add_electrical_pins
 <!-- BADGES:END -->
 
 
-[![Test code](https://github.com/gdsfactory/ihp/actions/workflows/test_code.yml/badge.svg)](https://github.com/gdsfactory/ihp/actions/workflows/test_code.yml)
-[![Build docs](https://github.com/gdsfactory/ihp/actions/workflows/pages.yml/badge.svg)](https://github.com/gdsfactory/ihp/actions/workflows/pages.yml)
-[![PyPI](https://img.shields.io/pypi/v/ihp-gdsfactory)](https://pypi.org/project/ihp-gdsfactory/)
-[![Python](https://img.shields.io/pypi/pyversions/ihp-gdsfactory)](https://pypi.org/project/ihp-gdsfactory/)
-[![License](https://img.shields.io/github/license/gdsfactory/ihp)](https://github.com/gdsfactory/ihp/blob/main/LICENSE)
+add_electrical_pins
 
 A [GDSFactory](https://gdsfactory.github.io/gdsfactory/)-based Process Design Kit for the [IHP SG13G2](https://github.com/IHP-GmbH/IHP-Open-PDK) 130nm BiCMOS open-source technology. It provides parametric layout cells, design rule constants, simulation models, and example designs for tape-out-ready integrated circuits.
 
@@ -152,7 +141,7 @@ uv run pytest tests/test_cells.py -v          # GDS regression + settings tests
 - [gdsfactory docs](https://gdsfactory.github.io/gdsfactory/)
 - [IHP docs from GDSFactory](https://gdsfactory.github.io/IHP/) and [code](https://github.com/gdsfactory/ihp)
 - [IHP documentation](https://ihp-open-pdk-docs.readthedocs.io/en/latest/#)
-- [IHP component diagrams](https://ihp-open-pdk-docs.readthedocs.io/en/latest/verification/lvs/04_01_fets.html)
+- add_electrical_pins
 
 ## License
 
