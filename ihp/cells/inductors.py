@@ -4,9 +4,8 @@ import math
 
 import gdsfactory as gf
 from gdsfactory import Component
+from gdsfactory.add_pins import add_electrical_pins
 from gdsfactory.typings import LayerSpec, LayerSpecs
-
-from ihp._common import _add_pins
 
 
 def snap_to_grid(p, grid: float = 0.005):
@@ -304,7 +303,12 @@ def inductor2(
     c.info["space"] = space
     c.info["diameter"] = diameter
 
-    _add_pins(c)
+    add_electrical_pins(
+        c,
+        port_pin_mapping={
+            p.name: [p.name] for p in c.ports if p.port_type == "electrical"
+        },
+    )
     return c
 
 

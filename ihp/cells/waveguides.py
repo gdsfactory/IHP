@@ -3,10 +3,9 @@
 from math import exp, isfinite, log, sqrt
 
 import gdsfactory as gf
+from gdsfactory.add_pins import add_electrical_pins
 from gdsfactory.cross_section import port_names_electrical, port_types_electrical
 from gdsfactory.typings import CrossSectionSpec, LayerSpec, Size
-
-from ihp._common import _add_pins
 
 from .. import tech
 
@@ -538,7 +537,7 @@ def tline(
         )
         ground.move((-3 * width, 0))
 
-    _add_pins(c)
+    add_electrical_pins(c, port_pin_mapping={"e1": ["e1", "e2"]})
     return c
 
 
@@ -614,7 +613,7 @@ def tline_bend_circular(
             )
         )
 
-    _add_pins(c)
+    add_electrical_pins(c, port_pin_mapping={"e1": ["e1", "e2"]})
     return c
 
 
@@ -690,7 +689,7 @@ def tline_bend_euler(
             )
         )
 
-    _add_pins(c)
+    add_electrical_pins(c, port_pin_mapping={"e1": ["e1", "e2"]})
     return c
 
 
@@ -741,7 +740,7 @@ def tline_bend_s(
         )
     )
 
-    _add_pins(c)
+    add_electrical_pins(c, port_pin_mapping={"e1": ["e1", "e2"]})
     return c
 
 
@@ -839,7 +838,7 @@ def tline_corner(
         port_type="electrical",
         layer=gf.get_cross_section(signal_cross_section).layer,
     )
-    _add_pins(c)
+    add_electrical_pins(c, port_pin_mapping={"e1": ["e1", "e2", "e3", "e4"]})
     return c
 
 
@@ -929,5 +928,5 @@ def coupler_tline(
     c.add_port(name="e4", port=bot.ports["e1"])
     c.flatten()
 
-    _add_pins(c)
+    add_electrical_pins(c, port_pin_mapping={"e1": ["e1", "e2"], "e3": ["e3", "e4"]})
     return c

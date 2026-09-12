@@ -6,6 +6,10 @@ requires = ["setuptools", "wheel", "ruff"]
 
 [dependency-groups]
 dev = [
+  "gdsfactoryplus>=1.8.16",
+  "pre-commit>=4.6.0",
+  "pylint>=4.0.8",
+  "ruff>=0.16.7",
   "towncrier>=25.8.0"
 ]
 docs = []
@@ -18,7 +22,7 @@ classifiers = [
   "Programming Language :: Python :: 3.13"
 ]
 dependencies = [
-  "gdsfactory~=9.47.0",
+  "gdsfactory~=9.50.0",
   "gplugins[sax]~=2.1.0",
   "scikit-rf>=1.0.0",
   "gdsfactoryplus"

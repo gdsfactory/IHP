@@ -2,10 +2,10 @@
 
 import gdsfactory as gf
 from gdsfactory import Component
+from gdsfactory.add_pins import add_electrical_pins
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 
-from ihp._common import _add_pins
 from ihp.tech import TECH as _TECH
 
 _XS = "metal1_routing"
@@ -241,7 +241,7 @@ def rsil(
         }
     )
 
-    _add_pins(c)
+    add_electrical_pins(c, port_pin_mapping={"P1": ["P1"], "P2": ["P2"]})
     return c
 
 
@@ -475,7 +475,7 @@ def rppd(
         }
     )
 
-    _add_pins(c)
+    add_electrical_pins(c, port_pin_mapping={"P1": ["P1"], "P2": ["P2"]})
     return c
 
 
@@ -710,5 +710,5 @@ def rhigh(
         }
     )
 
-    _add_pins(c)
+    add_electrical_pins(c, port_pin_mapping={"P1": ["P1"], "P2": ["P2"]})
     return c

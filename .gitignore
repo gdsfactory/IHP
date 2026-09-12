@@ -188,3 +188,7 @@ cython_debug/
 .DS_Store
 *Thumbs.db
 .pre-commit-config.yaml
+
+# LLM
+.agents
+.cursor

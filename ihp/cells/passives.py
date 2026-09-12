@@ -5,12 +5,12 @@ from typing import Literal
 import gdsfactory as gf
 import numpy as np
 from gdsfactory import Component
+from gdsfactory.add_pins import add_electrical_pins
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 from numpy import floor, round
 
 from ihp import cells, tech
-from ihp._common import _add_pins
 
 _XS = "metal1_routing"
 
@@ -221,7 +221,7 @@ def svaricap(
         port_type="electrical",
     )
 
-    _add_pins(c)
+    add_electrical_pins(c, port_pin_mapping={"G": ["G"], "B": ["B"]})
     return c
 
 
@@ -432,7 +432,7 @@ def esd_nmos(
         port_type="electrical",
     )
 
-    _add_pins(c)
+    add_electrical_pins(c, port_pin_mapping={"PAD": ["PAD"], "GND": ["GND"]})
     return c
 
 
@@ -585,7 +585,7 @@ def ptap1(
     c.info["rows"] = rows
     c.info["cols"] = cols
 
-    _add_pins(c)
+    add_electrical_pins(c, port_pin_mapping={"TAP": ["TAP"]})
     return c
 
 
@@ -749,7 +749,7 @@ def ntap1(
     c.info["rows"] = rows
     c.info["cols"] = cols
 
-    _add_pins(c)
+    add_electrical_pins(c, port_pin_mapping={"TAP": ["TAP"]})
     return c
 
 
@@ -933,7 +933,7 @@ def sealring(
     c.info["height"] = height
     c.info["ring_width"] = ring_width
 
-    _add_pins(c)
+    add_electrical_pins(c, port_pin_mapping={})
     return c
 
 
@@ -1124,5 +1124,5 @@ def guard_ring(
     c.info["rows"] = nrows
     c.info["guardRingSpacing"] = guardRingSpacing
 
-    _add_pins(c)
+    add_electrical_pins(c, port_pin_mapping={})
     return c

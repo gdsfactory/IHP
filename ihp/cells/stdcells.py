@@ -4,8 +4,7 @@ from __future__ import annotations
 
 import gdsfactory as gf
 import klayout.db as kdb
-
-from ihp._common import _add_pins
+from gdsfactory.add_pins import add_electrical_pins
 
 from ..config import PATH
 
@@ -106,7 +105,12 @@ def _add_ports_from_labels(component: gf.Component, cell_name: str) -> None:
 def _import_stdcell(cell_name: str) -> gf.Component:
     c = gf.import_gds(_GDS_PATH, cellname=cell_name)
     _add_ports_from_labels(c, cell_name)
-    _add_pins(c)
+    add_electrical_pins(
+        c,
+        port_pin_mapping={
+            p.name: [p.name] for p in c.ports if p.port_type == "electrical"
+        },
+    )
     return c
 
 
