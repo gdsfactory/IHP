@@ -827,7 +827,7 @@ wheels = [
 
 [[package]]
 name = "gdsfactoryplus"
-version = "1.8.16"
+version = "1.8.20"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "altair" },
@@ -866,11 +866,10 @@ dependencies = [
     { name = "websocket-client" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/58/b7/1f27ab904803aaa51014769c033b650ad561fe52a85c34e22e53be1b7595/gdsfactoryplus-1.8.16-cp312-cp312-macosx_14_0_arm64.whl", hash = "sha256:7172f34121e3e61e2caa8ee14adb952e88a8a76c24cc0eb9786d172db7e77ac6", size = 7177259, upload-time = "2026-06-17T05:01:11.24Z" },
-    { url = "https://files.pythonhosted.org/packages/c9/02/b737da05d58dfc3bbcdbbd3f747a70516e9daf5e977b6834019f097d6dea/gdsfactoryplus-1.8.16-cp312-cp312-macosx_15_0_arm64.whl", hash = "sha256:1476868bd4b87f37e833414d104c88039a79021f9ffca0a99d0ac7c78719263c", size = 7359284, upload-time = "2026-06-17T05:01:13.016Z" },
-    { url = "https://files.pythonhosted.org/packages/c4/35/b575868d068e7457d90b784863add8d8dceac89e6bb278090b3d2507907c/gdsfactoryplus-1.8.16-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:3b80c4a82cf126cc24f7db07f5526881a9f4d58440615ab8369cd11eaae96ac4", size = 15599788, upload-time = "2026-06-17T05:01:14.782Z" },
-    { url = "https://files.pythonhosted.org/packages/46/7c/d55adff7069302fcaf1f1001c40e8024f358c06417eaaa548026db3362e4/gdsfactoryplus-1.8.16-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:b3b83165a7bbf24ecf4f0fabef8af7ed2845116a05ff86bce748bbd4529f8426", size = 16215448, upload-time = "2026-06-17T05:01:17.537Z" },
-    { url = "https://files.pythonhosted.org/packages/ba/7f/764b5eb4af661d140e76f276e286bcefe330a349b39418918d1720e796e9/gdsfactoryplus-1.8.16-cp312-cp312-win_amd64.whl", hash = "sha256:5426b4490bac421e1ee735367e17b0fda230f4645c5a0297d1d7e7b211f9989e", size = 5644357, upload-time = "2026-06-17T05:01:20.096Z" },
+    { url = "https://files.pythonhosted.org/packages/d0/0f/d956906982b335b5b4a5a0f596ade9265e3358e1d66dad4cb3769dd62df6/gdsfactoryplus-1.8.20-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:acdd38e5378facb8fa5c36bc72642156d42743c5183c7f1fe81942ad1eaf70e3", size = 7349203, upload-time = "2026-08-12T11:47:03.378Z" },
+    { url = "https://files.pythonhosted.org/packages/59/29/dd33a12b45f58918f09a5ab896f90b4f95b09ed85cef31261692b906d3a3/gdsfactoryplus-1.8.20-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:0792ddee8d9c19f90832cdaa8381b7c2614db09792d90f9530194844b860beaf", size = 15547302, upload-time = "2026-08-12T11:47:05.644Z" },
+    { url = "https://files.pythonhosted.org/packages/53/f8/21ad3901389a72a18ad349725229a652d44a554a5126553377fc4a7fbe27/gdsfactoryplus-1.8.20-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:5308f263f02e68c08512e256192bf3c909080f24bfecdd21499647635a590503", size = 16143914, upload-time = "2026-08-12T11:47:07.834Z" },
+    { url = "https://files.pythonhosted.org/packages/22/0c/b1061ef047900e556148efcbe906f718905259eb57b9cbc70f399e88b032/gdsfactoryplus-1.8.20-cp312-cp312-win_amd64.whl", hash = "sha256:8d2f1e171346f04642c410d20632fb992689b5edc63d3dc081be283c0e6de3aa", size = 5637019, upload-time = "2026-08-12T11:47:09.905Z" },
 ]
 
 [[package]]
@@ -937,7 +936,7 @@ wheels = [
 
 [[package]]
 name = "gsim"
-version = "0.0.16"
+version = "0.5.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "gdsfactory" },
@@ -946,15 +945,16 @@ dependencies = [
     { name = "meshio" },
     { name = "nbformat" },
     { name = "nest-asyncio2" },
+    { name = "pdk-schema" },
     { name = "plotly" },
     { name = "pyvista" },
     { name = "trame" },
     { name = "trame-vtk" },
     { name = "trame-vuetify" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e0/ee/a60b6fc006d04b5a1e37e5d8d6dcb3fdcee87888846f04abbb77a9e1131f/gsim-0.0.16.tar.gz", hash = "sha256:6f21a755d5a4a71c4a0ab2805e2e08525e4f8eb6fdb9d624feb2cb37afb0a8f8", size = 171677, upload-time = "2026-04-22T19:10:41.354Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/9f/7b/c3bec33df23a4830d83d988202aa75011db78f555f8d8506db125742ff8a/gsim-0.5.0.tar.gz", hash = "sha256:c5b6bf50c549855b8f50ffecffceb6d7ce516524c799c740958e9c7d33964307", size = 392080, upload-time = "2026-09-15T18:12:19.045Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d2/6b/b3a469a9531890f18e2dae677b7ab3a6efd3bfb2ef363587ec668c794db8/gsim-0.0.16-py3-none-any.whl", hash = "sha256:2f6eb09b1f4a67e0da247f92cbc9acf471f315965f6c1b41b935997d90927456", size = 194773, upload-time = "2026-04-22T19:10:39.714Z" },
+    { url = "https://files.pythonhosted.org/packages/cf/fb/9b925b44094a89fa8588d65dddb98df854b97603a44e14f2abc16e4810fd/gsim-0.5.0-py3-none-any.whl", hash = "sha256:13470e7098e228153ede06c063161190f95c25dc147b22fdd8304dc1d47afa08", size = 433602, upload-time = "2026-09-15T18:12:17.62Z" },
 ]
 
 [[package]]
@@ -2408,6 +2408,18 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/5a/82/42f767fc1c1143d6fd36efb827202a2d997a375e160a71eb2888a925aac1/pathspec-1.1.1.tar.gz", hash = "sha256:17db5ecd524104a120e173814c90367a96a98d07c45b2e10c2f3919fff91bf5a", size = 135180, upload-time = "2026-04-27T01:46:08.907Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/f1/d9/7fb5aa316bc299258e68c73ba3bddbc499654a07f151cba08f6153988714/pathspec-1.1.1-py3-none-any.whl", hash = "sha256:a00ce642f577bf7f473932318056212bc4f8bfdf53128c78bbd5af0b9b20b189", size = 57328, upload-time = "2026-04-27T01:46:07.06Z" },
+]
+
+[[package]]
+name = "pdk-schema"
+version = "0.0.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pydantic" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/b5/ef/7c28c4400b7f0dae05b827d65b42ad68f10e1405c1e71e25c23fa00b5f0c/pdk_schema-0.0.2.tar.gz", hash = "sha256:60f8160c96b76c86cc972228319101d04e4f2ff86b410339647c37147a08bff5", size = 33011, upload-time = "2026-08-13T13:31:08.052Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/5b/d4/2188a40a58d05ea4f3c0031c5382d07cc1550037ea4bf2bca14e53094f9c/pdk_schema-0.0.2-py3-none-any.whl", hash = "sha256:e12123ece947e7aa100d5912b91fce111fe753aadc7ee283fada77b0f3f605c7", size = 36416, upload-time = "2026-08-13T13:31:06.657Z" },
 ]
 
 [[package]]
