@@ -1,0 +1,35 @@
+"""gflvs LVS configuration for IHP SG13G2 PDK."""
+
+from ihp.lvs.lvs import (
+    DEFAULT_LVS_CONFIG,
+    DEVICE_TEMPLATES,
+    DRAWING_LAYERS,
+    GDS_TABLE,
+    INCLUDE_CMIM,
+    INCLUDE_NPN,
+    INCLUDE_RESISTORS,
+    INCLUDE_RFCMIM,
+    INCLUDE_VIA_CELLS,
+    LABEL_LOGIC_LAYERS,
+    LAYER_CONNECTIVITY,
+    PIN_LOGIC_LAYERS,
+    VIA_DRAWING_LAYERS,
+    run_lvs_ihp,
+)
+
+__all__ = [
+    "DEFAULT_LVS_CONFIG",
+    "DEVICE_TEMPLATES",
+    "DRAWING_LAYERS",
+    "GDS_TABLE",
+    "INCLUDE_CMIM",
+    "INCLUDE_NPN",
+    "INCLUDE_RESISTORS",
+    "INCLUDE_RFCMIM",
+    "INCLUDE_VIA_CELLS",
+    "LABEL_LOGIC_LAYERS",
+    "LAYER_CONNECTIVITY",
+    "PIN_LOGIC_LAYERS",
+    "VIA_DRAWING_LAYERS",
+    "run_lvs_ihp",
+]

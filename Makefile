@@ -23,6 +23,9 @@ vacask-models:
 test:
 	uv run pytest -s
 
+test-lvs:
+	uv run pytest tests/gflvs/ -v
+
 test-force: install
 	uv run pytest -s --force-regen
 
