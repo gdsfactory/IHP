@@ -72,13 +72,13 @@ docs/               # Jupyter Book documentation
 
 1. Implement the cell function in the appropriate file under `ihp/cells/` (e.g., `fet_transistors.py`, `resistors.py`).
 2. Decorate it with `@gf.cell` and document it with a Google-style docstring.
-3. Export it from `ihp/cells/__init__.py` if it is a new cell.
+3. add_electrical_pins
 4. Add or update tests in `tests/test_cells.py`.
 5. Regenerate golden reference GDS files if needed: `make test-force`.
 
 ### Adding a simulation model
 
-Add SAX-compatible models to `ihp/models/` and export them from `ihp/models/__init__.py`.
+add_electrical_pins
 
 ## Code style
 
@@ -97,8 +97,8 @@ Code formatting and linting are enforced automatically by pre-commit hooks. The 
 - **Docstrings:** Google style (`Args:`, `Returns:`, etc.).
 - **Type hints:** Use modern Python syntax (`list[...]`, not `List[...]`). Strict mypy is enabled.
 - **Naming:** snake_case for cell functions and parameters. CamelCase for layer specs.
-- **Imports:** Relative imports within the package (`from ..tech import TECH`). Star imports are only permitted in `__init__.py` aggregation files.
-- **Geometry:** Use `add_polygon()` directly instead of sub-cell references where possible (avoids rounding issues). Use `_grid_fix()` for manufacturing grid alignment.
+- add_electrical_pins
+- add_electrical_pins
 
 ### Running the checks manually
 

@@ -2,6 +2,7 @@
 
 import gdsfactory as gf
 from gdsfactory import Component
+from gdsfactory.add_pins import add_electrical_pins
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 from numpy import floor
@@ -311,6 +312,7 @@ def cmom(
     c.info["spacing"] = spacing
 
     #   return the component
+    add_electrical_pins(c, port_pin_mapping={"PLUS": ["PLUS"], "MINUS": ["MINUS"]})
     return c
 
 
@@ -565,6 +567,7 @@ def cmim(
     c.info["capacitance_fF"] = capacitance
     c.info["area_um2"] = width * length
 
+    add_electrical_pins(c, port_pin_mapping={"MINUS": ["MINUS"], "PLUS": ["PLUS"]})
     return c
 
 
@@ -786,4 +789,8 @@ def rfcmim(
     c.add_label(text="TIE_LOW", position=(tie.x, tie.y), layer=layer_metal1label)
     c.add_label(text="TIE_LOW", position=(tie.x, tie.y), layer=layer_text)
 
+    add_electrical_pins(
+        c,
+        port_pin_mapping={"MINUS": ["MINUS"], "PLUS": ["PLUS"], "TIE_LOW": ["TIE_LOW"]},
+    )
     return c

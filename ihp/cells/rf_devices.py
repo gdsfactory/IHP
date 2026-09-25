@@ -2,6 +2,7 @@ from math import asin, cosh, log, pi, sin, sinh, sqrt
 
 import gdsfactory as gf
 import scipy
+from gdsfactory.add_pins import add_electrical_pins
 from gdsfactory.typings import CrossSectionSpec
 
 from ihp.cells.waveguides import (
@@ -230,6 +231,9 @@ def branch_line_coupler(
     c.add_port(name="e3", port=connection3.ports["e2"])
     c.add_port(name="e4", port=connection4.ports["e2"])
 
+    add_electrical_pins(
+        c, port_pin_mapping={"e1": ["e1"], "e2": ["e2"], "e3": ["e3"], "e4": ["e4"]}
+    )
     return c
 
 
@@ -260,10 +264,11 @@ def wilkinson_power_divider(
         ground_cross_section: Cross-section for the ground line.
             Accepts a single spec for microstrip or a two-element list
             ``[lower, upper]`` for stripline.
-        shape: Shape of the Wilkinson divider. Can be either "C" or "U". In a "C" shape, the quarter-wave branches are connected in a loop, while in a "U" shape, the branches are not braught together again
-        e_r: Relative permittivity of the dielectric between signal and
-            ground metals, used to derive the effective dielectric constant
-            and the line widths.
+        shape: Shape of the Wilkinson divider. Can be either "C" or "U". In a "C" shape,
+            the quarter-wave branches are connected in a loop, while in a "U" shape,
+            the branches are not brought together again.
+        e_r: Relative permittivity of the substrate. Defaults to 4.1 for silicon dioxide.
+
     Returns:
         A Component containing the Wilkinson power divider with ports
         ``e1`` (input), ``e2`` and ``e3`` (outputs).
@@ -635,6 +640,7 @@ def wilkinson_power_divider(
     #     bends=0
     # ))
 
+    add_electrical_pins(c, port_pin_mapping={"e1": ["e1"], "e2": ["e2"], "e3": ["e3"]})
     return c
 
 
@@ -759,6 +765,7 @@ def directional_coupler(
     c.add_port(name="e3", port=connection_port3.ports["e2"])
     c.add_port(name="e4", port=connection_port4.ports["e2"])
     c.flatten()
+    add_electrical_pins(c, port_pin_mapping={"e1": ["e1", "e2"], "e3": ["e3", "e4"]})
     return c
 
 
@@ -841,6 +848,7 @@ def quarter_wave_transformer(
     c.add_port(name="e1", port=connection_port1.ports["e2"])
     c.add_port(name="e2", port=connection_port2.ports["e2"])
 
+    add_electrical_pins(c, port_pin_mapping={"e1": ["e1"], "e2": ["e2"]})
     return c
 
 
@@ -1022,6 +1030,7 @@ def coupled_line_bandpass_filter(
 
     c.flatten()
 
+    add_electrical_pins(c, port_pin_mapping={"e1": ["e1"], "e2": ["e2"]})
     return c
 
 
@@ -1077,6 +1086,9 @@ def _corner_rectangle(
         orientation=180,
         port_type="electrical",
         layer=gf.get_cross_section(cross_section).layer,
+    )
+    add_electrical_pins(
+        c, port_pin_mapping={"e1": ["e1"], "e2": ["e2"], "e3": ["e3"], "e4": ["e4"]}
     )
     return c
 
@@ -1330,4 +1342,5 @@ def hairpin_coupled_line_bandpass_filter(
 
     # c.add_port(name="e1", port=input_line.ports["e1"])
 
+    add_electrical_pins(c, port_pin_mapping={"e1": ["e1"], "e2": ["e2"]})
     return c

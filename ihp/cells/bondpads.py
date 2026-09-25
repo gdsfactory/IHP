@@ -5,6 +5,7 @@ from typing import Literal
 
 import gdsfactory as gf
 from gdsfactory import Component
+from gdsfactory.add_pins import add_electrical_pins
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 
@@ -149,6 +150,7 @@ def bondpad(
     c.info["diameter"] = diameter
     c.info["top_metal"] = layer_top_metal
 
+    add_electrical_pins(c, port_pin_mapping={"pad": ["pad"]})
     return c
 
 
@@ -210,6 +212,12 @@ def bondpad_array(
 
     # TODO: Bondpad array VLSIR Metadata
 
+    add_electrical_pins(
+        c,
+        port_pin_mapping={
+            p.name: [p.name] for p in c.ports if p.port_type == "electrical"
+        },
+    )
     return c
 
 
@@ -230,4 +238,5 @@ def CuPillarPad() -> gf.Component:
     c.add_port(
         name="e4", center=(0, 0), width=width, orientation=270, layer="TopMetal2drawing"
     )
+    add_electrical_pins(c, port_pin_mapping={})
     return c

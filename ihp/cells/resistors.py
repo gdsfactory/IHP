@@ -2,6 +2,7 @@
 
 import gdsfactory as gf
 from gdsfactory import Component
+from gdsfactory.add_pins import add_electrical_pins
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 
@@ -240,6 +241,7 @@ def rsil(
         }
     )
 
+    add_electrical_pins(c, port_pin_mapping={"P1": ["P1"], "P2": ["P2"]})
     return c
 
 
@@ -473,6 +475,7 @@ def rppd(
         }
     )
 
+    add_electrical_pins(c, port_pin_mapping={"P1": ["P1"], "P2": ["P2"]})
     return c
 
 
@@ -707,4 +710,5 @@ def rhigh(
         }
     )
 
+    add_electrical_pins(c, port_pin_mapping={"P1": ["P1"], "P2": ["P2"]})
     return c
