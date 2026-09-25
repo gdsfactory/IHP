@@ -1,8 +1,6 @@
-# https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html
-
 [build-system]
-build-backend = "setuptools.build_meta"
-requires = ["setuptools", "wheel", "ruff"]
+build-backend = "hatchling.build"
+requires = ["hatchling"]
 
 [dependency-groups]
 dev = [
@@ -123,15 +121,11 @@ select = [
 "ihp/cells/__init__.py" = ["F403"]  # allowing star imports to aggregate cells
 "ihp/models/__init__.py" = ["F403"]  # allowing star imports to aggregate cells
 
-[tool.setuptools]
-include-package-data = true
+[tool.hatch.build.targets.wheel]
+packages = ["ihp", "cni"]
 
-[tool.setuptools.package-data]
-"*" = ["*.csv", "*.yaml", "*.yml", "*.gds", "*.lyp", "*.oas", "*.lyt", "*.dat", "*.nc", "*.svg", '*.GDS', "*.json", "*.txt", "*.lib", "*.va", "*.include", "*.h"]
-
-[tool.setuptools.packages.find]
-include = ["ihp", "ihp.*", "cni", "cni.*"]
-where = ["."]
+[tool.hatch.build.targets.wheel.force-include]
+"ihp-gdsfactory--sample-projects" = "ihp-gdsfactory--sample-projects"
 
 [tool.tbump]
 
