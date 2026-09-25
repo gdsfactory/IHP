@@ -3,21 +3,20 @@ copyright = "&copy; 2026 GDSFactory"
 docs_dir = "."
 extra_javascript = ["_static/extra.js"]
 nav = [
-  {"Home" = "index.md"},
-  {"Reference" = [
-    {"Layer Stack" = "layer_stack.md"},
-    {"Cells" = "cells.md"},
-    {"Changelog" = "changelog.md"}
-  ]},
-  {"Simulation" = [
-    {"Palace CPW Demo" = "palace_demo_cpw.md"},
-    {"Palace Microstrip Demo" = "palace_demo_microstrip.md"}
-  ]},
-  {"Examples" = [
-    {"SPICE to pic.yml" = "examples/spice_to_yml.md"},
-    {"SPICE + GDS to pic.yml" = "examples/spice_and_gds_to_yml.md"},
-    {"160 GHz LNA" = "examples/lna_160ghz.md"}
-  ]}
+  { "Home" = "index.md" },
+  { "Reference" = [
+    { "Cells" = "cells.md" },
+    { "Changelog" = "changelog.md" }
+  ] },
+  { "Simulation" = [
+    { "Palace CPW Demo" = "palace_demo_cpw.md" },
+    { "Palace Microstrip Demo" = "palace_demo_microstrip.md" }
+  ] },
+  { "Examples" = [
+    { "SPICE to pic.yml" = "examples/spice_to_yml.md" },
+    { "SPICE + GDS to pic.yml" = "examples/spice_and_gds_to_yml.md" },
+    { "160 GHz LNA" = "examples/lna_160ghz.md" }
+  ] }
 ]
 repo_name = "gdsfactory/IHP"
 repo_url = "https://github.com/gdsfactory/IHP"
