@@ -24,7 +24,7 @@ dependencies = [
   "gdsfactoryplus"
 ]
 description = "IHP pdk"
-keywords = ["python"]
+keywords = ["bicmos", "eda", "gdsfactory", "ihp", "pdk", "python", "sg13g2"]
 license = { file = "LICENSE" }
 name = "ihp-gdsfactory"
 readme = "README.md"
