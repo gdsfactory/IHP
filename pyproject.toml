@@ -15,7 +15,7 @@ dev = [
 docs = []
 
 [project]
-authors = [{name = "gdsfactory", email = "contact@gdsfactory.com"}]
+authors = [{ name = "gdsfactory", email = "contact@gdsfactory.com" }]
 classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
@@ -28,8 +28,8 @@ dependencies = [
   "gdsfactoryplus"
 ]
 description = "IHP pdk"
-keywords = ["python"]
-license = {file = "LICENSE"}
+keywords = ["bicmos", "eda", "gdsfactory", "ihp", "pdk", "python", "sg13g2"]
+license = { file = "LICENSE" }
 name = "ihp-gdsfactory"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
