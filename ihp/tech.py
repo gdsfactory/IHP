@@ -1051,8 +1051,8 @@ def CbCapCalc(calc: str, c: float, length: float, width: float, cell: str) -> fl
         calc: "C" (capacitance from l/w), "l" (length from C/w),
               "w" (width from C/l), "lw" (square dimension from C).
         c: Capacitance in fF (used when calc != "C").
-        l: Length in um.
-        w: Width in um.
+        length: Plate length in um (used when calc is "C" or "w").
+        width: Plate width in um (used when calc is "C" or "l").
         cell: Model name ("cmim" or "rfcmim").
     """
     from math import sqrt
