@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 requires = ["ruff", "setuptools", "wheel"]
 
 [project]
-authors = [{name = "gdsfactory", email = "contact@gdsfactory.com"}]
+authors = [{ name = "gdsfactory", email = "contact@gdsfactory.com" }]
 classifiers = [
   "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: 3.12"
@@ -18,7 +18,7 @@ dependencies = [
 ]
 description = "IHP pdk"
 keywords = ["python"]
-license = {file = "LICENSE"}
+license = { file = "LICENSE" }
 name = "ihp"
 readme = "README.md"
 requires-python = "~=3.12.0"
@@ -97,6 +97,12 @@ lint.ignore = [
   "C901",  # too complex
   "E501"
 ]
+lint.per-file-ignores."ihp/cells/__init__.py" = [
+  "F403"
+]  # allowing star imports to aggregate cells
+lint.per-file-ignores."ihp/models/__init__.py" = [
+  "F403"
+]  # allowing star imports to aggregate cells
 lint.select = [
   "B",  # flake8-bugbear
   "C",  # flake8-comprehensions
@@ -106,12 +112,6 @@ lint.select = [
   "UP",
   "W"
 ]
-lint.per-file-ignores."ihp/cells/__init__.py" = [
-  "F403"
-]  # allowing star imports to aggregate cells
-lint.per-file-ignores."ihp/models/__init__.py" = [
-  "F403"
-]  # allowing star imports to aggregate cells
 
 [tool.setuptools]
 include-package-data = true
@@ -137,14 +137,14 @@ packages.find.where = ["."]
 
 [tool.tbump]
 before_commit = [
-  {cmd = "towncrier build --yes --version {new_version}", name = "create & check changelog"},
-  {cmd = "git add CHANGELOG.md", name = "create & check changelog"},
-  {cmd = "grep -q -F {new_version} CHANGELOG.md", name = "create & check changelog"}
+  { cmd = "towncrier build --yes --version {new_version}", name = "create & check changelog" },
+  { cmd = "git add CHANGELOG.md", name = "create & check changelog" },
+  { cmd = "grep -q -F {new_version} CHANGELOG.md", name = "create & check changelog" }
 ]
 file = [
-  {src = "README.md"},
-  {src = "pyproject.toml"},
-  {src = "ihp/__init__.py"}
+  { src = "README.md" },
+  { src = "pyproject.toml" },
+  { src = "ihp/__init__.py" }
 ]
 git.message_template = "Bump to {new_version}"
 git.tag_template = "v{new_version}"
@@ -165,11 +165,11 @@ start_string = "<!-- towncrier release notes start -->\n"
 template = ".changelog.d/changelog_template.jinja"
 title_format = "## [{version}](https://github.com/gdsfactory/ihp/releases/tag/v{version}) - {project_date}"
 type = [
-  {directory = "security", name = "Security", showcontent = true},
-  {directory = "removed", name = "Removed", showcontent = true},
-  {directory = "deprecated", name = "Deprecated", showcontent = true},
-  {directory = "added", name = "Added", showcontent = true},
-  {directory = "changed", name = "Changed", showcontent = true},
-  {directory = "fixed", name = "Fixed", showcontent = true}
+  { directory = "security", name = "Security", showcontent = true },
+  { directory = "removed", name = "Removed", showcontent = true },
+  { directory = "deprecated", name = "Deprecated", showcontent = true },
+  { directory = "added", name = "Added", showcontent = true },
+  { directory = "changed", name = "Changed", showcontent = true },
+  { directory = "fixed", name = "Fixed", showcontent = true }
 ]
 underlines = ["", "", ""]
