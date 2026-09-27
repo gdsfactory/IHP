@@ -651,7 +651,7 @@ def get_layer_stack(
                 info={"mesh_order": 12},
             ),
             # ============ Contact ============
-            # Cont - tungsten contact plugs (Activ/Poly to Metal1)
+            # Cont - effective contact-plug model (Activ/Poly to Metal1)
             cont=LayerLevel(
                 layer=LAYER.Contdrawing,
                 thickness=thickness_cont,
@@ -665,7 +665,7 @@ def get_layer_stack(
                 layer=LAYER.Metal1drawing,
                 thickness=thickness_metal1,
                 zmin=z_m1,
-                material="sg13g2_metal1",
+                material="alcu_sg13g2_metal1",
                 info={"mesh_order": 14},
             ),
             # Via 1
@@ -673,7 +673,7 @@ def get_layer_stack(
                 layer=LAYER.Via1drawing,
                 thickness=thickness_via,
                 zmin=z_beol,
-                material="sg13g2_via1",
+                material="tungsten_sg13g2_via1",
                 info={"mesh_order": 15},
             ),
             # Metal 2
@@ -681,7 +681,7 @@ def get_layer_stack(
                 layer=LAYER.Metal2drawing,
                 thickness=thickness_metal,
                 zmin=z_beol + thickness_via,
-                material="sg13g2_metal2",
+                material="alcu_sg13g2_metal2",
                 info={"mesh_order": 16},
             ),
             # Via 2
@@ -689,7 +689,7 @@ def get_layer_stack(
                 layer=LAYER.Via2drawing,
                 thickness=thickness_via,
                 zmin=z_beol + thickness_via + thickness_metal,
-                material="sg13g2_via2",
+                material="tungsten_sg13g2_via2",
                 info={"mesh_order": 17},
             ),
             # Metal 3
@@ -697,7 +697,7 @@ def get_layer_stack(
                 layer=LAYER.Metal3drawing,
                 thickness=thickness_metal,
                 zmin=z_beol + 2 * thickness_via + thickness_metal,
-                material="sg13g2_metal3",
+                material="alcu_sg13g2_metal3",
                 info={"mesh_order": 18},
             ),
             # Via 3
@@ -705,7 +705,7 @@ def get_layer_stack(
                 layer=LAYER.Via3drawing,
                 thickness=thickness_via,
                 zmin=z_beol + 2 * thickness_via + 2 * thickness_metal,
-                material="sg13g2_via3",
+                material="tungsten_sg13g2_via3",
                 info={"mesh_order": 19},
             ),
             # Metal 4
@@ -713,7 +713,7 @@ def get_layer_stack(
                 layer=LAYER.Metal4drawing,
                 thickness=thickness_metal,
                 zmin=z_beol + 3 * thickness_via + 2 * thickness_metal,
-                material="sg13g2_metal4",
+                material="alcu_sg13g2_metal4",
                 info={"mesh_order": 20},
             ),
             # Via 4
@@ -721,7 +721,7 @@ def get_layer_stack(
                 layer=LAYER.Via4drawing,
                 thickness=thickness_via,
                 zmin=z_beol + 3 * thickness_via + 3 * thickness_metal,
-                material="sg13g2_via4",
+                material="tungsten_sg13g2_via4",
                 info={"mesh_order": 21},
             ),
             # Metal 5
@@ -729,7 +729,7 @@ def get_layer_stack(
                 layer=LAYER.Metal5drawing,
                 thickness=thickness_metal,
                 zmin=z_beol + 4 * thickness_via + 3 * thickness_metal,
-                material="sg13g2_metal5",
+                material="alcu_sg13g2_metal5",
                 info={"mesh_order": 22},
             ),
             # MIM capacitor - dielectric 40nm (TISMIM) + top plate 150nm (TMIMTOP)
@@ -756,7 +756,7 @@ def get_layer_stack(
                 layer=LAYER.TopVia1drawing,
                 thickness=thickness_topvia1,
                 zmin=z_m5_top,
-                material="sg13g2_topvia1",
+                material="tungsten_sg13g2_topvia1",
                 info={"mesh_order": 25},
             ),
             # TopMetal1
@@ -764,7 +764,7 @@ def get_layer_stack(
                 layer=LAYER.TopMetal1drawing,
                 thickness=thickness_topmetal1,
                 zmin=z_tv1_top,
-                material="sg13g2_topmetal1",
+                material="alcu_sg13g2_topmetal1",
                 info={"mesh_order": 26},
             ),
             # TopVia2
@@ -772,7 +772,7 @@ def get_layer_stack(
                 layer=LAYER.TopVia2drawing,
                 thickness=thickness_topvia2,
                 zmin=z_tm1_top,
-                material="sg13g2_topvia2",
+                material="tungsten_sg13g2_topvia2",
                 info={"mesh_order": 27},
             ),
             # TopMetal2
@@ -780,7 +780,7 @@ def get_layer_stack(
                 layer=LAYER.TopMetal2drawing,
                 thickness=thickness_topmetal2,
                 zmin=z_tv2_top,
-                material="sg13g2_topmetal2",
+                material="alcu_sg13g2_topmetal2",
                 info={"mesh_order": 28},
             ),
             # ============ Passivation / pad ============
