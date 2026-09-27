@@ -20,6 +20,7 @@ classifiers = [
 dependencies = [
   "gdsfactory~=9.45.0",
   "gplugins[sax]~=2.1.0",
+  "pdk-schema~=0.0.2",
   "scikit-rf>=1.0.0",
   "gdsfactoryplus"
 ]

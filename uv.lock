@@ -1035,6 +1035,7 @@ dependencies = [
     { name = "gdsfactory" },
     { name = "gdsfactoryplus" },
     { name = "gplugins", extra = ["sax"] },
+    { name = "pdk-schema" },
     { name = "scikit-rf" },
 ]
 
@@ -1078,6 +1079,7 @@ requires-dist = [
     { name = "mkdocs-with-pdf", marker = "extra == 'docs'" },
     { name = "mkdocstrings", extras = ["python"], marker = "extra == 'docs'", specifier = ">=0.27.0" },
     { name = "nbconvert", marker = "extra == 'docs'" },
+    { name = "pdk-schema", specifier = "~=0.0.2" },
     { name = "pre-commit", marker = "extra == 'dev'" },
     { name = "pytest", marker = "extra == 'dev'" },
     { name = "pytest-cov", marker = "extra == 'dev'" },
@@ -2398,11 +2400,23 @@ wheels = [
 ]
 
 [[package]]
+name = "pdk-schema"
+version = "0.0.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pydantic" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/b5/ef/7c28c4400b7f0dae05b827d65b42ad68f10e1405c1e71e25c23fa00b5f0c/pdk_schema-0.0.2.tar.gz", hash = "sha256:60f8160c96b76c86cc972228319101d04e4f2ff86b410339647c37147a08bff5", size = 33011, upload-time = "2026-08-13T13:31:08.052Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/5b/d4/2188a40a58d05ea4f3c0031c5382d07cc1550037ea4bf2bca14e53094f9c/pdk_schema-0.0.2-py3-none-any.whl", hash = "sha256:e12123ece947e7aa100d5912b91fce111fe753aadc7ee283fada77b0f3f605c7", size = 36416, upload-time = "2026-08-13T13:31:06.657Z" },
+]
+
+[[package]]
 name = "pexpect"
 version = "4.9.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "ptyprocess", marker = "sys_platform != 'emscripten' and sys_platform != 'win32'" },
+    { name = "ptyprocess" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/42/92/cc564bf6381ff43ce1f4d06852fc19a2f11d180f23dc32d9588bee2f149d/pexpect-4.9.0.tar.gz", hash = "sha256:ee7d41123f3c9911050ea2c2dac107568dc43b2d3b0c7557a33212c398ead30f", size = 166450, upload-time = "2023-11-25T09:07:26.339Z" }
 wheels = [
