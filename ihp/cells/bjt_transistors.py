@@ -6,6 +6,7 @@ import gdsfactory as gf
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 
+from ihp.models.circulax import with_circulax_models
 from ihp.tech import TECH as _TECH
 
 _XS = "metal1_routing"
@@ -87,6 +88,7 @@ def npn13G2_schematic(
             },
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"])
     s.create_port(name="C", cross_section=_XS, x=1, y=0, orientation=0)
     s.create_port(name="B", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="E", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -829,6 +831,7 @@ def npn13G2L_schematic(
             },
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"])
     s.create_port(name="C", cross_section=_XS, x=1, y=0, orientation=0)
     s.create_port(name="B", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="E", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -1435,6 +1438,7 @@ def npn13G2V_schematic(
             },
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"])
     s.create_port(name="C", cross_section=_XS, x=1, y=0, orientation=0)
     s.create_port(name="B", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="E", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -2142,6 +2146,7 @@ def pnpMPA_schematic(length: float = 2, width: float = 0.7) -> DSchematic:
             "params": {},
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"])
     s.create_port(name="C", cross_section=_XS, x=1, y=0, orientation=0)
     s.create_port(name="B", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="E", cross_section=_XS, x=0, y=-1, orientation=270)
