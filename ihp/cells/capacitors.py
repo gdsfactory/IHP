@@ -9,6 +9,7 @@ from numpy import floor
 from ihp import tech
 from ihp.cells.passives import guard_ring
 from ihp.cells.via_stacks import via_array, via_stack
+from ihp.models.circulax import with_circulax_models
 from ihp.tech import CbCapCalc
 
 _XS = "metal1_routing"
@@ -346,6 +347,7 @@ def cmim_schematic(
             "params": {"w": "width * 1e-6", "l": "length * 1e-6"},
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"])
     s.create_port(name="PLUS", cross_section=_XS, x=1, y=0, orientation=0)
     s.create_port(name="MINUS", cross_section=_XS, x=-1, y=0, orientation=180)
     return s
@@ -601,6 +603,7 @@ def rfcmim_schematic(
             "params": {"l": "length * 1e-6", "w": "width * 1e-6"},
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"])
     s.create_port(name="PLUS", cross_section=_XS, x=1, y=0, orientation=0)
     s.create_port(name="MINUS", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="BN", cross_section=_XS, x=0, y=-1, orientation=270)
