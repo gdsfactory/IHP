@@ -69,6 +69,7 @@ include "sg13g2_vacask_common.lib"
 //* values are one-sigma deviations (1/3 of min-max)
 
 subckt sg13_hv_nmos(d g s b)
+parameters swsoa=0
 parameters w=0.35u
 parameters l=0.34u
 parameters ng=1
@@ -395,6 +396,7 @@ model sg13g2_hv_nmos_psp_rf pspnqs103va (
 ends
 
 subckt sg13_hv_pmos(d g s b)
+parameters swsoa=0
 parameters w=0.35u
 parameters l=0.28u
 parameters ng=1

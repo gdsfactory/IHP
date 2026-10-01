@@ -3,6 +3,9 @@
 
 include "sg13g2_vacask_common.lib"
 
+model sg13g2_dschottky_nbl1_mod_default_mod_c sp_capacitor
+model sg13g2_dschottky_nbl1_mod_default_mod_r sp_resistor
+
 
 //*#######################################################################
 //*
@@ -44,12 +47,12 @@ drev (c 1) drev_mod  area=((nx*ny)*(l*w))/(scaling*scaling)
 dsub (s c) dsub_mod  area=(ls*ws)
 q1 (a c s) mod1_pnp  area=((nx*ny)*(l*w))/(scaling*scaling)
 
-rsmain (a 1) sg13g2_default_mod_r  r=(1360)/(nx*ny) tc1=2.975e-3 tc2=4.630e-6
-cstray (a c) sg13g2_default_mod_c  c=(2.185e-014/25)*(nx*ny)
-cin (a s) sg13g2_default_mod_c  c=(5e-016/5)*(nx)
-cdsub (c 2) sg13g2_default_mod_c  c=(1.7e-014/168)*(ls*ws)
-csub (2 s) sg13g2_default_mod_c  c=6e-016
-rsub (2 s) sg13g2_default_mod_r  r=1e+004
+rsmain (a 1) sg13g2_dschottky_nbl1_mod_default_mod_r  r=(1360)/(nx*ny) tc1=2.975e-3 tc2=4.630e-6
+cstray (a c) sg13g2_dschottky_nbl1_mod_default_mod_c  c=(2.185e-014/25)*(nx*ny)
+cin (a s) sg13g2_dschottky_nbl1_mod_default_mod_c  c=(5e-016/5)*(nx)
+cdsub (c 2) sg13g2_dschottky_nbl1_mod_default_mod_c  c=(1.7e-014/168)*(ls*ws)
+csub (2 s) sg13g2_dschottky_nbl1_mod_default_mod_c  c=6e-016
+rsub (2 s) sg13g2_dschottky_nbl1_mod_default_mod_r  r=1e+004
 
 ends
 
