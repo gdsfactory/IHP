@@ -4,6 +4,7 @@ import math
 
 import gdsfactory as gf
 from gdsfactory import Component
+from gdsfactory.add_pins import add_electrical_pins
 from gdsfactory.typings import LayerSpec, LayerSpecs
 
 
@@ -302,6 +303,12 @@ def inductor2(
     c.info["space"] = space
     c.info["diameter"] = diameter
 
+    add_electrical_pins(
+        c,
+        port_pin_mapping={
+            p.name: [p.name] for p in c.ports if p.port_type == "electrical"
+        },
+    )
     return c
 
 

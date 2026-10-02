@@ -2,6 +2,7 @@
 
 import gdsfactory as gf
 from gdsfactory import Component
+from gdsfactory.add_pins import add_electrical_pins
 from gdsfactory.typings import LayerSpec
 
 # Via design rules (in micrometers)
@@ -164,6 +165,7 @@ def via_array(
     c.info["enclosure_width"] = array_width + 2 * enclosure
     c.info["enclosure_height"] = array_height + 2 * enclosure
 
+    add_electrical_pins(c, port_pin_mapping={})
     return c
 
 
@@ -396,6 +398,12 @@ def via_stack(
     c.info["height"] = height
     c.info["n_layers"] = len(layer_order)
 
+    add_electrical_pins(
+        c,
+        port_pin_mapping={
+            p.name: [p.name] for p in c.ports if p.port_type == "electrical"
+        },
+    )
     return c
 
 
@@ -556,4 +564,5 @@ def via_stack_with_pads(
         port_type="electrical",
     )
 
+    add_electrical_pins(c, port_pin_mapping={"pad1": ["pad1"], "pad2": ["pad2"]})
     return c

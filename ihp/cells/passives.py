@@ -5,6 +5,7 @@ from typing import Literal
 import gdsfactory as gf
 import numpy as np
 from gdsfactory import Component
+from gdsfactory.add_pins import add_electrical_pins
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 from numpy import floor, round
@@ -220,6 +221,7 @@ def svaricap(
         port_type="electrical",
     )
 
+    add_electrical_pins(c, port_pin_mapping={"G": ["G"], "B": ["B"]})
     return c
 
 
@@ -430,6 +432,7 @@ def esd_nmos(
         port_type="electrical",
     )
 
+    add_electrical_pins(c, port_pin_mapping={"PAD": ["PAD"], "GND": ["GND"]})
     return c
 
 
@@ -582,6 +585,7 @@ def ptap1(
     c.info["rows"] = rows
     c.info["cols"] = cols
 
+    add_electrical_pins(c, port_pin_mapping={"TAP": ["TAP"]})
     return c
 
 
@@ -745,6 +749,7 @@ def ntap1(
     c.info["rows"] = rows
     c.info["cols"] = cols
 
+    add_electrical_pins(c, port_pin_mapping={"TAP": ["TAP"]})
     return c
 
 
@@ -928,6 +933,7 @@ def sealring(
     c.info["height"] = height
     c.info["ring_width"] = ring_width
 
+    add_electrical_pins(c, port_pin_mapping={})
     return c
 
 
@@ -1118,4 +1124,5 @@ def guard_ring(
     c.info["rows"] = nrows
     c.info["guardRingSpacing"] = guardRingSpacing
 
+    add_electrical_pins(c, port_pin_mapping={})
     return c

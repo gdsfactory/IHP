@@ -10,6 +10,7 @@ import math
 
 import gdsfactory as gf
 from gdsfactory import Component
+from gdsfactory.add_pins import add_electrical_pins
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 
@@ -45,10 +46,10 @@ def _metal_cont(
 
     Args:
         c: Component to add geometry to.
-        p1_x: X coordinate of the line start point, before shift_x (um).
-        p1_y: Y coordinate of the line start point, before shift_y (um).
-        p2_x: X coordinate of the line end point, before shift_x (um).
-        p2_y: Y coordinate of the line end point, before shift_y (um).
+        p1_x: X coordinate of the start point of the line (raw coordinates).
+        p1_y: Y coordinate of the start point of the line (raw coordinates).
+        p2_x: X coordinate of the end point of the line (raw coordinates).
+        p2_y: Y coordinate of the end point of the line (raw coordinates).
         layer_metal: Metal layer for the covering rectangle (empty string to skip).
         layer_cont: Contact/via layer for sub-rectangles.
         width: Width of the metal strip.
@@ -883,6 +884,12 @@ def _rf_mos_core(
             port_type="electrical",
         )
 
+    add_electrical_pins(
+        c,
+        port_pin_mapping={
+            p.name: [p.name] for p in c.ports if p.port_type == "electrical"
+        },
+    )
     return c
 
 
