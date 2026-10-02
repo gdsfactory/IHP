@@ -52,6 +52,7 @@ mask:
 
 docs-pdf:
 	uv run python .github/write_cells.py
+	uv run python .github/write_layer_stack.py
 	cp CHANGELOG.md docs/changelog.md
 	uv run mkdocs build -f mkdocs-pdf.yml
 
@@ -93,9 +94,11 @@ notebooks:
 	uv run python docs/hooks.py docs/examples/lna_160ghz.md
 
 docs: cp-docs cells notebooks
+	uv run python .github/write_layer_stack.py
 	uv run --extra docs zensical build -f docs/zensical.toml
 
 docs-serve: cp-docs notebooks
+	uv run python .github/write_layer_stack.py
 	uv run --extra docs zensical serve -f docs/zensical.toml -a localhost:8080
 
 update-changelog:
