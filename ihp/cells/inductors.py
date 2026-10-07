@@ -336,7 +336,7 @@ def inductor3(
         "NoRCXdrawing",
     ),
 ) -> Component:
-    """Create a 3-turn inductor.
+    """Create a 3-terminal (centre-tapped) inductor.
 
     Args:
         width: Width of the inductor trace in micrometers.
