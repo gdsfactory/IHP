@@ -16,6 +16,8 @@ from gdsfactory import Component
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 
+from ihp._schematic import with_circulax_models
+
 from ..tech import TECH
 
 _XS = "metal1_routing"
@@ -516,6 +518,7 @@ def nmos_schematic(
     nf: int = 1,
     m: int = 1,
 ) -> DSchematic:
+    """Register schematic models. @tags circulax-simulation"""
     s = DSchematic()
     s.info["symbol"] = "nmos"
     s.info["ports"] = [
@@ -556,6 +559,7 @@ def nmos_schematic(
             },
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"], qualname="nmos")
     s.create_port(name="D", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="G", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="S", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -607,6 +611,7 @@ def pmos_schematic(
     nf: int = 1,
     m: int = 1,
 ) -> DSchematic:
+    """Register schematic models. @tags circulax-simulation"""
     s = DSchematic()
     s.info["symbol"] = "pmos"
     s.info["ports"] = [
@@ -637,6 +642,7 @@ def pmos_schematic(
             "params": {"w": "width * 1e-6", "l": "length * 1e-6", "ng": "nf", "m": "m"},
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"], qualname="pmos")
     s.create_port(name="D", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="G", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="S", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -688,6 +694,7 @@ def nmos_hv_schematic(
     nf: int = 1,
     m: int = 1,
 ) -> DSchematic:
+    """Register schematic models. @tags circulax-simulation"""
     s = DSchematic()
     s.info["symbol"] = "nmos"
     s.info["ports"] = [
@@ -718,6 +725,7 @@ def nmos_hv_schematic(
             "params": {"w": "width * 1e-6", "l": "length * 1e-6", "ng": "nf", "m": "m"},
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"], qualname="nmos_hv")
     s.create_port(name="D", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="G", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="S", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -769,6 +777,7 @@ def pmos_hv_schematic(
     nf: int = 1,
     m: int = 1,
 ) -> DSchematic:
+    """Register schematic models. @tags circulax-simulation"""
     s = DSchematic()
     s.info["symbol"] = "pmos"
     s.info["ports"] = [
@@ -799,6 +808,7 @@ def pmos_hv_schematic(
             "params": {"w": "width * 1e-6", "l": "length * 1e-6", "ng": "nf", "m": "m"},
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"], qualname="pmos_hv")
     s.create_port(name="D", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="G", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="S", cross_section=_XS, x=0, y=-1, orientation=270)
