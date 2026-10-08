@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from ihp._schematic import with_circulax_models
+from ihp._schematic import native_port_map, with_circulax_models
 from ihp.cells import (
     antennas,
     bjt_transistors,
@@ -49,6 +49,7 @@ def test_circulax_metadata_matches_vacask(factory):
     assert circulax["qualname"] == factory.__name__.removesuffix("_schematic")
     assert circulax["port_order"] == vacask["port_order"]
     assert circulax["params"] == {}
+    assert "port_map" not in circulax
     assert "library" not in circulax
     json.dumps(circulax)
     native = next(model for model in models if model["implementation"] == "NgSpice")
@@ -65,7 +66,8 @@ def test_circulax_metadata_matches_vacask(factory):
             ):
                 terminals.append(words[2:])
     assert terminals
-    assert all(list(circulax["port_map"].values()) == nodes for nodes in terminals)
+    aliases = native_port_map(circulax["qualname"], circulax["port_order"])
+    assert all(list(aliases.values()) == nodes for nodes in terminals)
 
 
 def test_model_metadata_is_not_shared_mutable_state():
@@ -120,7 +122,8 @@ def test_registered_library_models_have_instance_binding(factory):
     model = getattr(module, registration["qualname"])
     assert model._is_circulax_library_model
     assert not callable(model)
-    assert model.port_map == registration["port_map"]
+    assert set(model.port_map) == set(registration["port_order"])
+    assert "port_map" not in registration
     assert model.defaults
     assert model.parameter_units
     assert getattr(module, registration["qualname"]) is model

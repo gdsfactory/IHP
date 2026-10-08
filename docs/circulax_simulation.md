@@ -26,6 +26,10 @@ converted VACASK cards use a different model family.
 Circulax flattens those internally and shares OSDI descriptors across instances,
 with individual leaf parameters forming rows of the same native device batch.
 Public port aliases match IHP symbols, including `P1`/`P2` on resistors.
+The metadata references those public ports without a `port_map`. The
+`LibraryModel` alone maps them to native NgSpice terminals (for example,
+public `D` to native `d`), so client connections retain the wrapper's public
+terminal names until Circulax flattens it.
 
 The native NgSpice bondpad subcircuit is an empty placeholder with an unconnected
 `PAD` terminal. Its registration preserves categorical shape settings, but does

@@ -67,6 +67,7 @@ def with_circulax_models(
 
     Parameter expressions and corner cards belong to the referenced LibraryModel,
     so GF+ forwards schematic settings without evaluating native library equations.
+    Its public ports match the symbol; native terminal aliases stay inside it.
     @tags circulax-simulation
     """
     result = list(models)
@@ -78,7 +79,6 @@ def with_circulax_models(
                     "ihp.models.circulax",
                     model["port_order"],
                     qualname=qualname,
-                    port_map=native_port_map(qualname, model["port_order"]),
                 )
             )
     return result
