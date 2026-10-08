@@ -7,9 +7,9 @@ from kfactory.schematic import DSchematic
 from numpy import floor
 
 from ihp import tech
+from ihp._schematic import with_circulax_models
 from ihp.cells.passives import guard_ring
 from ihp.cells.via_stacks import via_array, via_stack
-from ihp.models.circulax import with_circulax_models
 from ihp.tech import CbCapCalc
 
 _XS = "metal1_routing"
@@ -319,6 +319,7 @@ def cmim_schematic(
     width: float = 6.0,
     length: float = 6.0,
 ) -> DSchematic:
+    """Register schematic models. @tags circulax-simulation"""
     s = DSchematic()
     s.info["symbol"] = "capacitor"
     s.info["ports"] = [
@@ -347,7 +348,7 @@ def cmim_schematic(
             "params": {"w": "width * 1e-6", "l": "length * 1e-6"},
         },
     ]
-    s.info["models"] = with_circulax_models(s.info["models"])
+    s.info["models"] = with_circulax_models(s.info["models"], qualname="cmim")
     s.create_port(name="PLUS", cross_section=_XS, x=1, y=0, orientation=0)
     s.create_port(name="MINUS", cross_section=_XS, x=-1, y=0, orientation=180)
     return s
@@ -574,6 +575,7 @@ def rfcmim_schematic(
     width: float = 7.0,
     length: float = 7.0,
 ) -> DSchematic:
+    """Register schematic models. @tags circulax-simulation"""
     s = DSchematic()
     s.info["symbol"] = "capacitor"
     s.info["ports"] = [
@@ -603,7 +605,7 @@ def rfcmim_schematic(
             "params": {"l": "length * 1e-6", "w": "width * 1e-6"},
         },
     ]
-    s.info["models"] = with_circulax_models(s.info["models"])
+    s.info["models"] = with_circulax_models(s.info["models"], qualname="rfcmim")
     s.create_port(name="PLUS", cross_section=_XS, x=1, y=0, orientation=0)
     s.create_port(name="MINUS", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="BN", cross_section=_XS, x=0, y=-1, orientation=270)

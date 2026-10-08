@@ -8,7 +8,7 @@ from gdsfactory import Component
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 
-from ihp.models.circulax import with_circulax_models
+from ihp._schematic import BONDPAD_SHAPES, with_circulax_models
 
 from ..config import PATH
 
@@ -33,7 +33,8 @@ def bondpad_schematic(
     shape: Literal["octagon", "square", "circle"] = "octagon",
     diameter: float = 80.0,
 ) -> DSchematic:
-    _shape_map = {"octagon": 0, "square": 1, "circle": 2}
+    """Register schematic models. @tags circulax-simulation"""
+    _shape_map = BONDPAD_SHAPES
     s = DSchematic()
     s.info["symbol"] = "pad"
     s.info["ports"] = [{"name": "PAD", "side": "top", "type": "electric"}]
@@ -67,7 +68,7 @@ def bondpad_schematic(
             },
         },
     ]
-    s.info["models"] = with_circulax_models(s.info["models"])
+    s.info["models"] = with_circulax_models(s.info["models"], qualname="bondpad")
     s.create_port(name="PAD", cross_section=_XS, x=0, y=1, orientation=90)
     return s
 

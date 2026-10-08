@@ -7,7 +7,7 @@ import gdsfactory as gf
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 
-from ihp.models.circulax import with_circulax_models
+from ihp._schematic import with_circulax_models
 from ihp.tech import TECH as _TECH
 
 _XS = "metal1_routing"
@@ -131,6 +131,7 @@ def dantenna_schematic(
     guardRingType: Literal["none", "psub"] = "none",
     guardRingDistance: float = 1.0,
 ) -> DSchematic:
+    """Register schematic models. @tags circulax-simulation"""
     s = DSchematic()
     s.info["symbol"] = "diode"
     s.info["ports"] = [
@@ -159,7 +160,7 @@ def dantenna_schematic(
             "params": {"w": "width * 1e-6", "l": "length * 1e-6"},
         },
     ]
-    s.info["models"] = with_circulax_models(s.info["models"])
+    s.info["models"] = with_circulax_models(s.info["models"], qualname="dantenna")
     s.create_port(name="1", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="2", cross_section=_XS, x=0, y=-1, orientation=270)
     return s
@@ -280,6 +281,7 @@ def dpantenna_schematic(
     guardRingType: Literal["none", "nwell"] = "none",
     guardRingDistance: float = 1.0,
 ) -> DSchematic:
+    """Register schematic models. @tags circulax-simulation"""
     s = DSchematic()
     s.info["symbol"] = "diode"
     s.info["ports"] = [
@@ -308,7 +310,7 @@ def dpantenna_schematic(
             "params": {"w": "width * 1e-6", "l": "length * 1e-6"},
         },
     ]
-    s.info["models"] = with_circulax_models(s.info["models"])
+    s.info["models"] = with_circulax_models(s.info["models"], qualname="dpantenna")
     s.create_port(name="1", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="2", cross_section=_XS, x=0, y=-1, orientation=270)
     return s

@@ -10,7 +10,7 @@ from kfactory.schematic import DSchematic
 from numpy import floor, round
 
 from ihp import cells, tech
-from ihp.models.circulax import with_circulax_models
+from ihp._schematic import with_circulax_models
 
 _XS = "metal1_routing"
 
@@ -23,6 +23,7 @@ def svaricap_schematic(
     length: float = 1.0,
     nf: int = 1,
 ) -> DSchematic:
+    """Register schematic models. @tags circulax-simulation"""
     s = DSchematic()
     s.info["symbol"] = "varicap"
     s.info["ports"] = [
@@ -53,7 +54,7 @@ def svaricap_schematic(
             "params": {"w": "width * 1e-6", "l": "length * 1e-6", "Nx": "nf"},
         },
     ]
-    s.info["models"] = with_circulax_models(s.info["models"])
+    s.info["models"] = with_circulax_models(s.info["models"], qualname="svaricap")
     s.create_port(name="G1", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="W", cross_section=_XS, x=1, y=0, orientation=0)
     s.create_port(name="G2", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -230,6 +231,7 @@ def esd_nmos_schematic(
     length: float = 0.5,
     nf: int = 10,
 ) -> DSchematic:
+    """Register schematic models. @tags circulax-simulation"""
     s = DSchematic()
     s.info["symbol"] = "nmos"
     s.info["ports"] = [
@@ -258,7 +260,7 @@ def esd_nmos_schematic(
             "params": {"w": "width * 1e-6", "l": "length * 1e-6", "ng": "nf"},
         },
     ]
-    s.info["models"] = with_circulax_models(s.info["models"])
+    s.info["models"] = with_circulax_models(s.info["models"], qualname="esd_nmos")
     s.create_port(name="VDD", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="VSS", cross_section=_XS, x=0, y=-1, orientation=270)
     return s
@@ -442,6 +444,7 @@ def ptap1_schematic(
     rows: int = 1,
     cols: int = 1,
 ) -> DSchematic:
+    """Register schematic models. @tags circulax-simulation"""
     s = DSchematic()
     s.info["symbol"] = "tap"
     s.info["ports"] = [
@@ -470,7 +473,7 @@ def ptap1_schematic(
             "params": {"w": "width * 1e-6", "l": "length * 1e-6"},
         },
     ]
-    s.info["models"] = with_circulax_models(s.info["models"])
+    s.info["models"] = with_circulax_models(s.info["models"], qualname="ptap1")
     s.create_port(name="P1", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="P2", cross_section=_XS, x=0, y=-1, orientation=270)
     return s
@@ -595,6 +598,7 @@ def ntap1_schematic(
     rows: int = 1,
     cols: int = 1,
 ) -> DSchematic:
+    """Register schematic models. @tags circulax-simulation"""
     s = DSchematic()
     s.info["symbol"] = "tap"
     s.info["ports"] = [
@@ -623,7 +627,7 @@ def ntap1_schematic(
             "params": {"w": "width * 1e-6", "l": "length * 1e-6"},
         },
     ]
-    s.info["models"] = with_circulax_models(s.info["models"])
+    s.info["models"] = with_circulax_models(s.info["models"], qualname="ntap1")
     s.create_port(name="P1", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="P2", cross_section=_XS, x=0, y=-1, orientation=270)
     return s
