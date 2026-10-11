@@ -1,0 +1,1 @@
+Cells whose ports don't match a built-in GDSFactory+ editor symbol (`cmim`, `rfcmim`, `rsil`, `rppd`, `rhigh`, `npn13G2*`, `dantenna`, `dpantenna`, `esd_nmos`) no longer set `symbol`. Before, the editor wrote nets under the symbol's pin names and the netlist was missing pins. A new test checks that symbols and cell pins match.

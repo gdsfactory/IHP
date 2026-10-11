@@ -227,7 +227,7 @@ model sg13g2_lv_nmos_psp psp103va (
   vbrbot=10.0 vbrsti=10.0 vbrgat=10.0 pbrbot=4.0 pbrsti=4.0 pbrgat=4.0
   vbrbotd=10.0 vbrstid=10.0 vbrgatd=10.0 pbrbotd=4.0 pbrstid=4.0 pbrgatd=4.0
   vjunref=2.5 fjunq=0.03 vjunrefd=2.5 fjunqd=0.03 rint=1.3025e-11 rvpoly=0.0
-  dlsil=0.0 rsh=0.0 rshd=0.0 cfrw=2e-16/ng swsoa=swsoa vgs_max=1.6 vgd_max=1.6
+  dlsil=0.0 rsh=0.0 rshd=0.0 cfrw=2e-16/ng swsoa=0 vgs_max=1.6 vgd_max=1.6
   vgb_max=1.6 vds_max=1.6 vdb_max=1.6 vsb_max=1.6
 )
 
@@ -314,7 +314,7 @@ model sg13g2_lv_nmos_psp_rf pspnqs103va (
   cfrw=((1-rfmode)*2e-16+rfmode*(1e-18+pre_layout*(ng>0?3.8525e-17:0)))/ng
   rshg=rfmode*3.0 rgo=rfmode*40.0 rbulko=rfmode*0.002*ng/w
   rwello=rfmode*0.002*ng/w rjunso=rfmode*5000.0*l/w rjundo=rfmode*5000.0*l/w
-  swsoa=swsoa vgs_max=1.6 vgd_max=1.6 vgb_max=1.6 vds_max=1.6 vdb_max=1.6
+  swsoa=0 vgs_max=1.6 vgd_max=1.6 vgb_max=1.6 vds_max=1.6 vdb_max=1.6
   vsb_max=1.6
 )
 
@@ -575,7 +575,7 @@ model sg13g2_lv_pmos_psp psp103va (
   vbrbot=10.0 vbrsti=10.0 vbrgat=10.0 pbrbot=4.0 pbrsti=4.0 pbrgat=4.0
   vbrbotd=10.0 vbrstid=10.0 vbrgatd=10.0 pbrbotd=4.0 pbrstid=4.0 pbrgatd=4.0
   vjunref=2.5 fjunq=0.03 vjunrefd=2.5 fjunqd=0.03 rint=1e-12 rvpoly=0.0 dlsil=0.0
-  rsh=0.0 rshd=0.0 cfrw=1e-16/ng swsoa=swsoa vgs_max=1.6 vgd_max=1.6 vgb_max=1.6
+  rsh=0.0 rshd=0.0 cfrw=1e-16/ng swsoa=0 vgs_max=1.6 vgd_max=1.6 vgb_max=1.6
   vds_max=1.6 vdb_max=1.6 vsb_max=1.6
 )
 
@@ -663,7 +663,7 @@ model sg13g2_lv_pmos_psp_rf pspnqs103va (
   rsh=0.0 rshd=0.0 munqso=1.0 swnqs=rfmode*5.0
   cfrw=(1e-16+rfmode*(1e-18+pre_layout*(ng>0?1.2382e-16:0)))/ng rshg=rfmode*20.0
   rgo=rfmode*22.0 rbulko=rfmode*0.002*ng/w rwello=rfmode*0.001*ng/w
-  rjunso=rfmode*5000.0*l/w rjundo=rfmode*5000.0*l/w swsoa=swsoa vgs_max=1.6
+  rjunso=rfmode*5000.0*l/w rjundo=rfmode*5000.0*l/w swsoa=0 vgs_max=1.6
   vgd_max=1.6 vgb_max=1.6 vds_max=1.6 vdb_max=1.6 vsb_max=1.6
 )
 
@@ -899,7 +899,7 @@ model nmoscl_psp psp103va (
   vbrbot=10.0 vbrsti=10.0 vbrgat=10.0 pbrbot=4.0 pbrsti=4.0 pbrgat=4.0
   vbrbotd=10.0 vbrstid=10.0 vbrgatd=10.0 pbrbotd=4.0 pbrstid=4.0 pbrgatd=4.0
   vjunref=2.5 fjunq=0.03 vjunrefd=2.5 fjunqd=0.03 rint=1.3025e-11 rvpoly=0.0
-  dlsil=0.0 rsh=0.0 rshd=0.0 cfrw=2e-16/ng swsoa=swsoa vgs_max=1.6 vgd_max=1.6
+  dlsil=0.0 rsh=0.0 rshd=0.0 cfrw=2e-16/ng swsoa=0 vgs_max=1.6 vgd_max=1.6
   vgb_max=1.6 vds_max=1.6 vdb_max=1.6 vsb_max=1.6
 )
 
@@ -986,7 +986,7 @@ model nmoscl_psp_rf pspnqs103va (
   cfrw=((1-rfmode)*2e-16+rfmode*(1e-18+pre_layout*(ng>0?3.8525e-17:0)))/ng
   rshg=rfmode*3.0 rgo=rfmode*40.0 rbulko=rfmode*0.002*ng/w
   rwello=rfmode*0.002*ng/w rjunso=rfmode*5000.0*l/w rjundo=rfmode*5000.0*l/w
-  swsoa=swsoa vgs_max=1.6 vgd_max=1.6 vgb_max=1.6 vds_max=1.6 vdb_max=1.6
+  swsoa=0 vgs_max=1.6 vgd_max=1.6 vgb_max=1.6 vds_max=1.6 vdb_max=1.6
   vsb_max=1.6
 )
 
@@ -1177,7 +1177,7 @@ model nmoscl_psp psp103va (
   vbrbot=10.0 vbrsti=10.0 vbrgat=10.0 pbrbot=4.0 pbrsti=4.0 pbrgat=4.0
   vbrbotd=10.0 vbrstid=10.0 vbrgatd=10.0 pbrbotd=4.0 pbrstid=4.0 pbrgatd=4.0
   vjunref=2.5 fjunq=0.03 vjunrefd=2.5 fjunqd=0.03 rint=1.3025e-11 rvpoly=0.0
-  dlsil=0.0 rsh=0.0 rshd=0.0 cfrw=2e-16/ng swsoa=swsoa vgs_max=1.6 vgd_max=1.6
+  dlsil=0.0 rsh=0.0 rshd=0.0 cfrw=2e-16/ng swsoa=0 vgs_max=1.6 vgd_max=1.6
   vgb_max=1.6 vds_max=1.6 vdb_max=1.6 vsb_max=1.6
 )
 
@@ -1264,7 +1264,7 @@ model nmoscl_psp_rf pspnqs103va (
   cfrw=((1-rfmode)*2e-16+rfmode*(1e-18+pre_layout*(ng>0?3.8525e-17:0)))/ng
   rshg=rfmode*3.0 rgo=rfmode*40.0 rbulko=rfmode*0.002*ng/w
   rwello=rfmode*0.002*ng/w rjunso=rfmode*5000.0*l/w rjundo=rfmode*5000.0*l/w
-  swsoa=swsoa vgs_max=1.6 vgd_max=1.6 vgb_max=1.6 vds_max=1.6 vdb_max=1.6
+  swsoa=0 vgs_max=1.6 vgd_max=1.6 vgb_max=1.6 vds_max=1.6 vdb_max=1.6
   vsb_max=1.6
 )
 

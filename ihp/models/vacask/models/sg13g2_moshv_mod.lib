@@ -229,7 +229,7 @@ model sg13g2_hv_nmos_psp psp103va (
   vjunref=2.5 fjunq=0.03 vjunrefd=2.5 fjunqd=0.03 rint=3.0856e-12 rvpoly=0.0
   dlsil=0.0 rsh=0.0 rshd=0.0 cfrw=pre_layout*1.2e-16/ng rshg=20.0 rgo=35.0
   rbulko=0.002*ng/w rwello=0.002*ng/w rjunso=5000.0*l/w rjundo=5000.0*l/w
-  swsoa=swsoa vgs_max=3.0 vgd_max=3.0 vgb_max=3.0 vds_max=3.0 vdb_max=1.6
+  swsoa=0 vgs_max=3.0 vgd_max=3.0 vgb_max=3.0 vds_max=3.0 vdb_max=1.6
   vsb_max=1.6
 )
 
@@ -316,7 +316,7 @@ model sg13g2_hv_nmos_psp_rf pspnqs103va (
   cfrw=(pre_layout*(1-rfmode)*1.2e-16+rfmode*(0.0+pre_layout*(ng>0?4.1214e-16:0)))/ng
   rshg=rfmode*20.0 rgo=rfmode*35.0 rbulko=rfmode*0.002*ng/w
   rwello=rfmode*0.002*ng/w rjunso=rfmode*5000.0*l/w rjundo=rfmode*5000.0*l/w
-  swsoa=swsoa vgs_max=3.0 vgd_max=3.0 vgb_max=3.0 vds_max=3.0 vdb_max=1.6
+  swsoa=0 vgs_max=3.0 vgd_max=3.0 vgb_max=3.0 vds_max=3.0 vdb_max=1.6
   vsb_max=1.6
 )
 
@@ -573,7 +573,7 @@ model sg13g2_hv_pmos_psp psp103va (
   vbrbotd=10.0 vbrstid=10.0 vbrgatd=10.0 pbrbotd=4.0 pbrstid=4.0 pbrgatd=4.0
   vjunref=2.5 fjunq=0.03 vjunrefd=2.5 fjunqd=0.03 rint=0.0 rvpoly=0.0 dlsil=0.0
   rsh=0.0 rshd=0.0 cfrw=pre_layout*0.0/ng rshg=40.0 rgo=15.0 rbulko=0.002*ng/w
-  rwello=0.001*ng/w rjunso=5000.0*l/w rjundo=5000.0*l/w swsoa=swsoa vgs_max=3.0
+  rwello=0.001*ng/w rjunso=5000.0*l/w rjundo=5000.0*l/w swsoa=0 vgs_max=3.0
   vgd_max=3.0 vgb_max=3.0 vds_max=3.0 vdb_max=1.6 vsb_max=1.6
 )
 
@@ -659,7 +659,7 @@ model sg13g2_hv_pmos_psp_rf pspnqs103va (
   cfrw=(pre_layout*0.0+rfmode*(2.01e-17+pre_layout*(ng>0?3.5e-17:0)))/ng
   rshg=rfmode*40.0 rgo=rfmode*15.0 rbulko=rfmode*0.002*ng/w
   rwello=rfmode*0.001*ng/w rjunso=rfmode*5000.0*l/w rjundo=rfmode*5000.0*l/w
-  swsoa=swsoa vgs_max=3.0 vgd_max=3.0 vgb_max=3.0 vds_max=3.0 vdb_max=1.6
+  swsoa=0 vgs_max=3.0 vgd_max=3.0 vgb_max=3.0 vds_max=3.0 vdb_max=1.6
   vsb_max=1.6
 )
 

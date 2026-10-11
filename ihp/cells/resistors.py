@@ -30,7 +30,6 @@ def rsil_schematic(
     resistance: float | None = None,
 ) -> DSchematic:
     s = DSchematic()
-    s.info["symbol"] = "resistor"
     s.info["ports"] = [
         {"name": "P1", "side": "top", "type": "electric"},
         {"name": "P2", "side": "bottom", "type": "electric"},
@@ -249,7 +248,6 @@ def rppd_schematic(
     resistance: float | None = None,
 ) -> DSchematic:
     s = DSchematic()
-    s.info["symbol"] = "resistor"
     s.info["ports"] = [
         {"name": "P1", "side": "top", "type": "electric"},
         {"name": "P2", "side": "bottom", "type": "electric"},
@@ -482,7 +480,6 @@ def rhigh_schematic(
     resistance: float | None = None,
 ) -> DSchematic:
     s = DSchematic()
-    s.info["symbol"] = "resistor"
     s.info["ports"] = [
         {"name": "P1", "side": "top", "type": "electric"},
         {"name": "P2", "side": "bottom", "type": "electric"},

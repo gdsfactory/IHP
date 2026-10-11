@@ -48,7 +48,6 @@ def npn13G2_schematic(
     CMetY2: float = 0,
 ) -> DSchematic:
     s = DSchematic()
-    s.info["symbol"] = "npn"
     s.info["ports"] = [
         {"name": "BN", "side": "top", "type": "electric"},
         {"name": "E", "side": "bottom", "type": "electric"},
@@ -794,7 +793,6 @@ def npn13G2L_schematic(
     Nx: int = 1,
 ) -> DSchematic:
     s = DSchematic()
-    s.info["symbol"] = "npn"
     s.info["ports"] = [
         {"name": "BN", "side": "top", "type": "electric"},
         {"name": "E", "side": "bottom", "type": "electric"},
@@ -1400,7 +1398,6 @@ def npn13G2V_schematic(
     Nx: int = 1,
 ) -> DSchematic:
     s = DSchematic()
-    s.info["symbol"] = "npn"
     s.info["ports"] = [
         {"name": "BN", "side": "top", "type": "electric"},
         {"name": "E", "side": "bottom", "type": "electric"},

@@ -11,6 +11,7 @@ drives an operating-point solve with the Verilog-A sources compiled on the fly.
 from __future__ import annotations
 
 import os
+import re
 import shutil
 import subprocess
 import tempfile
@@ -23,6 +24,7 @@ from ihp.cells.bjt_transistors import npn13G2_schematic
 from ihp.cells.bondpads import bondpad_schematic
 from ihp.cells.capacitors import cmim_schematic
 from ihp.cells.fet_transistors import nmos_schematic
+from ihp.cells.inductors import inductor2_schematic
 from ihp.cells.passives import svaricap_schematic
 from ihp.cells.resistors import rsil_schematic
 from ihp.cells.rf_transistors import rfnmos_schematic
@@ -49,6 +51,7 @@ REPRESENTATIVE_FACTORIES = [
     bondpad_schematic,
     rfnmos_schematic,
     svaricap_schematic,
+    inductor2_schematic,
 ]
 
 
@@ -84,10 +87,33 @@ def test_schematic_has_matching_ngspice_and_vacask_entries(schematic_factory) ->
 
 def test_common_lib_loads_existing_verilog_a_sources() -> None:
     common = COMMON_LIB.read_text()
-    assert "parameters swsoa=0" in common
     for rel in VA_LOADS:
         assert f'load "{rel}"' in common, f"common file missing load of {rel}"
         assert (VACASK_MODELS / rel).resolve().is_file(), f"missing VA source {rel}"
+
+
+def test_common_lib_is_safe_to_include_repeatedly() -> None:
+    # Every converted lib includes the common file, so one netlist reads it many
+    # times. VACASK accepts a repeated load but not a repeated parameters/model.
+    for line in COMMON_LIB.read_text().splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("//"):
+            continue
+        assert stripped.startswith("load "), f"common file has non-load line: {line}"
+
+
+@pytest.mark.parametrize(
+    "lib", sorted(VACASK_MODELS.glob("*.lib")), ids=lambda p: p.name
+)
+def test_lib_defines_the_default_models_it_uses(lib: Path) -> None:
+    text = lib.read_text()
+    assert not re.search(r"=\s*swsoa\b", text), "swsoa must be inlined as 0"
+    assert "sg13g2_default_mod_" not in text, "shared default model name"
+    defined = set(re.findall(r"^model (\w+_default_mod_\w+) ", text, re.MULTILINE))
+    used = set(re.findall(r"\b(\w+_default_mod_\w+)\b", text))
+    assert used <= defined, f"used but not defined here: {sorted(used - defined)}"
+    for name in defined:
+        assert name.startswith(f"{lib.stem}_default_mod_"), f"{name} is not per-lib"
 
 
 def test_no_committed_osdi_under_vacask() -> None:
@@ -132,6 +158,62 @@ def test_converted_lib_compiles_and_solves_via_vacask() -> None:
     -> solve. It does NOT go through the Mosaic netlister, so it is unaffected
     by the selector bug.
     """
+    corner = VACASK_MODELS / "cornerRES.lib"
+    assert corner.is_file()
+
+    _run_vacask_op(
+        "rsil_op",
+        f"""rsil operating point smoke test
+
+model vsource vsource
+
+include "{corner}" section=res_typ
+
+ground 0
+v1 (1 0) vsource dc=1.0
+xr (1 0 0) rsil w=1e-6 l=1e-6
+
+control
+  analysis op1 op
+endc
+""",
+    )
+
+
+def test_several_libs_in_one_deck_solve_via_vacask() -> None:
+    """A circuit using several device families includes the common file once
+    per lib (and twice through ``cornerCAP``); it must still parse and solve.
+    """
+    _run_vacask_op(
+        "mixed_op",
+        f"""mixed libs operating point smoke test
+
+model vsource vsource
+
+include "{VACASK_MODELS / "cornerCAP.lib"}" section=cap_typ
+include "{VACASK_MODELS / "cornerRES.lib"}" section=res_typ
+include "{VACASK_MODELS / "cornerMOSlv.lib"}" section=mos_tt
+include "{VACASK_MODELS / "sg13g2_esd.lib"}"
+include "{VACASK_MODELS / "ihp_inductor_rl.lib"}"
+
+ground 0
+v1 (1 0) vsource dc=1.2
+xc (1 0) cap_cmim w=10e-6 l=10e-6
+xr (1 2 0) rsil w=1e-6 l=1e-6
+xm (2 2 0 0) sg13_lv_nmos w=1e-6 l=0.13e-6
+xd (1 2 0) diodevss_2kv
+xl (1 3) ihp_inductor_rl inductance=1e-9 resistance=5
+xcl (3 0) cap_cmim w=10e-6 l=10e-6
+
+control
+  analysis op1 op
+endc
+""",
+    )
+
+
+def _run_vacask_op(name: str, deck: str) -> None:
+    """Run an operating-point deck through vacask-bin and assert it solved."""
     vacask_bin = pytest.importorskip("vacask_bin")
     vacask_cmd = vacask_bin.VACASK_CMD
     if not os.path.exists(vacask_cmd):
@@ -145,27 +227,9 @@ def test_converted_lib_compiles_and_solves_via_vacask() -> None:
             "SIM_OPENVAF to a working openvaf-r to enable this test"
         )
 
-    corner = VACASK_MODELS / "cornerRES.lib"
-    assert corner.is_file()
-
-    deck = f"""rsil operating point smoke test
-
-model vsource vsource
-
-include "{corner}" section=res_typ
-
-ground 0
-v1 (1 0) vsource dc=1.0
-xr (1 0 0) rsil w=1e-6 l=1e-6
-
-control
-  analysis op1 op
-endc
-"""
-
     env = {**os.environ, "SIM_OPENVAF": openvaf}
     with tempfile.TemporaryDirectory() as tmp:
-        sim_path = Path(tmp) / "rsil_op.sim"
+        sim_path = Path(tmp) / f"{name}.sim"
         sim_path.write_text(deck)
         # cwd is a writable temp dir: vacask writes the compiled .osdi here, not
         # into the (possibly read-only) installed package.
