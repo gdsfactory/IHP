@@ -13,6 +13,8 @@ from gdsfactory import Component
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 
+from ihp._schematic import with_circulax_models
+
 from ..tech import TECH
 from .fet_transistors import _add_rect, _even_dbu, _fix, _grid_fix
 
@@ -899,6 +901,7 @@ def rfnmos_schematic(
     gat_ring: bool = True,
     guard_ring: str = "Yes",
 ) -> DSchematic:
+    """Register schematic models. @tags circulax-simulation"""
     s = DSchematic()
     s.info["symbol"] = "nmos"
     s.info["ports"] = [
@@ -941,6 +944,7 @@ def rfnmos_schematic(
             },
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"], qualname="rfnmos")
     s.create_port(name="D", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="G", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="S", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -1014,6 +1018,7 @@ def rfpmos_schematic(
     gat_ring: bool = True,
     guard_ring: str = "Yes",
 ) -> DSchematic:
+    """Register schematic models. @tags circulax-simulation"""
     s = DSchematic()
     s.info["symbol"] = "pmos"
     s.info["ports"] = [
@@ -1056,6 +1061,7 @@ def rfpmos_schematic(
             },
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"], qualname="rfpmos")
     s.create_port(name="D", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="G", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="S", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -1129,6 +1135,7 @@ def rfnmos_hv_schematic(
     gat_ring: bool = True,
     guard_ring: str = "Yes",
 ) -> DSchematic:
+    """Register schematic models. @tags circulax-simulation"""
     s = DSchematic()
     s.info["symbol"] = "nmos"
     s.info["ports"] = [
@@ -1171,6 +1178,7 @@ def rfnmos_hv_schematic(
             },
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"], qualname="rfnmos_hv")
     s.create_port(name="D", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="G", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="S", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -1244,6 +1252,7 @@ def rfpmos_hv_schematic(
     gat_ring: bool = True,
     guard_ring: str = "Yes",
 ) -> DSchematic:
+    """Register schematic models. @tags circulax-simulation"""
     s = DSchematic()
     s.info["symbol"] = "pmos"
     s.info["ports"] = [
@@ -1286,6 +1295,7 @@ def rfpmos_hv_schematic(
             },
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"], qualname="rfpmos_hv")
     s.create_port(name="D", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="G", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="S", cross_section=_XS, x=0, y=-1, orientation=270)

@@ -6,6 +6,7 @@ import gdsfactory as gf
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 
+from ihp._schematic import with_circulax_models
 from ihp.tech import TECH as _TECH
 
 _XS = "metal1_routing"
@@ -47,6 +48,7 @@ def npn13G2_schematic(
     CMetY1: float = 0,
     CMetY2: float = 0,
 ) -> DSchematic:
+    """Register schematic models. @tags circulax-simulation"""
     s = DSchematic()
     s.info["symbol"] = "npn"
     s.info["ports"] = [
@@ -87,6 +89,7 @@ def npn13G2_schematic(
             },
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"], qualname="npn13G2")
     s.create_port(name="C", cross_section=_XS, x=1, y=0, orientation=0)
     s.create_port(name="B", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="E", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -793,6 +796,7 @@ def npn13G2L_schematic(
     emitter_width: float = 0.07,
     Nx: int = 1,
 ) -> DSchematic:
+    """Register schematic models. @tags circulax-simulation"""
     s = DSchematic()
     s.info["symbol"] = "npn"
     s.info["ports"] = [
@@ -829,6 +833,7 @@ def npn13G2L_schematic(
             },
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"], qualname="npn13G2L")
     s.create_port(name="C", cross_section=_XS, x=1, y=0, orientation=0)
     s.create_port(name="B", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="E", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -1399,6 +1404,7 @@ def npn13G2V_schematic(
     emitter_width: float = 0.12,
     Nx: int = 1,
 ) -> DSchematic:
+    """Register schematic models. @tags circulax-simulation"""
     s = DSchematic()
     s.info["symbol"] = "npn"
     s.info["ports"] = [
@@ -1435,6 +1441,7 @@ def npn13G2V_schematic(
             },
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"], qualname="npn13G2V")
     s.create_port(name="C", cross_section=_XS, x=1, y=0, orientation=0)
     s.create_port(name="B", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="E", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -2113,6 +2120,7 @@ def contactArray(
 
 
 def pnpMPA_schematic(length: float = 2, width: float = 0.7) -> DSchematic:
+    """Register schematic models. @tags circulax-simulation"""
     s = DSchematic()
     s.info["symbol"] = "pnp"
     s.info["ports"] = [
@@ -2142,6 +2150,7 @@ def pnpMPA_schematic(length: float = 2, width: float = 0.7) -> DSchematic:
             "params": {},
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"], qualname="pnpMPA")
     s.create_port(name="C", cross_section=_XS, x=1, y=0, orientation=0)
     s.create_port(name="B", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="E", cross_section=_XS, x=0, y=-1, orientation=270)

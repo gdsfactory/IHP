@@ -5,6 +5,7 @@ from gdsfactory import Component
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 
+from ihp._schematic import with_circulax_models
 from ihp.tech import TECH as _TECH
 
 _XS = "metal1_routing"
@@ -29,6 +30,7 @@ def rsil_schematic(
     dx: float = 0.5,
     resistance: float | None = None,
 ) -> DSchematic:
+    """Register schematic models. @tags circulax-simulation"""
     s = DSchematic()
     s.info["symbol"] = "resistor"
     s.info["ports"] = [
@@ -58,6 +60,7 @@ def rsil_schematic(
             "params": {"w": "dx * 1e-6", "l": "dy * 1e-6", "m": "1"},
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"], qualname="rsil")
     s.create_port(name="P1", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="P2", cross_section=_XS, x=0, y=-1, orientation=270)
     s.create_port(name="BN", cross_section=_XS, x=1, y=0, orientation=0)
@@ -248,6 +251,7 @@ def rppd_schematic(
     dx: float = 0.5,
     resistance: float | None = None,
 ) -> DSchematic:
+    """Register schematic models. @tags circulax-simulation"""
     s = DSchematic()
     s.info["symbol"] = "resistor"
     s.info["ports"] = [
@@ -277,6 +281,7 @@ def rppd_schematic(
             "params": {"w": "dx * 1e-6", "l": "dy * 1e-6", "m": "1"},
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"], qualname="rppd")
     s.create_port(name="P1", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="P2", cross_section=_XS, x=0, y=-1, orientation=270)
     s.create_port(name="BN", cross_section=_XS, x=1, y=0, orientation=0)
@@ -481,6 +486,7 @@ def rhigh_schematic(
     dx: float = 0.5,
     resistance: float | None = None,
 ) -> DSchematic:
+    """Register schematic models. @tags circulax-simulation"""
     s = DSchematic()
     s.info["symbol"] = "resistor"
     s.info["ports"] = [
@@ -510,6 +516,7 @@ def rhigh_schematic(
             "params": {"w": "dx * 1e-6", "l": "dy * 1e-6", "m": "1"},
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"], qualname="rhigh")
     s.create_port(name="P1", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="P2", cross_section=_XS, x=0, y=-1, orientation=270)
     s.create_port(name="BN", cross_section=_XS, x=1, y=0, orientation=0)
