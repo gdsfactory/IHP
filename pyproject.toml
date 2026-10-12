@@ -72,6 +72,13 @@ min = 1  # 1GHz
 name = "f"
 num = 4001
 
+[tool.hatch.build.targets.wheel]
+exclude = ["ihp/refs"]
+packages = ["ihp", "cni"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"ihp-gdsfactory--sample-projects" = "ihp-gdsfactory--sample-projects"
+
 [tool.mypy]
 python_version = "3.12"
 strict = true
@@ -121,13 +128,6 @@ select = [
 [tool.ruff.lint.per-file-ignores]
 "ihp/cells/__init__.py" = ["F403"]  # allowing star imports to aggregate cells
 "ihp/models/__init__.py" = ["F403"]  # allowing star imports to aggregate cells
-
-[tool.hatch.build.targets.wheel]
-packages = ["ihp", "cni"]
-exclude = ["ihp/refs"]
-
-[tool.hatch.build.targets.wheel.force-include]
-"ihp-gdsfactory--sample-projects" = "ihp-gdsfactory--sample-projects"
 
 [tool.tbump]
 
