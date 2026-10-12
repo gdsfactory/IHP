@@ -16,6 +16,8 @@ from gdsfactory import Component
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 
+from ihp.models.circulax import with_circulax_models
+
 from ..tech import TECH
 
 _XS = "metal1_routing"
@@ -556,6 +558,7 @@ def nmos_schematic(
             },
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"])
     s.create_port(name="D", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="G", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="S", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -637,6 +640,7 @@ def pmos_schematic(
             "params": {"w": "width * 1e-6", "l": "length * 1e-6", "ng": "nf", "m": "m"},
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"])
     s.create_port(name="D", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="G", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="S", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -718,6 +722,7 @@ def nmos_hv_schematic(
             "params": {"w": "width * 1e-6", "l": "length * 1e-6", "ng": "nf", "m": "m"},
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"])
     s.create_port(name="D", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="G", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="S", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -799,6 +804,7 @@ def pmos_hv_schematic(
             "params": {"w": "width * 1e-6", "l": "length * 1e-6", "ng": "nf", "m": "m"},
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"])
     s.create_port(name="D", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="G", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="S", cross_section=_XS, x=0, y=-1, orientation=270)

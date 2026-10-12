@@ -7,6 +7,7 @@ import gdsfactory as gf
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 
+from ihp.models.circulax import with_circulax_models
 from ihp.tech import TECH as _TECH
 
 _XS = "metal1_routing"
@@ -158,6 +159,7 @@ def dantenna_schematic(
             "params": {"w": "width * 1e-6", "l": "length * 1e-6"},
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"])
     s.create_port(name="1", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="2", cross_section=_XS, x=0, y=-1, orientation=270)
     return s
@@ -306,6 +308,7 @@ def dpantenna_schematic(
             "params": {"w": "width * 1e-6", "l": "length * 1e-6"},
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"])
     s.create_port(name="1", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="2", cross_section=_XS, x=0, y=-1, orientation=270)
     return s

@@ -13,6 +13,8 @@ from gdsfactory import Component
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 
+from ihp.models.circulax import with_circulax_models
+
 from ..tech import TECH
 from .fet_transistors import _add_rect, _even_dbu, _fix, _grid_fix
 
@@ -941,6 +943,7 @@ def rfnmos_schematic(
             },
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"])
     s.create_port(name="D", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="G", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="S", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -1056,6 +1059,7 @@ def rfpmos_schematic(
             },
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"])
     s.create_port(name="D", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="G", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="S", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -1171,6 +1175,7 @@ def rfnmos_hv_schematic(
             },
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"])
     s.create_port(name="D", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="G", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="S", cross_section=_XS, x=0, y=-1, orientation=270)
@@ -1286,6 +1291,7 @@ def rfpmos_hv_schematic(
             },
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"])
     s.create_port(name="D", cross_section=_XS, x=0, y=1, orientation=90)
     s.create_port(name="G", cross_section=_XS, x=-1, y=0, orientation=180)
     s.create_port(name="S", cross_section=_XS, x=0, y=-1, orientation=270)
