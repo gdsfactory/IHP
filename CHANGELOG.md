@@ -10,12 +10,12 @@
 - `ihp.cells2` — CNI-based PyCell reference implementations removed. Use `ihp.cells` pure-Python parametric cells.
 - `ihp.cells_fixed` — deprecated fixed-GDS wrapper cells removed. Equivalent parametric cells exist in `ihp.cells`.
 - `cni` — CNI runtime package removed (was only required by `cells2`).
-- add_electrical_pins
+- `test_xor_transistors.py` — XOR regression tests against `cells2` removed.
 - `CuPillarPad_fixed` renamed to `CuPillarPad` and moved to `ihp.cells.bondpads`.
 
 ### Changed
 
-- add_electrical_pins
+- `add_pads_top` default pad changed from `CuPillarPad_fixed` to `CuPillarPad`.
 
 
 ## [0.3.0](https://github.com/gdsfactory/ihp/releases/tag/v0.3.0) - 2026-06-26
@@ -38,7 +38,7 @@ No significant changes.
 
 ### Added
 
-- add_electrical_pins
+- Pure GDSFactory RF-MOSFETs (`nfet_rf`, `pfet_rf`) with full layout generation, split from the transistors module [#90](https://github.com/gdsfactory/ihp/pull/90)
 - `TechIHP` Pydantic model centralizing all FET + RF geometry design-rule constants [#90](https://github.com/gdsfactory/ihp/pull/90)
 - `cells2` PyCell reference page in documentation, documenting the CNI-ported reference implementations
 - Technology page (`docs/tech.rst`) documenting `ihp.tech`: layer map, layer stack, design rules, cross-sections, and routing strategies
@@ -58,7 +58,7 @@ No significant changes.
 ### Fixed
 
 - Port layers now use pin sublayers with `port_type="electrical"` across all cells [#94](https://github.com/gdsfactory/ihp/pull/94)
-- add_electrical_pins
+- Double `_fixed_fixed` naming bug on `cmim_fixed` and `inductor2_fixed`
 - MOSFET layout improved and fuzzed against PyCell reference [#88](https://github.com/gdsfactory/ihp/pull/88)
 - `import_gds` (`functools.partial`) no longer leaks into the cell catalog documentation
 

@@ -19,7 +19,6 @@ tech:
 vacask-models:
 	python scripts/convert_vacask_models.py
 
-
 test:
 	uv run pytest -s
 

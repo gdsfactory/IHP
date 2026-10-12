@@ -628,6 +628,23 @@ wheels = [
 ]
 
 [[package]]
+name = "doroutes"
+version = "1.5.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "kfactory" },
+    { name = "kwasm" },
+    { name = "numpy" },
+    { name = "shapely" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/14/ab/db8b47dd4e2262bebbf89c2bfa72f5df70e431a571b8fbdd38b31f5472a7/doroutes-1.5.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:7199a83e238ab58d3e81094f3b22de1bbb2cd96f96a0a6948b3b79f8eb986fb4", size = 3357029, upload-time = "2026-09-28T10:02:32.857Z" },
+    { url = "https://files.pythonhosted.org/packages/bb/bb/98a0114ab7deb35630a76512f7ed05fcab79a1f296dfee7065f0b6966fcd/doroutes-1.5.0-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:10c81b38c863b40914ce7302fb0f8a23367442e0b611da9ae72621ed7d4b5de9", size = 3576549, upload-time = "2026-09-28T10:02:35.23Z" },
+    { url = "https://files.pythonhosted.org/packages/8a/1f/04cf6496f58079c55ca1c5b9825784b6b2905f160bea64be7585d2b60185/doroutes-1.5.0-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:a975c8739912b363a3deae9b56cfc1829812a42096eb7e255c3cfb1687614d8d", size = 3723175, upload-time = "2026-09-28T10:02:36.567Z" },
+    { url = "https://files.pythonhosted.org/packages/34/fc/088013f0ec583dce25ce71a65ae3909089a07d618d4dc2a77c6e86197633/doroutes-1.5.0-cp312-cp312-win_amd64.whl", hash = "sha256:7856621b7e0460b6c432b83dfbe6ebbf72f69fd88b7aeb6fa87b4ce27d6c3229", size = 3156149, upload-time = "2026-09-28T10:02:37.934Z" },
+]
+
+[[package]]
 name = "elvis-lvs"
 version = "0.2.1"
 source = { registry = "https://pypi.org/simple" }
@@ -845,13 +862,14 @@ wheels = [
 
 [[package]]
 name = "gdsfactoryplus"
-version = "1.8.16"
+version = "1.8.24"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "altair" },
     { name = "bokeh" },
     { name = "cookiecutter" },
     { name = "deepdiff" },
+    { name = "doroutes" },
     { name = "elvis-lvs" },
     { name = "fastapi" },
     { name = "frozendict" },
@@ -884,11 +902,10 @@ dependencies = [
     { name = "websocket-client" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/58/b7/1f27ab904803aaa51014769c033b650ad561fe52a85c34e22e53be1b7595/gdsfactoryplus-1.8.16-cp312-cp312-macosx_14_0_arm64.whl", hash = "sha256:7172f34121e3e61e2caa8ee14adb952e88a8a76c24cc0eb9786d172db7e77ac6", size = 7177259, upload-time = "2026-06-17T05:01:11.24Z" },
-    { url = "https://files.pythonhosted.org/packages/c9/02/b737da05d58dfc3bbcdbbd3f747a70516e9daf5e977b6834019f097d6dea/gdsfactoryplus-1.8.16-cp312-cp312-macosx_15_0_arm64.whl", hash = "sha256:1476868bd4b87f37e833414d104c88039a79021f9ffca0a99d0ac7c78719263c", size = 7359284, upload-time = "2026-06-17T05:01:13.016Z" },
-    { url = "https://files.pythonhosted.org/packages/c4/35/b575868d068e7457d90b784863add8d8dceac89e6bb278090b3d2507907c/gdsfactoryplus-1.8.16-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:3b80c4a82cf126cc24f7db07f5526881a9f4d58440615ab8369cd11eaae96ac4", size = 15599788, upload-time = "2026-06-17T05:01:14.782Z" },
-    { url = "https://files.pythonhosted.org/packages/46/7c/d55adff7069302fcaf1f1001c40e8024f358c06417eaaa548026db3362e4/gdsfactoryplus-1.8.16-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:b3b83165a7bbf24ecf4f0fabef8af7ed2845116a05ff86bce748bbd4529f8426", size = 16215448, upload-time = "2026-06-17T05:01:17.537Z" },
-    { url = "https://files.pythonhosted.org/packages/ba/7f/764b5eb4af661d140e76f276e286bcefe330a349b39418918d1720e796e9/gdsfactoryplus-1.8.16-cp312-cp312-win_amd64.whl", hash = "sha256:5426b4490bac421e1ee735367e17b0fda230f4645c5a0297d1d7e7b211f9989e", size = 5644357, upload-time = "2026-06-17T05:01:20.096Z" },
+    { url = "https://files.pythonhosted.org/packages/52/24/0db775c6e48749f4a8b1d12f0cd0b9cb2ee548b91880fad7dddfd882547d/gdsfactoryplus-1.8.24-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:b7aff884a17ababcd027cbaf22acbf93de485d6378d66cfa6cfef4df6443a74b", size = 7557222, upload-time = "2026-10-09T16:19:28.037Z" },
+    { url = "https://files.pythonhosted.org/packages/41/2b/0e18131f217521977f0d7a1c57b9af3ed3dc5b8b2f3ddec38be238563692/gdsfactoryplus-1.8.24-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:747b938831f6d9d6be63369b85f2c96a16a52b6b31853e50caf21ad02ad18484", size = 15777448, upload-time = "2026-10-09T16:19:30.149Z" },
+    { url = "https://files.pythonhosted.org/packages/34/44/a0715046025890b21e87fbef3d2097b6cee88156dbcaafea4bd7a18903dd/gdsfactoryplus-1.8.24-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:875ddee762dd1083462ee4c5f4cada6aeb59202d2794fab333da7f6a5c62beb3", size = 16410336, upload-time = "2026-10-09T16:19:32.671Z" },
+    { url = "https://files.pythonhosted.org/packages/69/47/45e30068a050c53303b92a9128d296e62680f954444c36b2e3b478425d06/gdsfactoryplus-1.8.24-cp312-cp312-win_amd64.whl", hash = "sha256:659bdbc574b65964837cc0b4181d59ed8247d1415d03ef5435ac7f0f0a813ab7", size = 5690091, upload-time = "2026-10-09T16:19:34.797Z" },
 ]
 
 [[package]]
@@ -955,7 +972,7 @@ wheels = [
 
 [[package]]
 name = "gsim"
-version = "0.0.16"
+version = "0.2.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "gdsfactory" },
@@ -970,9 +987,9 @@ dependencies = [
     { name = "trame-vtk" },
     { name = "trame-vuetify" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e0/ee/a60b6fc006d04b5a1e37e5d8d6dcb3fdcee87888846f04abbb77a9e1131f/gsim-0.0.16.tar.gz", hash = "sha256:6f21a755d5a4a71c4a0ab2805e2e08525e4f8eb6fdb9d624feb2cb37afb0a8f8", size = 171677, upload-time = "2026-04-22T19:10:41.354Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/0e/a2/6e247168fcbdce02f7910e42a36f1340e6802e65d82335a42e34b7ccbe03/gsim-0.2.0.tar.gz", hash = "sha256:f179b63d1e0852a8bfef037f1b418f343b61311f092465baddcbdb91b8c3cbc4", size = 286081, upload-time = "2026-08-12T18:39:36.45Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d2/6b/b3a469a9531890f18e2dae677b7ab3a6efd3bfb2ef363587ec668c794db8/gsim-0.0.16-py3-none-any.whl", hash = "sha256:2f6eb09b1f4a67e0da247f92cbc9acf471f315965f6c1b41b935997d90927456", size = 194773, upload-time = "2026-04-22T19:10:39.714Z" },
+    { url = "https://files.pythonhosted.org/packages/69/7c/e0aa8bfceb94f5729fde6fbf390c24094e7e1ffe1fcc4143a61ae023e089/gsim-0.2.0-py3-none-any.whl", hash = "sha256:571a054967f868236bc16cab4d449d46ac789d2ba7f9aba01dae1baf323862e6", size = 312345, upload-time = "2026-08-12T18:39:34.902Z" },
 ]
 
 [[package]]
@@ -1092,7 +1109,7 @@ requires-dist = [
     { name = "gdsfactory", specifier = "~=9.50.0" },
     { name = "gdsfactoryplus" },
     { name = "gplugins", extras = ["sax"], specifier = "~=2.1.0" },
-    { name = "gsim", marker = "python_full_version >= '3.12' and extra == 'simulation'", specifier = ">=0.0.16" },
+    { name = "gsim", marker = "python_full_version >= '3.12' and extra == 'simulation'", specifier = ">=0.2.0" },
     { name = "jsondiff", marker = "extra == 'dev'" },
     { name = "jupyter", marker = "extra == 'docs'" },
     { name = "kwasm", marker = "extra == 'docs'" },
