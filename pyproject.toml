@@ -124,6 +124,7 @@ select = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["ihp", "cni"]
+exclude = ["ihp/refs"]
 
 [tool.hatch.build.targets.wheel.force-include]
 "ihp-gdsfactory--sample-projects" = "ihp-gdsfactory--sample-projects"
