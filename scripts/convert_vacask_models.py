@@ -14,8 +14,9 @@ beyond that:
 * No xschem symbol conversion, no stdcell/io conversion, no ``.vacaskrc.toml``.
 
 The generated ``sg13g2_vacask_common.lib`` is produced HERE (not via the official
-precompile path): it declares ``swsoa``, ``load``s the four shipped Verilog-A
-sources, and ``load``s the bundled SPICE-compatible primitive ``.osdi`` modules
+precompile path): it ``load``s the four shipped Verilog-A sources and the
+bundled SPICE-compatible primitive ``.osdi`` modules. Shared definitions are
+localized to their users to allow repeated includes in mixed/HV circuits
 (the primitive set is derived from the converter's ``family_map`` usage).
 
 Each converted ``.lib`` carries ``include "sg13g2_vacask_common.lib"`` at its top
@@ -38,6 +39,7 @@ or, with the defaults below (or ``make vacask-models``):
 from __future__ import annotations
 
 import os
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -148,12 +150,47 @@ def main() -> int:
             osdi_files.add(osdi_file)
             dflmods.add((mt, module))
 
-    write_common_lib(osdi_files, dflmods, default_model_prefix="sg13g2_default_mod_")
+    localize_common_definitions(OUT_DIR, dflmods)
+    write_common_lib(osdi_files)
     print(f"Wrote {OUT_DIR / COMMON_LIB}")
     return 0
 
 
-def write_common_lib(osdi_files, dflmods, default_model_prefix):
+def localize_common_definitions(directory, default_modules):
+    """Keep common loads repeatable; scope SOA and default cards to their users.
+
+    Native VACASK rejects repeated parameter/model definitions. CornerMOShv
+    includes both MOS and varactor libraries, and mixed circuits include several
+    corner families. Shared includes must therefore contain loads only.
+    """
+    for path in directory.glob("*.lib"):
+        if path.name == COMMON_LIB:
+            continue
+        text = path.read_text()
+        prefix = path.stem + "_default_mod_"
+        declarations = []
+        for suffix, module in sorted(default_modules):
+            old_name = "sg13g2_default_mod_" + suffix
+            if re.search(r"\b" + re.escape(old_name) + r"\b", text):
+                new_name = prefix + suffix
+                text = re.sub(r"\b" + re.escape(old_name) + r"\b", new_name, text)
+                declarations.append(f"model {new_name} {module}")
+        if declarations:
+            marker = f'include "{COMMON_LIB}"\n'
+            text = text.replace(
+                marker, marker + "\n" + "\n".join(declarations) + "\n", 1
+            )
+        if re.search(r"\bswsoa=swsoa\b", text):
+            text = re.sub(
+                r"(^subckt [^\n]+\n)(?!parameters swsoa=0\n)",
+                r"\1parameters swsoa=0\n",
+                text,
+                flags=re.MULTILINE,
+            )
+        path.write_text(text)
+
+
+def write_common_lib(osdi_files):
     """Generate the on-the-fly common include loaded by every converted lib."""
     lines = [
         "// On-the-fly VACASK common include for the IHP SG13G2 models.",
@@ -164,23 +201,12 @@ def write_common_lib(osdi_files, dflmods, default_model_prefix):
         "// loads are SPICE-compatible primitives bundled in vacask-bin (resolved",
         "// via its module path / SIM_MODULE_PATH at runtime).",
         "",
-        "// Disable safe-operating-area checks (the SWSOA .param is stripped from",
-        "// the converted MOS libs; see sg13g2tovc patches).",
-        "parameters swsoa=0",
-        "",
         "// IHP Verilog-A device sources (compiled on the fly):",
     ]
     lines += [f'load "{p}"' for p in VA_LOADS]
     lines.append("")
     lines.append("// vacask-bin bundled SPICE-compatible primitive modules:")
     lines += [f'load "{p}"' for p in sorted(osdi_files)]
-    if dflmods:
-        lines.append("")
-        lines.append("// Default models for unmodeled primitive instances:")
-        lines += [
-            f"model {default_model_prefix}{mt} {module}"
-            for mt, module in sorted(dflmods)
-        ]
     lines.append("")
     (OUT_DIR / COMMON_LIB).write_text("\n".join(lines))
 

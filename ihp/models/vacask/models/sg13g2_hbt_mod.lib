@@ -3,6 +3,9 @@
 
 include "sg13g2_vacask_common.lib"
 
+model sg13g2_hbt_mod_default_mod_c sp_capacitor
+model sg13g2_hbt_mod_default_mod_r sp_resistor
+
 //*#######################################################################
 //*
 //* Copyright 2023 IHP PDK Authors
@@ -72,9 +75,9 @@ model npn13G2_NX_vbic vbic13_5t (
   tavc=-0.00188 kfn=6.00e-9*(4/nx) afn=1.80 bfn=1.00
 )
 
-rsub (s1 bn) sg13g2_default_mod_r  r=300+100*nx
-csub (s1 bn) sg13g2_default_mod_c  c=2.30e-14-(1.50e-15*nx)
-rt (t 0) sg13g2_default_mod_r  r=1e9
+rsub (s1 bn) sg13g2_hbt_mod_default_mod_r  r=300+100*nx
+csub (s1 bn) sg13g2_hbt_mod_default_mod_c  c=2.30e-14-(1.50e-15*nx)
+rt (t 0) sg13g2_hbt_mod_default_mod_r  r=1e9
 ends
 
 //* 5 terminal version of npn13G2 device
@@ -109,9 +112,9 @@ model npn13G2_NX_vbic vbic13_5t (
   tavc=-0.00188 kfn=6.00e-9*(4/nx) afn=1.80 bfn=1.00
 )
 
-rsub (s1 bn) sg13g2_default_mod_r  r=300+100*nx
-csub (s1 bn) sg13g2_default_mod_c  c=2.30e-14-(1.50e-15*nx)
-rt (t 0) sg13g2_default_mod_r  r=1e9
+rsub (s1 bn) sg13g2_hbt_mod_default_mod_r  r=300+100*nx
+csub (s1 bn) sg13g2_hbt_mod_default_mod_c  c=2.30e-14-(1.50e-15*nx)
+rt (t 0) sg13g2_hbt_mod_default_mod_r  r=1e9
 ends
 
 //*--------------------npn13g2l----------------------------------------------------
@@ -173,9 +176,9 @@ model npn13G2l_NX_vbic vbic13_5t (
   kfn=3.00e-9*(2.5/el)*(4/nx) afn=1.80 bfn=1.00
 )
 
-rsub (s1 bn) sg13g2_default_mod_r  r=(300+(400*nx))*(el/2.5)**0.5
-csub (s1 bn) sg13g2_default_mod_c  c=(1.70e-14-(2.00e-15*nx))*(el/2.5)**0
-rt (t 0) sg13g2_default_mod_r  r=1e9
+rsub (s1 bn) sg13g2_hbt_mod_default_mod_r  r=(300+(400*nx))*(el/2.5)**0.5
+csub (s1 bn) sg13g2_hbt_mod_default_mod_c  c=(1.70e-14-(2.00e-15*nx))*(el/2.5)**0
+rt (t 0) sg13g2_hbt_mod_default_mod_r  r=1e9
 ends
 
 //* a five terminal version of npn13G2l device
@@ -215,9 +218,9 @@ model npn13G2l_NX_vbic vbic13_5t (
   kfn=3.00e-9*(2.5/el)*(4/nx) afn=1.80 bfn=1.00
 )
 
-rsub (s1 bn) sg13g2_default_mod_r  r=(300+(400*nx))*(el/2.5)**0.5
-csub (s1 bn) sg13g2_default_mod_c  c=(1.70e-14-(2.00e-15*nx))*(el/2.5)**0
-rt (t 0) sg13g2_default_mod_r  r=1e9
+rsub (s1 bn) sg13g2_hbt_mod_default_mod_r  r=(300+(400*nx))*(el/2.5)**0.5
+csub (s1 bn) sg13g2_hbt_mod_default_mod_c  c=(1.70e-14-(2.00e-15*nx))*(el/2.5)**0
+rt (t 0) sg13g2_hbt_mod_default_mod_r  r=1e9
 ends
 
 //*--------------------npn13g2v----------------------------------------------------
@@ -280,9 +283,9 @@ model npn13G2v_NX_vbic vbic13_5t (
   kfn=6.00e-7*(2.5/el)*(4/nx) afn=2.20 bfn=1.00
 )
 
-rsub (s1 bn) sg13g2_default_mod_r  r=(300+(400*nx))*(el/2.5)**0.85
-csub (s1 bn) sg13g2_default_mod_c  c=(1.70e-14-(2.00e-15*nx))*(el/2.5)**0
-rt (t 0) sg13g2_default_mod_r  r=1e9
+rsub (s1 bn) sg13g2_hbt_mod_default_mod_r  r=(300+(400*nx))*(el/2.5)**0.85
+csub (s1 bn) sg13g2_hbt_mod_default_mod_c  c=(1.70e-14-(2.00e-15*nx))*(el/2.5)**0
+rt (t 0) sg13g2_hbt_mod_default_mod_r  r=1e9
 ends
 
 //* a five terminal npn13G2v device model
@@ -322,9 +325,9 @@ model npn13G2v_NX_vbic vbic13_5t (
   kfn=6.00e-7*(2.5/el)*(4/nx) afn=2.20 bfn=1.00
 )
 
-rsub (s1 bn) sg13g2_default_mod_r  r=(300+(400*nx))*(el/2.5)**0.85
-csub (s1 bn) sg13g2_default_mod_c  c=(1.70e-14-(2.00e-15*nx))*(el/2.5)**0
-rt (t 0) sg13g2_default_mod_r  r=1e9
+rsub (s1 bn) sg13g2_hbt_mod_default_mod_r  r=(300+(400*nx))*(el/2.5)**0.85
+csub (s1 bn) sg13g2_hbt_mod_default_mod_c  c=(1.70e-14-(2.00e-15*nx))*(el/2.5)**0
+rt (t 0) sg13g2_hbt_mod_default_mod_r  r=1e9
 ends
 
 //*******************************************************************************
