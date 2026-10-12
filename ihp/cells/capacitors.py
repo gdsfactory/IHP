@@ -317,9 +317,9 @@ def cmom(
 def cmim_schematic(
     width: float = 6.0,
     length: float = 6.0,
+    m: int = 1,
 ) -> DSchematic:
     s = DSchematic()
-    s.info["symbol"] = "capacitor"
     s.info["ports"] = [
         {"name": "MINUS", "side": "left", "type": "electric"},
         {"name": "PLUS", "side": "right", "type": "electric"},
@@ -333,7 +333,7 @@ def cmim_schematic(
             "library": "ihp/models/ngspice/models/cornerCAP.lib",
             "sections": ["cap_typ", "cap_bcs", "cap_wcs"],
             "port_order": ["PLUS", "MINUS"],
-            "params": {"w": "width * 1e-6", "l": "length * 1e-6"},
+            "params": {"w": "width * 1e-6", "l": "length * 1e-6", "m": "m"},
         },
         {
             "language": "spectre",
@@ -343,7 +343,7 @@ def cmim_schematic(
             "library": "ihp/models/vacask/models/cornerCAP.lib",
             "sections": ["cap_typ", "cap_bcs", "cap_wcs"],
             "port_order": ["PLUS", "MINUS"],
-            "params": {"w": "width * 1e-6", "l": "length * 1e-6"},
+            "params": {"w": "width * 1e-6", "l": "length * 1e-6", "m": "m"},
         },
     ]
     s.create_port(name="PLUS", cross_section=_XS, x=1, y=0, orientation=0)
@@ -370,6 +370,7 @@ def cmim(
     layer_metal5pin: LayerSpec = "Metal5pin",
     layer_topmetal1pin: LayerSpec = "TopMetal1pin",
     model: str = "cmim",
+    m: int = 1,
     **kwargs,
 ) -> Component:
     """Create a MIM (Metal-Insulator-Metal) capacitor.
@@ -377,6 +378,7 @@ def cmim(
     Args:
         width: Width of the capacitor in micrometers.
         length: Length of the capacitor in micrometers.
+        m: Multiplier (number of parallel devices, netlist only).
         bot_enclosure: Bottol Metal5 layer enclosure
         top_enclosure:
         layer_metal5: Metal 5 drawing layer.
@@ -573,7 +575,6 @@ def rfcmim_schematic(
     length: float = 7.0,
 ) -> DSchematic:
     s = DSchematic()
-    s.info["symbol"] = "capacitor"
     s.info["ports"] = [
         {"name": "BN", "side": "bottom", "type": "electric"},
         {"name": "MINUS", "side": "left", "type": "electric"},

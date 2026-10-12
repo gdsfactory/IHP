@@ -72,6 +72,13 @@ min = 1  # 1GHz
 name = "f"
 num = 4001
 
+[tool.hatch.build.targets.wheel]
+exclude = ["ihp/refs"]
+packages = ["ihp", "cni"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"ihp-gdsfactory--sample-projects" = "ihp-gdsfactory--sample-projects"
+
 [tool.mypy]
 python_version = "3.12"
 strict = true
@@ -122,11 +129,16 @@ select = [
 "ihp/cells/__init__.py" = ["F403"]  # allowing star imports to aggregate cells
 "ihp/models/__init__.py" = ["F403"]  # allowing star imports to aggregate cells
 
-[tool.hatch.build.targets.wheel]
-packages = ["ihp", "cni"]
+[tool.setuptools]
+include-package-data = true
 
-[tool.hatch.build.targets.wheel.force-include]
-"ihp-gdsfactory--sample-projects" = "ihp-gdsfactory--sample-projects"
+[tool.setuptools.package-data]
+"*" = ["*.csv", "*.yaml", "*.yml", "*.gds", "*.lyp", "*.oas", "*.lyt", "*.dat", "*.nc", "*.svg", '*.GDS', "*.json", "*.txt", "*.lib", "*.va", "*.include", "*.h"]
+
+[tool.setuptools.packages.find]
+exclude = ["ihp.refs", "ihp.refs.*"]
+include = ["ihp", "ihp.*", "cni", "cni.*"]
+where = ["."]
 
 [tool.tbump]
 

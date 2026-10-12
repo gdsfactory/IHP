@@ -5,13 +5,58 @@ import math
 import gdsfactory as gf
 from gdsfactory import Component
 from gdsfactory.typings import LayerSpec, LayerSpecs
+from kfactory.schematic import DSchematic
+
+_XS = "metal1_routing"
 
 
 def snap_to_grid(p, grid: float = 0.005):
     return round(p / grid) * grid
 
 
-@gf.cell(tags=["IHP", "inductor"])
+def inductor2_schematic(
+    width: float = 2.0,
+    space: float = 2.1,
+    diameter: float = 25.35,
+    turns: int = 1,
+    **kwargs,
+) -> DSchematic:
+    s = DSchematic()
+    s.info["ports"] = [
+        {"name": "P1", "side": "top", "type": "electric"},
+        {"name": "P2", "side": "bottom", "type": "electric"},
+    ]
+    # The PDK has no compact model for inductor2; simulate it as ``inductance``
+    # in series with ``resistance`` (as the SAX model does). For RF work set
+    # ``resistance`` to the loss at the operating frequency, 2*pi*f*L/Q.
+    s.info["models"] = [
+        {
+            "language": "spice",
+            "implementation": "NgSpice",
+            "name": "ihp_inductor_rl",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/ngspice/models/ihp_inductor_rl.lib",
+            "sections": [],
+            "port_order": ["P1", "P2"],
+            "params": {"inductance": "inductance", "resistance": "resistance"},
+        },
+        {
+            "language": "spectre",
+            "implementation": "VACASK",
+            "name": "ihp_inductor_rl",
+            "spice_type": "SUBCKT",
+            "library": "ihp/models/vacask/models/ihp_inductor_rl.lib",
+            "sections": [],
+            "port_order": ["P1", "P2"],
+            "params": {"inductance": "inductance", "resistance": "resistance"},
+        },
+    ]
+    s.create_port(name="P1", cross_section=_XS, x=0, y=1, orientation=90)
+    s.create_port(name="P2", cross_section=_XS, x=0, y=-1, orientation=270)
+    return s
+
+
+@gf.cell(schematic_function=inductor2_schematic, tags=["IHP", "inductor"])
 def inductor2(
     width: float = 2.0,
     space: float = 2.1,
