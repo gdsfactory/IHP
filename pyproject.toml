@@ -129,6 +129,17 @@ select = [
 "ihp/cells/__init__.py" = ["F403"]  # allowing star imports to aggregate cells
 "ihp/models/__init__.py" = ["F403"]  # allowing star imports to aggregate cells
 
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+"*" = ["*.csv", "*.yaml", "*.yml", "*.gds", "*.lyp", "*.oas", "*.lyt", "*.dat", "*.nc", "*.svg", '*.GDS', "*.json", "*.txt", "*.lib", "*.va", "*.include", "*.h"]
+
+[tool.setuptools.packages.find]
+exclude = ["ihp.refs", "ihp.refs.*"]
+include = ["ihp", "ihp.*", "cni", "cni.*"]
+where = ["."]
+
 [tool.tbump]
 
 [[tool.tbump.before_commit]]
