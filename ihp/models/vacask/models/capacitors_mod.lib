@@ -3,7 +3,6 @@
 
 include "sg13g2_vacask_common.lib"
 
-// Default models for unmodeled primitive instances:
 model capacitors_mod_default_mod_c sp_capacitor
 model capacitors_mod_default_mod_l sp_inductor
 model capacitors_mod_default_mod_r sp_resistor

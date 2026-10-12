@@ -87,6 +87,8 @@ def test_schematic_has_matching_ngspice_and_vacask_entries(schematic_factory) ->
 
 def test_common_lib_loads_existing_verilog_a_sources() -> None:
     common = COMMON_LIB.read_text()
+    for name in ("sg13g2_moslv_mod.lib", "sg13g2_moshv_mod.lib"):
+        assert "parameters swsoa=0" in (VACASK_MODELS / name).read_text()
     for rel in VA_LOADS:
         assert f'load "{rel}"' in common, f"common file missing load of {rel}"
         assert (VACASK_MODELS / rel).resolve().is_file(), f"missing VA source {rel}"
@@ -107,7 +109,6 @@ def test_common_lib_is_safe_to_include_repeatedly() -> None:
 )
 def test_lib_defines_the_default_models_it_uses(lib: Path) -> None:
     text = lib.read_text()
-    assert not re.search(r"=\s*swsoa\b", text), "swsoa must be inlined as 0"
     assert "sg13g2_default_mod_" not in text, "shared default model name"
     defined = set(re.findall(r"^model (\w+_default_mod_\w+) ", text, re.MULTILINE))
     used = set(re.findall(r"\b(\w+_default_mod_\w+)\b", text))
@@ -247,3 +248,32 @@ def _run_vacask_op(name: str, deck: str) -> None:
     assert "Running analysis 'op1'" in output, output
     assert "error while loading shared libraries" not in output
     assert "Failed to compile" not in output
+
+
+def test_generated_common_definitions_are_repeatable(tmp_path, monkeypatch):
+    """Mixed/HV libraries must not redeclare shared parameters or model names."""
+    import importlib.util
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    monkeypatch.setenv("VACASK_DIR", str(tmp_path))
+    monkeypatch.setenv("PDK_ROOT", str(tmp_path))
+    spec = importlib.util.spec_from_file_location(
+        "converter", root / "scripts/convert_vacask_models.py"
+    )
+    converter = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(converter)
+    for stem in ["first", "second"]:
+        (tmp_path / f"{stem}.lib").write_text(
+            'include "sg13g2_vacask_common.lib"\n'
+            f"subckt {stem}(p n)\nmodel rm psp103va swsoa=swsoa\n"
+            "r1 (p n) sg13g2_default_mod_r r=1k\nends\n"
+        )
+    converter.localize_common_definitions(tmp_path, [("r", "sp_resistor")])
+    first = (tmp_path / "first.lib").read_text()
+    second = (tmp_path / "second.lib").read_text()
+    assert "model first_default_mod_r sp_resistor" in first
+    assert "model second_default_mod_r sp_resistor" in second
+    assert "parameters swsoa=0" in first
+    converter.localize_common_definitions(tmp_path, [("r", "sp_resistor")])
+    assert (tmp_path / "first.lib").read_text() == first

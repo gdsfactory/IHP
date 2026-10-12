@@ -29,8 +29,8 @@ rejects a repeated ``parameters`` or ``model``, and has no include guard, so
 the common file holds ``load`` statements only. ``postprocess`` moves everything
 else out of it:
 
-* ``swsoa=swsoa`` in the MOS libs becomes ``swsoa=0`` (the value the official
-  flow declares globally) instead of relying on a global ``swsoa`` parameter.
+* Each subcircuit using ``swsoa=swsoa`` in the MOS libs declares its own
+  ``parameters swsoa=0`` (the value the official flow declares globally).
 * The default primitive models (``sg13g2_default_mod_c/l/r``) are defined at the
   top of each lib that uses them, under a per-lib name.
 
@@ -193,43 +193,41 @@ def postprocess(out_dir: Path, osdi_files) -> None:
     """
     write_common_lib(out_dir, osdi_files)
     write_inductor_lib(out_dir)
-    for lib in sorted(out_dir.glob("*.lib")):
-        if lib.name == COMMON_LIB:
+    localize_common_definitions(out_dir, DEFAULT_MODEL_MODULES.items())
+
+
+def localize_common_definitions(directory, default_modules):
+    """Keep common loads repeatable; scope SOA and default cards to their users.
+
+    Native VACASK rejects repeated parameter/model definitions. CornerMOShv
+    includes both MOS and varactor libraries, and mixed circuits include several
+    corner families. Shared includes must therefore contain loads only.
+    """
+    for path in directory.glob("*.lib"):
+        if path.name == COMMON_LIB:
             continue
-        text = lib.read_text()
-        new = _inline_swsoa(text, lib.name)
-        new = _localize_default_models(new, lib)
-        if new != text:
-            lib.write_text(new)
-
-
-def _inline_swsoa(text: str, name: str) -> str:
-    """Replace the global ``swsoa`` parameter with its value, 0."""
-    text = re.sub(r"\bswsoa=swsoa\b", "swsoa=0", text)
-    if re.search(r"=\s*swsoa\b", text):
-        sys.exit(f"{name}: unhandled reference to the swsoa parameter")
-    return text
-
-
-def _localize_default_models(text: str, lib: Path) -> str:
-    """Define the default primitive models this lib uses under per-lib names."""
-    used = sorted(set(re.findall(rf"\b{DEFAULT_MODEL_PREFIX}(\w+)\b", text)))
-    if not used:
-        return text
-    if re.search(r"^\s*section\b", text, flags=re.MULTILINE):
-        # Top-level statements are skipped when a lib is included by section.
-        sys.exit(f"{lib.name}: default models used in a lib with sections")
-    prefix = f"{lib.stem}_default_mod_"
-    text = re.sub(rf"\b{DEFAULT_MODEL_PREFIX}(\w+)\b", rf"{prefix}\1", text)
-    models = "".join(f"model {prefix}{mt} {DEFAULT_MODEL_MODULES[mt]}\n" for mt in used)
-    include = f'include "{COMMON_LIB}"\n'
-    if include not in text:
-        sys.exit(f"{lib.name}: missing {include.strip()}")
-    return text.replace(
-        include,
-        f"{include}\n// Default models for unmodeled primitive instances:\n{models}",
-        1,
-    )
+        text = path.read_text()
+        prefix = path.stem + "_default_mod_"
+        declarations = []
+        for suffix, module in sorted(default_modules):
+            old_name = DEFAULT_MODEL_PREFIX + suffix
+            if re.search(r"\b" + re.escape(old_name) + r"\b", text):
+                new_name = prefix + suffix
+                text = re.sub(r"\b" + re.escape(old_name) + r"\b", new_name, text)
+                declarations.append(f"model {new_name} {module}")
+        if declarations:
+            marker = f'include "{COMMON_LIB}"\n'
+            text = text.replace(
+                marker, marker + "\n" + "\n".join(declarations) + "\n", 1
+            )
+        if re.search(r"\bswsoa=swsoa\b", text):
+            text = re.sub(
+                r"(^subckt [^\n]+\n)(?!parameters swsoa=0\n)",
+                r"\1parameters swsoa=0\n",
+                text,
+                flags=re.MULTILINE,
+            )
+        path.write_text(text)
 
 
 def _read_osdi_loads(common: Path) -> set[str]:
