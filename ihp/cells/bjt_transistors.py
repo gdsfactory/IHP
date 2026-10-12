@@ -3,6 +3,7 @@
 import math
 
 import gdsfactory as gf
+from gdsfactory.add_pins import add_electrical_pins
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 
@@ -784,6 +785,7 @@ def npn13G2(
         port_type="electrical",
     )
 
+    add_electrical_pins(c, port_pin_mapping={"C": ["C"], "B": ["B"], "E": ["E"]})
     return c
 
 
@@ -1389,6 +1391,7 @@ def npn13G2L(
         ),
     )
 
+    add_electrical_pins(c, port_pin_mapping={"C": ["C"], "B": ["B"], "E": ["E"]})
     return c
 
 
@@ -2015,6 +2018,7 @@ def npn13G2V(
         ),
     )
 
+    add_electrical_pins(c, port_pin_mapping={"C": ["C"], "B": ["B"], "E": ["E"]})
     return c
 
 
@@ -2048,8 +2052,8 @@ def contactArray(
             Length (x-dimension) of the region which contains the pin array.
         width : float
             Width (y-dimension) of the region which contains the pin array.
-        contactLayer : LayerSpec
-            Layer on which each square contact rectangle is drawn.
+        contactLayer: LayerSpec
+            Layer on which the contacts are placed.
         xl: float
             Minimum x-coordinate of the array that contains the pins.
         yl: float
@@ -2599,4 +2603,7 @@ def pnpMPA(length: float = 2, width: float = 0.7) -> gf.Component:
         port_type="electrical",
     )
 
+    add_electrical_pins(
+        c, port_pin_mapping={"TIE": ["TIE"], "PLUS": ["PLUS"], "MINUS": ["MINUS"]}
+    )
     return c

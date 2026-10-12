@@ -4,6 +4,10 @@ requires = ["hatchling"]
 
 [dependency-groups]
 dev = [
+  "gdsfactoryplus>=1.8.16",
+  "pre-commit>=4.6.0",
+  "pylint>=4.0.8",
+  "ruff>=0.16.7",
   "towncrier>=25.8.0"
 ]
 docs = []
@@ -16,7 +20,7 @@ classifiers = [
   "Programming Language :: Python :: 3.13"
 ]
 dependencies = [
-  "gdsfactory~=9.45.0",
+  "gdsfactory~=9.50.0",
   "gplugins[sax]~=2.1.0",
   "pdk-schema~=0.0.2",
   "scikit-rf>=1.0.0",
@@ -49,7 +53,7 @@ docs = [
   "zensical>=0.0.40,<0.1.0"
 ]
 simulation = [
-  "gsim>=0.0.16; python_version>='3.12'"
+  "gsim>=0.2.0; python_version>='3.12'"
 ]
 
 [tool.codespell]
