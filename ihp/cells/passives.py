@@ -231,7 +231,6 @@ def esd_nmos_schematic(
     nf: int = 10,
 ) -> DSchematic:
     s = DSchematic()
-    s.info["symbol"] = "nmos"
     s.info["ports"] = [
         {"name": "VDD", "side": "top", "type": "electric"},
         {"name": "VSS", "side": "bottom", "type": "electric"},

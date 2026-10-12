@@ -1,0 +1,1 @@
+ESD protection diode cells `diodevdd_2kv`, `diodevdd_4kv`, `diodevss_2kv` and `diodevss_4kv` (imported from the PDK GDS, with `VDD`/`PAD`/`VSS` ports placed from the pin labels) and NgSpice/VACASK schematic models with an `m` multiplier.

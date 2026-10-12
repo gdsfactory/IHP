@@ -3,6 +3,10 @@
 
 include "sg13g2_vacask_common.lib"
 
+model capacitors_mod_default_mod_c sp_capacitor
+model capacitors_mod_default_mod_l sp_inductor
+model capacitors_mod_default_mod_r sp_resistor
+
 //*******************************************************************************
 //*                                                                             *
 //* Copyright 2023 IHP PDK Authors                                              *
@@ -36,9 +40,9 @@ parameters ic=1e10
 parameters tc1=0
 parameters tc2=0
 @if (ic>1e9)
-  c1 (plus minus) sg13g2_default_mod_c  c=c*cap_cpara tc1=tc1 tc2=tc2
+  c1 (plus minus) capacitors_mod_default_mod_c  c=c*cap_cpara tc1=tc1 tc2=tc2
 @else
-  c1 (plus minus) sg13g2_default_mod_c  c=c*cap_cpara tc1=tc1 tc2=tc2
+  c1 (plus minus) capacitors_mod_default_mod_c  c=c*cap_cpara tc1=tc1 tc2=tc2
 @end
 ends
 
@@ -62,7 +66,7 @@ parameters w=7u
 parameters mm_ok=0
 parameters sf=1e-6
 parameters ic=1e10
-r1 (plus 1) sg13g2_default_mod_r  r=55m $mfactor=m
+r1 (plus 1) capacitors_mod_default_mod_r  r=55m $mfactor=m
 @if (ic>1e9)
   c1 (1 minus) cmim_core  l=l/sf w=w/sf scale=1 $mfactor=m
 @else
@@ -102,41 +106,41 @@ parameters rskin_val=0.154618+0.00702016*(l/sf)
 
 //* add tiny element to allow passing an IC value
 @if (ic>1e9)
-  cic1 (plus bn) sg13g2_default_mod_c  c=cic0 $mfactor=m
-  cic2 (minus bn) sg13g2_default_mod_c  c=cic0 $mfactor=m
+  cic1 (plus bn) capacitors_mod_default_mod_c  c=cic0 $mfactor=m
+  cic2 (minus bn) capacitors_mod_default_mod_c  c=cic0 $mfactor=m
 @else
-  cic1 (plus bn) sg13g2_default_mod_c  c=cic0 $mfactor=m
-  cic2 (minus bn) sg13g2_default_mod_c  c=cic0 $mfactor=m
+  cic1 (plus bn) capacitors_mod_default_mod_c  c=cic0 $mfactor=m
+  cic2 (minus bn) capacitors_mod_default_mod_c  c=cic0 $mfactor=m
 @end
 
 //* --------- model subcircuit ------------------------------
-lskin (plus 2) sg13g2_default_mod_l  l=lskin_val $mfactor=m
-rskin (plus 2) sg13g2_default_mod_r  r=rskin_val $mfactor=m
+lskin (plus 2) capacitors_mod_default_mod_l  l=lskin_val $mfactor=m
+rskin (plus 2) capacitors_mod_default_mod_r  r=rskin_val $mfactor=m
 
 @if ((lplate_val+lfeed_val-lskin_val)>1e-18)
-  lmim (2 3) sg13g2_default_mod_l  l=(lplate_val+lfeed_val-lskin_val) $mfactor=m
+  lmim (2 3) capacitors_mod_default_mod_l  l=(lplate_val+lfeed_val-lskin_val) $mfactor=m
 @else
-  lmim (2 3) sg13g2_default_mod_l  l=1e-18 $mfactor=m
+  lmim (2 3) capacitors_mod_default_mod_l  l=1e-18 $mfactor=m
 @end
 
-rmim (3 4) sg13g2_default_mod_r  r=rmim_val $mfactor=m
+rmim (3 4) capacitors_mod_default_mod_r  r=rmim_val $mfactor=m
 cmim (4 5) cmim_core  l=l/sf w=w/sf scale=1 $mfactor=m
-cox (5 51) sg13g2_default_mod_c  c=cox_val $mfactor=m
-csub (51 bn) sg13g2_default_mod_c  c=csub_val $mfactor=m
+cox (5 51) capacitors_mod_default_mod_c  c=cox_val $mfactor=m
+csub (51 bn) capacitors_mod_default_mod_c  c=csub_val $mfactor=m
 
 @if (rsub_val>10m)
-  rsub (51 bn) sg13g2_default_mod_r  r=rsub_val $mfactor=m
+  rsub (51 bn) capacitors_mod_default_mod_r  r=rsub_val $mfactor=m
 @else
-  rsub (51 bn) sg13g2_default_mod_r  r=10m $mfactor=m
+  rsub (51 bn) capacitors_mod_default_mod_r  r=10m $mfactor=m
 @end
 
 @if (lfeed_val>1e-18)
-  lfeed (5 minus) sg13g2_default_mod_l  l=lfeed_val $mfactor=m
+  lfeed (5 minus) capacitors_mod_default_mod_l  l=lfeed_val $mfactor=m
 @else
-  lfeed (5 minus) sg13g2_default_mod_l  l=1e-18 $mfactor=m
+  lfeed (5 minus) capacitors_mod_default_mod_l  l=1e-18 $mfactor=m
 @end
 
 //*avoid floating node for initial condition
-rdummy (5 bn) sg13g2_default_mod_r  r=1G $mfactor=m
+rdummy (5 bn) capacitors_mod_default_mod_r  r=1G $mfactor=m
 
 ends
