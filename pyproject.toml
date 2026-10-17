@@ -4,7 +4,7 @@ requires = ["hatchling"]
 
 [dependency-groups]
 dev = [
-  "gdsfactoryplus>=1.8.16",
+  "gdsfactoryplus>=2.1.467,<3",
   "pre-commit>=4.6.0",
   "pylint>=4.0.8",
   "ruff>=0.16.7",
@@ -20,11 +20,11 @@ classifiers = [
   "Programming Language :: Python :: 3.13"
 ]
 dependencies = [
-  "gdsfactory~=9.50.0",
+  "gdsfactory~=9.51.0",
   "gplugins[sax]~=2.1.0",
-  "pdk-schema~=0.0.2",
+  "pdk-schema~=0.3.0",
   "scikit-rf>=1.0.0",
-  "gdsfactoryplus"
+  "gdsfactoryplus>=2.1.467,<3"
 ]
 description = "IHP pdk"
 keywords = ["bicmos", "eda", "gdsfactory", "ihp", "pdk", "python", "sg13g2"]
