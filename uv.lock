@@ -1126,7 +1126,7 @@ provides-extras = ["dev", "docs", "simulation"]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "gdsfactoryplus", specifier = ">=2.1.467,<3" },
+    { name = "gdsfactoryplus", specifier = ">=1.8.16" },
     { name = "pre-commit", specifier = ">=4.6.0" },
     { name = "pylint", specifier = ">=4.0.8" },
     { name = "ruff", specifier = ">=0.16.7" },

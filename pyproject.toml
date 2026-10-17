@@ -4,7 +4,7 @@ requires = ["hatchling"]
 
 [dependency-groups]
 dev = [
-  "gdsfactoryplus>=2.1.467,<3",
+  "gdsfactoryplus>=1.8.16",
   "pre-commit>=4.6.0",
   "pylint>=4.0.8",
   "ruff>=0.16.7",
