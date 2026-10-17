@@ -1,0 +1,1 @@
+VACASK decks that use more than one device library now load. `sg13g2_vacask_common.lib` now holds only `load` statements, because VACASK rejects a repeated `parameters` or `model` statement. Each converted lib defines its own default primitive models, and `swsoa` is inlined as `0`. `scripts/convert_vacask_models.py` applies these changes and gains a `--postprocess-only` mode.

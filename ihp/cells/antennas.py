@@ -131,7 +131,6 @@ def dantenna_schematic(
     guardRingDistance: float = 1.0,
 ) -> DSchematic:
     s = DSchematic()
-    s.info["symbol"] = "diode"
     s.info["ports"] = [
         {"name": "1", "side": "top", "type": "electric"},
         {"name": "2", "side": "bottom", "type": "electric"},
@@ -279,7 +278,6 @@ def dpantenna_schematic(
     guardRingDistance: float = 1.0,
 ) -> DSchematic:
     s = DSchematic()
-    s.info["symbol"] = "diode"
     s.info["ports"] = [
         {"name": "1", "side": "top", "type": "electric"},
         {"name": "2", "side": "bottom", "type": "electric"},

@@ -52,7 +52,6 @@ mask:
 
 docs-pdf:
 	uv run python .github/write_cells.py
-	uv run python .github/write_layer_stack.py
 	cp CHANGELOG.md docs/changelog.md
 	uv run mkdocs build -f mkdocs-pdf.yml
 

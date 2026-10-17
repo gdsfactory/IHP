@@ -13,6 +13,7 @@ import math
 
 import gdsfactory as gf
 from gdsfactory import Component
+from gdsfactory.add_pins import add_electrical_pins
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 
@@ -70,10 +71,10 @@ def _place_contacts(
     Args:
         c: Component to add contacts to.
         layer_cont: Contact layer.
-        xl: X coordinate of the lower-left corner of the bounding box (um).
-        yl: Y coordinate of the lower-left corner of the bounding box (um).
-        xh: X coordinate of the upper-right corner of the bounding box (um).
-        yh: Y coordinate of the upper-right corner of the bounding box (um).
+        xl: X coordinate of the lower-left corner of the bounding box.
+        yl: Y coordinate of the lower-left corner of the bounding box.
+        xh: X coordinate of the upper-right corner of the bounding box.
+        yh: Y coordinate of the upper-right corner of the bounding box.
         ox: X-direction enclosure (0 for transistor S/D contacts).
         oy: Y-direction enclosure (cont_Activ_overRec for transistor S/D).
         ws: Contact size.
@@ -504,6 +505,7 @@ def _mos_core(
         port_type="electrical",
     )
 
+    add_electrical_pins(c, port_pin_mapping={"S": ["S"], "D": ["D"], "G": ["G"]})
     return c
 
 

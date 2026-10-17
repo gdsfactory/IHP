@@ -7,8 +7,10 @@ from gdsfactory.pdk import Pdk
 from gdsfactory.typings import (
     ConnectivitySpec,
 )
+from pdk_schema import MaterialCard
 
 from ihp import cells, tech
+from ihp.material_cards import MATERIAL_CARDS
 from ihp.models import models
 from ihp.tech import (
     LAYER,
@@ -31,6 +33,7 @@ __all__ = [
     "cells",
     "cross_sections",
     "PDK",
+    "MATERIAL_CARDS",
     "__version__",
 ]
 
@@ -48,8 +51,19 @@ connectivity = cast(
     ],
 )
 
+
+class IhpPdk(Pdk):
+    """IHP PDK with schema-backed material cards."""
+
+    material_cards: dict[str, MaterialCard]
+
+    def __init__(self, *, material_cards: dict[str, MaterialCard], **pdk_data):
+        super().__init__(**pdk_data)
+        self.material_cards = material_cards
+
+
 _cells = get_cells(cells)
-PDK = Pdk(
+PDK = IhpPdk(
     name="IHP",
     cells=_cells,
     cross_sections=cross_sections,
@@ -59,4 +73,5 @@ PDK = Pdk(
     layer_views=LAYER_VIEWS,
     connectivity=connectivity,
     routing_strategies=routing_strategies,
+    material_cards=MATERIAL_CARDS,
 )

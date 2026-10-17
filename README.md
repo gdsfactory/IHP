@@ -149,6 +149,7 @@ uv run pytest tests/test_cells.py -v          # GDS regression + settings tests
 
 ## Documentation
 
+- [RF material cards and sources](docs/materials.md)
 - [gdsfactory docs](https://gdsfactory.github.io/gdsfactory/)
 - [IHP docs from GDSFactory](https://gdsfactory.github.io/IHP/) and [code](https://github.com/gdsfactory/ihp)
 - [IHP documentation](https://ihp-open-pdk-docs.readthedocs.io/en/latest/#)

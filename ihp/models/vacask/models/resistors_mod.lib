@@ -3,6 +3,8 @@
 
 include "sg13g2_vacask_common.lib"
 
+model resistors_mod_default_mod_r sp_resistor
+
 //*#######################################################################
 //*
 //* Copyright 2023 IHP PDK Authors
@@ -27,7 +29,7 @@ include "sg13g2_vacask_common.lib"
 //* The value of R is calculated by schematic capture tool.
 subckt ptap1(1 2)
 parameters r=262.8 w=0.78e-6 l=0.78e-6
-r1 (1 2) sg13g2_default_mod_r  r=r
+r1 (1 2) resistors_mod_default_mod_r  r=r
 ends
 
 //**ntap1 (TIE WELL)
@@ -36,7 +38,7 @@ ends
 //* The value of R is calculated by schematic capture tool.
 subckt ntap1(1 2)
 parameters r=262.8 w=0.78e-6 l=0.78e-6
-r1 (1 2) sg13g2_default_mod_r  r=r
+r1 (1 2) resistors_mod_default_mod_r  r=r
 ends
 
 //* Parasitic R/C models
@@ -44,7 +46,7 @@ ends
 //* value is taken from extraction routine
 subckt Rparasitic(1 2)
 parameters r=0 w=0 l=0 tc1=0.00353 tc2=0
-r1 (1 2) sg13g2_default_mod_r  r=r*res_rpara tc1=tc1 tc2=tc2
+r1 (1 2) resistors_mod_default_mod_r  r=r*res_rpara tc1=tc1 tc2=tc2
 ends
 
 subckt rsil(1 2 bn)
