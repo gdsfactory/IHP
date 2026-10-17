@@ -98,10 +98,45 @@ def _extract_layers(layer_stack):
     return sorted(layers, key=lambda layer: layer["zmin"])
 
 
+def _assign_columns(layers):
+    """Give every connected overlap cluster one consistent column grid."""
+    cluster = []
+    cluster_top = -math.inf
+
+    def assign_cluster():
+        column_ends = []
+        for layer in cluster:
+            column = next(
+                (
+                    index
+                    for index, end in enumerate(column_ends)
+                    if end <= layer["zmin"]
+                ),
+                len(column_ends),
+            )
+            if column == len(column_ends):
+                column_ends.append(layer["zmax"])
+            else:
+                column_ends[column] = layer["zmax"]
+            layer["col"] = column
+        for layer in cluster:
+            layer["ncols"] = len(column_ends)
+
+    for layer in layers:
+        if cluster and layer["zmin"] >= cluster_top:
+            assign_cluster()
+            cluster = []
+            cluster_top = -math.inf
+        cluster.append(layer)
+        cluster_top = max(cluster_top, layer["zmax"])
+    assign_cluster()
+
+
 def _compute_layout(layers):
     """Place uniform rows and physically scaled rows on a common canvas."""
     if not layers:
         return [], []
+    _assign_columns(layers)
     top_margin, plot_height = 45, 700
     bottom = min(layer["zmin"] for layer in layers)
     top = max(layer["zmax"] for layer in layers)
@@ -112,18 +147,11 @@ def _compute_layout(layers):
         return top_margin + plot_height * (top - z_coordinate) / depth
 
     for index, layer in enumerate(layers):
-        overlapping = [
-            other
-            for other in layers
-            if other["zmin"] < layer["zmax"] and other["zmax"] > layer["zmin"]
-        ]
         layer.update(
             uy=round(top_margin + (len(layers) - index - 1) * row_height, 2),
             uh=round(row_height * 0.93, 2),
             sy=round(vertical_position(layer["zmax"]), 2),
             sh=round(max(plot_height * layer["thickness"] / depth, 1), 2),
-            ncols=len(overlapping),
-            col=overlapping.index(layer),
         )
     raw_step = depth / 10
     magnitude = 10 ** math.floor(math.log10(raw_step))
@@ -184,7 +212,8 @@ def render_page(bands=None):
         "# Layer Stack\n",
         "Hover for details, Ctrl+scroll to zoom, drag to pan, and double-click to reset.\n",
         "Layer heights come from the PDK stack. Cross-sections show registered default "
-        "widths and offsets; lateral mask patterns are not shown.\n",
+        "widths and offsets, with an independent horizontal scale for each cross-section. "
+        "Lateral mask patterns are not shown.\n",
         f"<style>\n{stylesheet}\n</style>\n",
     ]
     for band_label, pdk in BANDS if bands is None else bands:

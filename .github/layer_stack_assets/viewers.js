@@ -111,18 +111,20 @@
       svg.append(element("line", {x1: 75, y1: y, x2: 980, y2: y, stroke: "#ddd"}));
       label(svg, 68, y + 4, `${tick.z} µm`, {"text-anchor": "end"});
     });
-    const halfExtent = Math.max(...crossSections.flatMap(crossSection =>
-      crossSection.layers.map(layer => Math.abs(layer.offset) + layer.width / 2))) * 1.2 || 1;
     const columnWidth = 900 / crossSections.length;
-    const xScale = (columnWidth - 20) / (2 * halfExtent);
     crossSections.forEach((crossSection, index) => {
+      const halfExtent = Math.max(...crossSection.layers.map(layer =>
+        Math.abs(layer.offset) + layer.width / 2)) * 1.2 || 1;
+      const xScale = (columnWidth - 20) / (2 * halfExtent);
       const center = 80 + (index + 0.5) * columnWidth;
       crossSection.layers.forEach(layer => {
         const y = yPosition(layer.zmax);
         layerRectangle(svg, layer, center + (layer.offset - layer.width / 2) * xScale,
           y, layer.width * xScale, Math.max(yPosition(layer.zmin) - y, 1));
       });
-      label(svg, center, 410, crossSection.name, {"text-anchor": "end",
+      const caption = crossSection.layers.length === 1
+        ? `${crossSection.name} (${crossSection.layers[0].width} µm)` : crossSection.name;
+      label(svg, center, 410, caption, {"text-anchor": "end",
         transform: `rotate(-35 ${center} 410)`});
     });
   }

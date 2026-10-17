@@ -56,6 +56,20 @@ def test_json_cannot_end_its_script_element():
     assert json.loads(embedded) == payload
 
 
+def test_scaled_overlap_clusters_do_not_cover_each_other():
+    """A chain of overlapping intervals needs a shared column grid."""
+    layers = [
+        {"name": name, "zmin": bottom, "zmax": top, "thickness": top - bottom}
+        for name, bottom, top in (("B", 0, 2), ("A", 1, 4), ("C", 3, 5), ("D", 6, 7))
+    ]
+    positioned, _ = generator._compute_layout(layers)
+    assert [layer["ncols"] for layer in positioned] == [2, 2, 2, 1]
+    for index, layer in enumerate(positioned):
+        for other in positioned[index + 1 :]:
+            if layer["zmin"] < other["zmax"] and layer["zmax"] > other["zmin"]:
+                assert layer["col"] != other["col"]
+
+
 def test_shared_assets_are_emitted_once_for_multiple_bands():
     PDK.activate()
     page = generator.render_page([("one", PDK), ("two", PDK)])
