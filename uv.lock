@@ -1103,7 +1103,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "gdsfactory", specifier = "~=9.51.0" },
-    { name = "gdsfactoryplus", specifier = ">=2.1.467,<3" },
+    { name = "gdsfactoryplus" },
     { name = "gplugins", extras = ["sax"], specifier = "~=2.1.0" },
     { name = "gsim", marker = "python_full_version >= '3.12' and extra == 'simulation'", specifier = ">=0.2.0" },
     { name = "jsondiff", marker = "extra == 'dev'" },

@@ -24,7 +24,7 @@ dependencies = [
   "gplugins[sax]~=2.1.0",
   "pdk-schema~=0.3.0",
   "scikit-rf>=1.0.0",
-  "gdsfactoryplus>=2.1.467,<3"
+  "gdsfactoryplus"
 ]
 description = "IHP pdk"
 keywords = ["bicmos", "eda", "gdsfactory", "ihp", "pdk", "python", "sg13g2"]
