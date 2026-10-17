@@ -1,0 +1,38 @@
+.layer-stack-viz .stack-viewer {
+  position: relative;
+  max-width: 100%;
+  overflow: auto;
+  margin: 12px 0 24px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: white;
+  color: #222;
+}
+.layer-stack-viz svg {
+  display: block;
+  font: 11px system-ui, sans-serif;
+  touch-action: pan-y;
+}
+.layer-stack-viz .stack-tooltip {
+  position: absolute;
+  z-index: 10;
+  pointer-events: none;
+  padding: 8px;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  background: white;
+  color: #222;
+  font: 12px system-ui, sans-serif;
+  white-space: pre-line;
+}
+.layer-stack-viz .stack-controls button {
+  padding: 4px 12px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  background: white;
+  color: #222;
+  cursor: pointer;
+}
+.layer-stack-viz button[aria-pressed="true"] {
+  background: #ddd;
+}
