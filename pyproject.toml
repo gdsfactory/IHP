@@ -52,7 +52,7 @@ docs = [
   "zensical>=0.0.40,<0.1.0"
 ]
 simulation = [
-  "gsim>=0.2.0; python_version>='3.12'"
+  "gsim~=0.7; python_version>='3.12'"
 ]
 
 [tool.codespell]
