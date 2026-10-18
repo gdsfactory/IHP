@@ -11,7 +11,7 @@ classifiers = [
   "Programming Language :: Python :: 3.12"
 ]
 dependencies = [
-  "gdsfactory~=9.45.0",
+  "gdsfactory~=9.51.0",
   "gplugins[sax]~=2.1.0",
   "scikit-rf>=1.0.0",
   "gdsfactoryplus"
@@ -43,7 +43,7 @@ docs = [
   "zensical>=0.0.40,<0.1.0"
 ]
 simulation = [
-  "gsim>=0.0.16; python_version>='3.12'"
+  "gsim~=0.7; python_version>='3.12'"
 ]
 
 [tool.basedpyright]

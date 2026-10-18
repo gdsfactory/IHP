@@ -943,7 +943,7 @@ wheels = [
 
 [[package]]
 name = "gsim"
-version = "0.2.0"
+version = "0.7.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "gdsfactory" },
@@ -952,15 +952,16 @@ dependencies = [
     { name = "meshio" },
     { name = "nbformat" },
     { name = "nest-asyncio2" },
+    { name = "pdk-schema", extra = ["sympy"] },
     { name = "plotly" },
     { name = "pyvista" },
     { name = "trame" },
     { name = "trame-vtk" },
     { name = "trame-vuetify" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/0e/a2/6e247168fcbdce02f7910e42a36f1340e6802e65d82335a42e34b7ccbe03/gsim-0.2.0.tar.gz", hash = "sha256:f179b63d1e0852a8bfef037f1b418f343b61311f092465baddcbdb91b8c3cbc4", size = 286081, upload-time = "2026-08-12T18:39:36.45Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c9/87/707c9bcf98c14b37ca291c5d4a032ed77c2f3d9ab089d8ccdd4745565b25/gsim-0.7.0.tar.gz", hash = "sha256:cc9f7689a1506b8f628222d871f9bd9ee9a94a1a944f4b1c866b0daa17044945", size = 483012, upload-time = "2026-10-09T14:56:05.591Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/69/7c/e0aa8bfceb94f5729fde6fbf390c24094e7e1ffe1fcc4143a61ae023e089/gsim-0.2.0-py3-none-any.whl", hash = "sha256:571a054967f868236bc16cab4d449d46ac789d2ba7f9aba01dae1baf323862e6", size = 312345, upload-time = "2026-08-12T18:39:34.902Z" },
+    { url = "https://files.pythonhosted.org/packages/2e/a8/db63f8d7683f62a35019e50f892dfebdb1084790e5bfffd240623971cd38/gsim-0.7.0-py3-none-any.whl", hash = "sha256:8200928e98281f884574763a712d5bc72dcd8b62fa60f188072792a0c162e716", size = 530330, upload-time = "2026-10-09T14:56:03.924Z" },
 ]
 
 [[package]]
@@ -1104,7 +1105,7 @@ requires-dist = [
     { name = "gdsfactory", specifier = "~=9.51.0" },
     { name = "gdsfactoryplus" },
     { name = "gplugins", extras = ["sax"], specifier = "~=2.1.0" },
-    { name = "gsim", marker = "python_full_version >= '3.12' and extra == 'simulation'", specifier = ">=0.2.0" },
+    { name = "gsim", marker = "python_full_version >= '3.12' and extra == 'simulation'", specifier = "~=0.7" },
     { name = "jsondiff", marker = "extra == 'dev'" },
     { name = "jupyter", marker = "extra == 'docs'" },
     { name = "kwasm", marker = "extra == 'docs'" },
@@ -2617,6 +2618,11 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/77/a1/32995403066d1be72a01508f53f6b28d67e313fa724dc0ce29c67b2eeb08/pdk_schema-0.3.0.tar.gz", hash = "sha256:5ada78c5e3fb7ea96f105cb15d3f84d5233f59dab60decf723302e24f7035473", size = 117650, upload-time = "2026-10-09T13:11:42.788Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/d0/ff/75cd07cd588fd8e5547a53304270fd8e0898e48761c950d289e3ac46bff3/pdk_schema-0.3.0-py3-none-any.whl", hash = "sha256:4f904c81e44f60f5a53a1f3a8099cca4c0158db7096061e3dcbd1cd701127090", size = 43045, upload-time = "2026-10-09T13:11:41.591Z" },
+]
+
+[package.optional-dependencies]
+sympy = [
+    { name = "sympy" },
 ]
 
 [[package]]
