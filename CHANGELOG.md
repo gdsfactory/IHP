@@ -1,7 +1,28 @@
 # [Changelog](https://keepachangelog.com/en/1.0.0/)
-## [Unreleased](https://github.com/gdsfactory/ihp/compare/v2.0.0...main)
+## [Unreleased](https://github.com/gdsfactory/ihp/compare/v2.0.1...main)
 
 <!-- towncrier release notes start -->
+
+## [2.0.1](https://github.com/gdsfactory/ihp/releases/tag/v2.0.1) - 2026-10-18
+
+
+### Added
+
+- ESD protection diode cells `diodevdd_2kv`, `diodevdd_4kv`, `diodevss_2kv` and `diodevss_4kv` (imported from the PDK GDS, with `VDD`/`PAD`/`VSS` ports placed from the pin labels) and NgSpice/VACASK schematic models with an `m` multiplier.
+- `cmim` takes an `m` multiplier (number of parallel devices) that is passed to the NgSpice and VACASK netlists.
+- `inductor2` has a schematic and a series R-L netlist model (`ihp_inductor_rl`, NgSpice and VACASK) that matches the SAX `inductor_with_loss` model. The PDK ships no compact inductor model.
+
+
+### Changed
+
+- Require `gsim~=0.7` for simulation and align the bundled sample project's GDSFactory requirement with `gdsfactory~=9.51.0`. [#277](https://github.com/gdsfactory/ihp/issues/277)
+
+
+### Fixed
+
+- Cells whose ports don't match a built-in GDSFactory+ editor symbol (`cmim`, `rfcmim`, `rsil`, `rppd`, `rhigh`, `npn13G2*`, `dantenna`, `dpantenna`, `esd_nmos`) no longer set `symbol`. Before, the editor wrote nets under the symbol's pin names and the netlist was missing pins. A new test checks that symbols and cell pins match.
+- SAX `inductor3` and `cmim` models now default to the same geometry as their PCells (`inductor3`: 221.5 pH / 1.386 Ohm instead of the `inductor2` values; `cmim`: 6x6 um instead of 7x7 um). The model regression test now sweeps frequency instead of wavelength, so it actually runs.
+- VACASK decks that use more than one device library now load. `sg13g2_vacask_common.lib` now holds only `load` statements, because VACASK rejects a repeated `parameters` or `model` statement. Each converted lib defines its own default primitive models, and `swsoa` is inlined as `0`. `scripts/convert_vacask_models.py` applies these changes and gains a `--postprocess-only` mode.
 
 ## [2.0.0](https://github.com/gdsfactory/ihp/releases/tag/v2.0.0) - 2026-07-04
 

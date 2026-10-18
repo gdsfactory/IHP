@@ -1,1 +1,0 @@
-SAX `inductor3` and `cmim` models now default to the same geometry as their PCells (`inductor3`: 221.5 pH / 1.386 Ohm instead of the `inductor2` values; `cmim`: 6x6 um instead of 7x7 um). The model regression test now sweeps frequency instead of wavelength, so it actually runs.
