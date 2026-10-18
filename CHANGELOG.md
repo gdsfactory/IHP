@@ -8,6 +8,11 @@
 
 ### Added
 
+- SG13G2 standard-cell library with ports. [#215](https://github.com/gdsfactory/IHP/pull/215)
+- Logical electrical pins across PCells for SPICE export, without adding pin geometry. [#230](https://github.com/gdsfactory/IHP/pull/230)
+- Schema-backed SG13G2 RF material cards with composition metadata, layer-specific electrical properties, and source provenance. [#254](https://github.com/gdsfactory/IHP/pull/254)
+- Bundled sample projects in the published wheel for GDSFactory+ project scaffolding. [#221](https://github.com/gdsfactory/IHP/pull/221)
+- Documentation with 3D component views, Palace simulation notebooks, SPICE converter examples, and an LNA notebook. [#206](https://github.com/gdsfactory/IHP/pull/206), [#207](https://github.com/gdsfactory/IHP/pull/207), [#209](https://github.com/gdsfactory/IHP/pull/209), [#210](https://github.com/gdsfactory/IHP/pull/210)
 - ESD protection diode cells `diodevdd_2kv`, `diodevdd_4kv`, `diodevss_2kv` and `diodevss_4kv` (imported from the PDK GDS, with `VDD`/`PAD`/`VSS` ports placed from the pin labels) and NgSpice/VACASK schematic models with an `m` multiplier.
 - `cmim` takes an `m` multiplier (number of parallel devices) that is passed to the NgSpice and VACASK netlists.
 - `inductor2` has a schematic and a series R-L netlist model (`ihp_inductor_rl`, NgSpice and VACASK) that matches the SAX `inductor_with_loss` model. The PDK ships no compact inductor model.
@@ -15,11 +20,15 @@
 
 ### Changed
 
-- Require `gsim~=0.7` for simulation and align the bundled sample project's GDSFactory requirement with `gdsfactory~=9.51.0`. [#277](https://github.com/gdsfactory/ihp/issues/277)
+- Split the MIM layer stack into separate dielectric and metal levels, with corresponding Vmim placement updates. [#225](https://github.com/gdsfactory/IHP/pull/225)
+- Require Python 3.12 (`>=3.12,<3.13`). [#209](https://github.com/gdsfactory/IHP/pull/209)
+- Update dependencies to `gdsfactory~=9.51.0` and `pdk-schema~=0.3.0`, and align the bundled sample project's GDSFactory requirement. [#276](https://github.com/gdsfactory/IHP/pull/276), [#277](https://github.com/gdsfactory/IHP/pull/277)
+- Require `gsim~=0.7` for simulation in both the root package and bundled sample project. [#277](https://github.com/gdsfactory/IHP/pull/277)
 
 
 ### Fixed
 
+- Correct CPW port orientation and add lateral air padding in the Palace documentation examples. [#276](https://github.com/gdsfactory/IHP/pull/276)
 - Cells whose ports don't match a built-in GDSFactory+ editor symbol (`cmim`, `rfcmim`, `rsil`, `rppd`, `rhigh`, `npn13G2*`, `dantenna`, `dpantenna`, `esd_nmos`) no longer set `symbol`. Before, the editor wrote nets under the symbol's pin names and the netlist was missing pins. A new test checks that symbols and cell pins match.
 - SAX `inductor3` and `cmim` models now default to the same geometry as their PCells (`inductor3`: 221.5 pH / 1.386 Ohm instead of the `inductor2` values; `cmim`: 6x6 um instead of 7x7 um). The model regression test now sweeps frequency instead of wavelength, so it actually runs.
 - VACASK decks that use more than one device library now load. `sg13g2_vacask_common.lib` now holds only `load` statements, because VACASK rejects a repeated `parameters` or `model` statement. Each converted lib defines its own default primitive models, and `swsoa` is inlined as `0`. `scripts/convert_vacask_models.py` applies these changes and gains a `--postprocess-only` mode.
