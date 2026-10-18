@@ -26,19 +26,19 @@ from .utility_functions import *
 
 
 def dbCreateRectArray(self, layerId, origin, n, m, x1, off1):
-    """
-    Creates an n x m array of rectangles.
+    """Create an n x m array of rectangles.
 
-    Parameters:
-    - layerId: The layer on which to create the rectangles.
-    - origin: Tuple (x, y) specifying the lower-left corner of the first rectangle.
-    - n: Number of rows.
-    - m: Number of columns.
-    - x1: Size of each rectangle (square: x1 x x1).
-    - off1: Offset between rectangles in both X and Y directions.
+    Args:
+        self: The database object used to create rectangles.
+        layerId: The layer on which to create the rectangles.
+        origin: Tuple (x, y) specifying the lower-left corner of the first rectangle.
+        n: Number of rows.
+        m: Number of columns.
+        x1: Size of each rectangle (square: x1 x x1).
+        off1: Offset between rectangles in both X and Y directions.
 
     Returns:
-    - List of created rectangle instances.
+        List of created rectangle instances.
     """
     if type(layerId) == str:
         layerId = Layer(layerId)

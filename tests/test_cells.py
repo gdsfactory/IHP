@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import inspect
 import pathlib
 
 import gdsfactory as gf
+import jax.numpy as jnp
 import jsondiff
 import numpy as np
 import pytest
@@ -131,17 +133,16 @@ model_names = sorted(
 
 
 @pytest.mark.parametrize("model_name", model_names)
-def test_models_with_wavelength_sweep(
+def test_models_with_frequency_sweep(
     model_name: str, ndarrays_regression: NDArraysRegressionFixture
 ) -> None:
-    """Test models with different wavelengths to avoid regressions in frequency response."""
-    # Test at different wavelengths
-    wl = [1.53, 1.55, 1.57]
-    try:
-        model = models[model_name]
-        s_params = model(wl=wl)
-    except TypeError:
-        pytest.skip(f"{model_name} does not accept a wl argument")
+    """Test models at different frequencies to avoid regressions in frequency response."""
+    model = models[model_name]
+    if "f" not in inspect.signature(getattr(model, "__wrapped__", model)).parameters:
+        pytest.skip(f"{model_name} does not accept an f argument")
+
+    f = jnp.array([1e9, 5e9, 10e9])
+    s_params = model(f=f)
 
     # Convert s_params dictionary to arrays for regression testing
     # s_params is a dict with tuple keys (port pairs) and JAX array values

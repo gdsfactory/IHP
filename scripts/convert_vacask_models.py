@@ -14,14 +14,28 @@ beyond that:
 * No xschem symbol conversion, no stdcell/io conversion, no ``.vacaskrc.toml``.
 
 The generated ``sg13g2_vacask_common.lib`` is produced HERE (not via the official
-precompile path): it declares ``swsoa``, ``load``s the four shipped Verilog-A
-sources, and ``load``s the bundled SPICE-compatible primitive ``.osdi`` modules
-(the primitive set is derived from the converter's ``family_map`` usage).
+precompile path): it ``load``s the four shipped Verilog-A sources and the
+bundled SPICE-compatible primitive ``.osdi`` modules (the primitive set is
+derived from the converter's ``family_map`` usage).
 
 Each converted ``.lib`` carries ``include "sg13g2_vacask_common.lib"`` at its top
 (via the converter ``signature``) so it is self-contained: when the netlister
 includes a flat device lib the modules come along, and corner libs reach the
 common file through the inner ``include "..._mod.lib"`` of each section.
+
+The common file is therefore included many times in one netlist (once per
+library, and twice through a corner lib). VACASK accepts a repeated ``load`` but
+rejects a repeated ``parameters`` or ``model``, and has no include guard, so
+the common file holds ``load`` statements only. ``postprocess`` moves everything
+else out of it:
+
+* Each subcircuit using ``swsoa=swsoa`` in the MOS libs declares its own
+  ``parameters swsoa=0`` (the value the official flow declares globally).
+* The default primitive models (``sg13g2_default_mod_c/l/r``) are defined at the
+  top of each lib that uses them, under a per-lib name.
+
+``postprocess`` is idempotent and runs on its own with ``--postprocess-only``,
+which needs neither ``VACASK_DIR`` nor ``PDK_ROOT``.
 
 Pinned sources (see PR / Step 0):
     VACASK        codeberg.org/arpadbuermen/VACASK  main @ 25cb29d1bc25847e83fc9161d122374ee845d4e7
@@ -33,30 +47,37 @@ Invocation:
 
 or, with the defaults below (or ``make vacask-models``):
     python scripts/convert_vacask_models.py
+
+Re-apply only the post-processing to the shipped libs:
+    python scripts/convert_vacask_models.py --postprocess-only
 """
 
 from __future__ import annotations
 
 import os
+import re
 import shutil
 import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
-# Dev/maintenance inputs only -- nothing at PDK runtime depends on these paths.
-VACASK_DIR_ENV = os.environ.get("VACASK_DIR")
-PDK_ROOT_ENV = os.environ.get("PDK_ROOT")
-
-if not VACASK_DIR_ENV or not PDK_ROOT_ENV:
-    raise ValueError("Both VACASK_DIR and PDK_ROOT environment variables must be set.")
-
-VACASK_DIR = Path(VACASK_DIR_ENV)
-PDK_ROOT = Path(PDK_ROOT_ENV)
 PDK = os.environ.get("PDK", "ihp-sg13g2")
 
 OUT_DIR = REPO_ROOT / "ihp" / "models" / "vacask" / "models"
 COMMON_LIB = "sg13g2_vacask_common.lib"
+# Package-authored inductor model (no PDK source to convert); see
+# write_inductor_lib.
+INDUCTOR_LIB_STEM = "ihp_inductor_rl"
+
+# Prefix the converter gives default models of unmodeled primitive instances,
+# and the vacask-bin module each one maps to (VACASK ``default_models``).
+DEFAULT_MODEL_PREFIX = "sg13g2_default_mod_"
+DEFAULT_MODEL_MODULES = {
+    "c": "sp_capacitor",
+    "l": "sp_inductor",
+    "r": "sp_resistor",
+}
 
 # The four IHP Verilog-A device sources we ship and compile on the fly. Paths are
 # relative to OUT_DIR and resolve into the shipped ihp/models/ngspice/va tree.
@@ -101,6 +122,18 @@ def _build_cfg(default_config, sg13g2tovc, tech_src, read_process_depth, output_
 
 
 def main() -> int:
+    if "--postprocess-only" in sys.argv[1:]:
+        postprocess(OUT_DIR, _read_osdi_loads(OUT_DIR / COMMON_LIB))
+        print(f"Post-processed {OUT_DIR}")
+        return 0
+
+    # Dev/maintenance inputs only -- nothing at PDK runtime depends on these paths.
+    vacask_dir_env = os.environ.get("VACASK_DIR")
+    pdk_root_env = os.environ.get("PDK_ROOT")
+    if not vacask_dir_env or not pdk_root_env:
+        sys.exit("Both VACASK_DIR and PDK_ROOT environment variables must be set.")
+    VACASK_DIR = Path(vacask_dir_env)
+    PDK_ROOT = Path(pdk_root_env)
     if not VACASK_DIR.is_dir():
         sys.exit(f"VACASK_DIR does not exist: {VACASK_DIR}")
     if not PDK_ROOT.is_dir():
@@ -124,7 +157,6 @@ def main() -> int:
     device_rows = [row for row in sg13g2tovc.tech_files if row[0].endswith(".lib")]
 
     osdi_files: set[str] = set()
-    dflmods: set[tuple[str, str]] = set()
 
     print(f"Converting {len(device_rows)} device .lib files from {tech_src}")
     for filename, read_process_depth, output_depth, _destpath in device_rows:
@@ -146,15 +178,100 @@ def main() -> int:
         for mt in cvt.data["default_models_needed"]:
             osdi_file, module = cvt.cfg["default_models"][mt]
             osdi_files.add(osdi_file)
-            dflmods.add((mt, module))
+            if DEFAULT_MODEL_MODULES.get(mt) != module:
+                sys.exit(f"Unexpected default model {mt} -> {module}")
 
-    write_common_lib(osdi_files, dflmods, default_model_prefix="sg13g2_default_mod_")
+    postprocess(OUT_DIR, osdi_files)
     print(f"Wrote {OUT_DIR / COMMON_LIB}")
     return 0
 
 
-def write_common_lib(osdi_files, dflmods, default_model_prefix):
-    """Generate the on-the-fly common include loaded by every converted lib."""
+def postprocess(out_dir: Path, osdi_files) -> None:
+    """Make every converted lib safe to include alongside the others.
+
+    Idempotent: running it on already post-processed libs changes nothing.
+    """
+    write_common_lib(out_dir, osdi_files)
+    write_inductor_lib(out_dir)
+    localize_common_definitions(out_dir, DEFAULT_MODEL_MODULES.items())
+
+
+def localize_common_definitions(directory, default_modules):
+    """Keep common loads repeatable; scope SOA and default cards to their users.
+
+    Native VACASK rejects repeated parameter/model definitions. CornerMOShv
+    includes both MOS and varactor libraries, and mixed circuits include several
+    corner families. Shared includes must therefore contain loads only.
+    """
+    for path in directory.glob("*.lib"):
+        if path.name == COMMON_LIB:
+            continue
+        text = path.read_text()
+        prefix = path.stem + "_default_mod_"
+        declarations = []
+        for suffix, module in sorted(default_modules):
+            old_name = DEFAULT_MODEL_PREFIX + suffix
+            if re.search(r"\b" + re.escape(old_name) + r"\b", text):
+                new_name = prefix + suffix
+                text = re.sub(r"\b" + re.escape(old_name) + r"\b", new_name, text)
+                declarations.append(f"model {new_name} {module}")
+        if declarations:
+            marker = f'include "{COMMON_LIB}"\n'
+            text = text.replace(
+                marker, marker + "\n" + "\n".join(declarations) + "\n", 1
+            )
+        if re.search(r"\bswsoa=swsoa\b", text):
+            text = re.sub(
+                r"(^subckt [^\n]+\n)(?!parameters swsoa=0\n)",
+                r"\1parameters swsoa=0\n",
+                text,
+                flags=re.MULTILINE,
+            )
+        path.write_text(text)
+
+
+def _read_osdi_loads(common: Path) -> set[str]:
+    """Primitive ``.osdi`` loads of an existing common lib (VA sources excluded)."""
+    loads = re.findall(r'^load "([^"]+)"', common.read_text(), flags=re.MULTILINE)
+    return {p for p in loads if p not in VA_LOADS}
+
+
+def write_inductor_lib(out_dir: Path) -> None:
+    """Write the VACASK twin of ``ngspice/models/ihp_inductor_rl.lib``.
+
+    The PDK has no compact inductor model, so there is nothing to convert; this
+    package's series R-L subcircuit is emitted here so a regeneration keeps it.
+    """
+    lines = [
+        "// Series R-L model for the IHP SG13G2 spiral inductors (inductor2).",
+        "// Generated by scripts/convert_vacask_models.py -- do not edit by hand.",
+        "//",
+        "// Not part of the IHP PDK; mirrors ihp/models/ngspice/models/"
+        "ihp_inductor_rl.lib",
+        "// and ihp.models.sax.inductors.inductor_with_loss.",
+        "",
+        f'include "{COMMON_LIB}"',
+        "",
+        "// Default models for unmodeled primitive instances:",
+        f"model {INDUCTOR_LIB_STEM}_default_mod_l {DEFAULT_MODEL_MODULES['l']}",
+        f"model {INDUCTOR_LIB_STEM}_default_mod_r {DEFAULT_MODEL_MODULES['r']}",
+        "",
+        "subckt ihp_inductor_rl(p1 p2)",
+        "parameters inductance=33.303e-12 resistance=0.5777",
+        f"l1 (p1 n1) {INDUCTOR_LIB_STEM}_default_mod_l  l=inductance",
+        f"r1 (n1 p2) {INDUCTOR_LIB_STEM}_default_mod_r  r=resistance",
+        "ends",
+        "",
+    ]
+    (out_dir / f"{INDUCTOR_LIB_STEM}.lib").write_text("\n".join(lines))
+
+
+def write_common_lib(out_dir: Path, osdi_files) -> None:
+    """Generate the on-the-fly common include loaded by every converted lib.
+
+    It holds ``load`` statements only: VACASK accepts those repeatedly, and this
+    file is included many times in one netlist.
+    """
     lines = [
         "// On-the-fly VACASK common include for the IHP SG13G2 models.",
         "// Generated by scripts/convert_vacask_models.py -- do not edit by hand.",
@@ -163,10 +280,10 @@ def write_common_lib(osdi_files, dflmods, default_model_prefix):
         "// to .osdi on first run by the openvaf-r bundled in vacask-bin. The .osdi",
         "// loads are SPICE-compatible primitives bundled in vacask-bin (resolved",
         "// via its module path / SIM_MODULE_PATH at runtime).",
-        "",
-        "// Disable safe-operating-area checks (the SWSOA .param is stripped from",
-        "// the converted MOS libs; see sg13g2tovc patches).",
-        "parameters swsoa=0",
+        "//",
+        "// Every converted lib includes this file, so it is read many times per",
+        "// netlist. Keep it to load statements: VACASK rejects a repeated",
+        "// parameters or model statement.",
         "",
         "// IHP Verilog-A device sources (compiled on the fly):",
     ]
@@ -174,15 +291,8 @@ def write_common_lib(osdi_files, dflmods, default_model_prefix):
     lines.append("")
     lines.append("// vacask-bin bundled SPICE-compatible primitive modules:")
     lines += [f'load "{p}"' for p in sorted(osdi_files)]
-    if dflmods:
-        lines.append("")
-        lines.append("// Default models for unmodeled primitive instances:")
-        lines += [
-            f"model {default_model_prefix}{mt} {module}"
-            for mt, module in sorted(dflmods)
-        ]
     lines.append("")
-    (OUT_DIR / COMMON_LIB).write_text("\n".join(lines))
+    (out_dir / COMMON_LIB).write_text("\n".join(lines))
 
 
 if __name__ == "__main__":

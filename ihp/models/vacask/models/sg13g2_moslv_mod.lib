@@ -69,6 +69,7 @@ include "sg13g2_vacask_common.lib"
 //* values are one-sigma deviations (1/3 of min-max)
 
 subckt sg13_lv_nmos(d g s b)
+parameters swsoa=0
 parameters w=0.35u
 parameters l=0.34u
 parameters ng=1
@@ -396,6 +397,7 @@ model sg13g2_lv_nmos_psp_rf pspnqs103va (
 ends
 
 subckt sg13_lv_pmos(d g s b)
+parameters swsoa=0
 parameters w=0.35u
 parameters l=0.28u
 parameters ng=1
@@ -723,6 +725,7 @@ ends
 //* ESD MOS Clamp devices
 //*****************************************************************
 subckt nmoscl_2(vdd vss)
+parameters swsoa=0
 parameters l=0.36u
 parameters w=168u
 parameters m=1
@@ -1002,6 +1005,7 @@ model nmoscl_psp_rf pspnqs103va (
 ends
 
 subckt nmoscl_4(vdd vss)
+parameters swsoa=0
 parameters l=0.36u
 parameters w=168u
 parameters m=1

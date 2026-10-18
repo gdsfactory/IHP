@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="80"
+   height="80"
+   viewBox="0 0 80 80"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <g
+     id="icon"
+     transform="translate(0,80) scale(1,-1)">
+    <rect
+       style="fill:none;fill-opacity:0;stroke:none;stroke-opacity:0.165761"
+       id="frame"
+       width="79"
+       height="79"
+       x="0.5"
+       y="0.5" />
+       <path d="M 1.524 1.382 L 1.513 8.456 L 6.834 8.568 L 8.579 8.828 L 10.038 9.282 L 11.399 10.046 L 12.528 11.080 L 13.362 12.327 L 13.892 13.799 L 14.171 15.579 L 14.256 17.627 L 14.259 60.801 L 14.352 63.726 L 14.757 66.477 L 15.530 68.880 L 16.822 71.201 L 18.388 73.060 L 20.515 74.791 L 22.971 76.110 L 25.597 76.958 L 28.652 77.438 L 32.140 77.579 L 61.878 77.581 L 76.966 78.618 L 78.487 78.614 L 78.479 69.466 L 76.966 69.466 L 61.878 70.503 L 31.024 70.484 L 28.745 70.322 L 26.831 69.913 L 25.386 69.272 L 24.061 68.255 L 23.189 67.178 L 22.582 65.941 L 22.206 64.457 L 22.026 62.730 L 21.975 17.157 L 21.744 13.886 L 21.081 11.050 L 19.998 8.662 L 18.417 6.494 L 16.405 4.651 L 14.038 3.202 L 11.697 2.286 L 8.841 1.669 L 5.912 1.420 L 1.524 1.382 Z" id="poly0" style="fill:none;fill-opacity:0;stroke:currentColor;stroke-dasharray:none;stroke-opacity:1" />
+
+  </g>
+</svg>

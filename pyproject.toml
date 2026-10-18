@@ -1,35 +1,37 @@
-# https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html
-
 [build-system]
-build-backend = "setuptools.build_meta"
-requires = ["setuptools", "wheel", "ruff"]
+build-backend = "hatchling.build"
+requires = ["hatchling"]
 
 [dependency-groups]
 dev = [
+  "pre-commit>=4.6.0",
+  "pylint>=4.0.8",
+  "ruff>=0.16.7",
   "towncrier>=25.8.0"
 ]
 docs = []
 
 [project]
-authors = [{name = "gdsfactory", email = "contact@gdsfactory.com"}]
+authors = [{ name = "gdsfactory", email = "contact@gdsfactory.com" }]
 classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13"
 ]
 dependencies = [
-  "gdsfactory~=9.45.0",
+  "gdsfactory~=9.51.0",
   "gplugins[sax]~=2.1.0",
+  "pdk-schema~=0.3.0",
   "scikit-rf>=1.0.0",
   "gdsfactoryplus"
 ]
 description = "IHP pdk"
-keywords = ["python"]
-license = {file = "LICENSE"}
+keywords = ["bicmos", "eda", "gdsfactory", "ihp", "pdk", "python", "sg13g2"]
+license = { file = "LICENSE" }
 name = "ihp-gdsfactory"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
-version = "2.0.0"
+version = "2.0.1"
 
 [project.optional-dependencies]
 dev = [
@@ -50,7 +52,7 @@ docs = [
   "zensical>=0.0.40,<0.1.0"
 ]
 simulation = [
-  "gsim>=0.0.16; python_version>='3.12'"
+  "gsim~=0.7; python_version>='3.12'"
 ]
 
 [tool.codespell]
@@ -72,6 +74,13 @@ max = 15  # 15GHz
 min = 1  # 1GHz
 name = "f"
 num = 4001
+
+[tool.hatch.build.targets.wheel]
+exclude = ["ihp/refs"]
+packages = ["ihp", "cni"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"ihp-gdsfactory--sample-projects" = "ihp-gdsfactory--sample-projects"
 
 [tool.mypy]
 python_version = "3.12"
@@ -130,6 +139,7 @@ include-package-data = true
 "*" = ["*.csv", "*.yaml", "*.yml", "*.gds", "*.lyp", "*.oas", "*.lyt", "*.dat", "*.nc", "*.svg", '*.GDS', "*.json", "*.txt", "*.lib", "*.va", "*.include", "*.h"]
 
 [tool.setuptools.packages.find]
+exclude = ["ihp.refs", "ihp.refs.*"]
 include = ["ihp", "ihp.*", "cni", "cni.*"]
 where = ["."]
 
@@ -158,7 +168,7 @@ message_template = "Bump to {new_version}"
 tag_template = "v{new_version}"
 
 [tool.tbump.version]
-current = "2.0.0"
+current = "2.0.1"
 regex = '''
   (?P<major>\d+)
   \.
