@@ -65,31 +65,34 @@ cp-docs:
 
 notebooks:
 	@if [ "$$(uname -s)" = "Linux" ]; then sudo apt-get install -y --no-install-recommends libglu1-mesa libgl1 libegl1 libosmesa6 2>/dev/null; fi
-	VTK_DEFAULT_RENDER_WINDOW_OFFSCREEN=1 uv run --extra docs --extra simulation jupyter nbconvert --to notebook --execute \
-		--ExecutePreprocessor.timeout=600 \
-		--output-dir /tmp/ihp-notebooks \
-		docs/palace_demo_cpw.ipynb docs/palace_demo_microstrip.ipynb
+	@failed=0; \
+	for notebook in \
+		docs/palace_demo_cpw.ipynb \
+		docs/palace_demo_microstrip.ipynb \
+		examples/design_examples/spice_to_yml/spice_to_yml.ipynb \
+		examples/design_examples/spice_and_gds_to_yml/spice_and_gds_to_yml.ipynb \
+		examples/design_examples/ihp_160g_lna/design_data/factory/lna_notebook.ipynb; do \
+		echo "Executing $$notebook"; \
+		VTK_DEFAULT_RENDER_WINDOW_OFFSCREEN=1 uv run --extra docs --extra simulation jupyter nbconvert --to notebook --execute \
+			--ExecutePreprocessor.timeout=600 \
+			--output-dir /tmp/ihp-notebooks "$$notebook" || failed=1; \
+	done; \
+	exit $$failed
 	uv run --extra docs jupyter nbconvert --to markdown \
 		--output-dir docs \
 		/tmp/ihp-notebooks/palace_demo_cpw.ipynb \
 		/tmp/ihp-notebooks/palace_demo_microstrip.ipynb
 	uv run python docs/hooks.py docs/palace_demo_cpw.md docs/palace_demo_microstrip.md
 	mkdir -p docs/examples
-	uv run --extra docs jupyter nbconvert --to notebook --execute \
-		--ExecutePreprocessor.timeout=600 \
-		--output-dir /tmp/ihp-notebooks \
-		examples/design_examples/spice_to_yml/spice_to_yml.ipynb \
-		examples/design_examples/spice_and_gds_to_yml/spice_and_gds_to_yml.ipynb
 	uv run --extra docs jupyter nbconvert --to markdown \
 		--output-dir docs/examples \
 		/tmp/ihp-notebooks/spice_to_yml.ipynb \
 		/tmp/ihp-notebooks/spice_and_gds_to_yml.ipynb
 	uv run python docs/hooks.py docs/examples/spice_to_yml.md docs/examples/spice_and_gds_to_yml.md
-	uv run --extra docs jupyter nbconvert --to markdown --execute \
-		--ExecutePreprocessor.timeout=600 \
+	uv run --extra docs jupyter nbconvert --to markdown \
 		--output-dir docs/examples \
 		--output lna_160ghz \
-		examples/design_examples/ihp_160g_lna/design_data/factory/lna_notebook.ipynb
+		/tmp/ihp-notebooks/lna_notebook.ipynb
 	uv run python docs/hooks.py docs/examples/lna_160ghz.md
 
 docs: cp-docs cells notebooks
