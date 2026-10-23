@@ -1,0 +1,22 @@
+info:
+  guardRingSpacing: 0.14
+  model: psub-guard-ring
+  rows: 1
+  width: 0.5
+name: guard_ring_W0p5_G0p14_Gpsub_Bm5_m5_5_5_PNone_LAActivdra_b1928167
+ports: {}
+settings:
+  bbox:
+  - - -5
+    - -5
+  - - 5
+    - 5
+  guardRingSpacing: 0.14
+  guardRingType: psub
+  layer_activ: Activdrawing
+  layer_cont: Contdrawing
+  layer_metal1: Metal1drawing
+  layer_nsd: nSDdrawing
+  layer_nwell: NWelldrawing
+  layer_psd: pSDdrawing
+  width: 0.5

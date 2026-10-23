@@ -1,0 +1,43 @@
+info: {}
+name: tline_corner_L10_SCStopmetal2_routing_GCStopmetal1_rout_aa16dbcf
+ports:
+  e1:
+    center:
+    - 0
+    - 1
+    layer: TopMetal2drawing
+    name: e1
+    orientation: 180
+    port_type: electrical
+    width: 2
+  e2:
+    center:
+    - 1
+    - 2
+    layer: TopMetal2drawing
+    name: e2
+    orientation: 90
+    port_type: electrical
+    width: 2
+  e3:
+    center:
+    - 2
+    - 1
+    layer: TopMetal2drawing
+    name: e3
+    orientation: 0
+    port_type: electrical
+    width: 2
+  e4:
+    center:
+    - 1
+    - 0
+    layer: TopMetal2drawing
+    name: e4
+    orientation: 270
+    port_type: electrical
+    width: 2
+settings:
+  ground_cross_section: topmetal1_routing
+  length: 10
+  signal_cross_section: topmetal2_routing

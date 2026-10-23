@@ -1,0 +1,40 @@
+info: {}
+name: sg13g2_buf_16
+ports:
+  A:
+    center:
+    - 10.85
+    - 1.684
+    layer: Metal1drawing
+    name: A
+    orientation: 270
+    port_type: electrical
+    width: 1.18
+  VDD:
+    center:
+    - 6
+    - 3.78
+    layer: Metal1drawing
+    name: VDD
+    orientation: 90
+    port_type: electrical
+    width: 12
+  VSS:
+    center:
+    - 6
+    - 0
+    layer: Metal1drawing
+    name: VSS
+    orientation: 270
+    port_type: electrical
+    width: 12
+  X:
+    center:
+    - 2.43
+    - 1.684
+    layer: Metal1drawing
+    name: X
+    orientation: 270
+    port_type: electrical
+    width: 1.28
+settings: {}

@@ -1,3 +1,33 @@
-info: {}
-name: diodevdd_4kv
-settings: {}
+info:
+  model: diodevdd_4kv
+name: diodevdd_4kv_M1
+ports:
+  PAD:
+    center:
+    - -2.3
+    - 18.515
+    layer: Metal2drawing
+    name: PAD
+    orientation: 180
+    port_type: electrical
+    width: 21.56
+  VDD:
+    center:
+    - 15.505
+    - 18.515
+    layer: Metal2drawing
+    name: VDD
+    orientation: 0
+    port_type: electrical
+    width: 29.6
+  VSS:
+    center:
+    - 7.16
+    - 0
+    layer: Metal1drawing
+    name: VSS
+    orientation: 270
+    port_type: electrical
+    width: 14.32
+settings:
+  m: 1

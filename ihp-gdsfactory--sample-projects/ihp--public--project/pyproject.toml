@@ -12,39 +12,30 @@ classifiers = [
 ]
 dependencies = [
   "gdsfactory~=9.51.0",
+  "gdsfactoryplus",
   "gplugins[sax]~=2.1.0",
-  "scikit-rf>=1.0.0",
-  "gdsfactoryplus"
+  "ihp-gdsfactory==2.0.1"
 ]
-description = "IHP pdk"
+description = "IHP PDK sample project"
 keywords = ["python"]
 license = { file = "LICENSE" }
-name = "ihp"
-readme = "README.md"
-requires-python = "~=3.12.0"
-version = "0.0.6"
-
-[project.optional-dependencies]
-dev = [
+name = "myihp"
+optional-dependencies.dev = [
+  "pre-commit",
   "pytest",
   "pytest-cov",
-  "pytest_regressions",
-  'jsondiff',
+  "jsondiff",
   "pytest-github-actions-annotate-failures",
-  "pre-commit"
+  "pytest-regressions"
 ]
-docs = [
-  "jupyter",
-  "kwasm",
-  "mkdocs-material",
-  "mkdocs-with-pdf",
-  "nbconvert",
-  "mkdocstrings[python]>=0.27.0",
-  "zensical>=0.0.40,<0.1.0"
+optional-dependencies.docs = [
+  "autodoc-pydantic",
+  "jupyter-book==1.0.3",
+  "jupytext"
 ]
-simulation = [
-  "gsim~=0.7; python_version>='3.12'"
-]
+readme = "README.md"
+requires-python = "~=3.12.0"
+version = "0.0.7"
 
 [tool.basedpyright]
 pythonPlatform = "Linux"
@@ -57,13 +48,7 @@ reportUnusedCallResult = false
 ignore-words-list = "te,fpr,nd,donot,schem"
 
 [tool.gdsfactoryplus]
-name = "ihp"
-
-[tool.gdsfactoryplus.livewire]
-schematic_scale = 0.1
-
-[tool.gdsfactoryplus.pdk]
-name = "ihp"
+pdk.name = "ihp"
 
 [tool.mypy]
 python_version = "3.12"
@@ -97,12 +82,6 @@ lint.ignore = [
   "C901",  # too complex
   "E501"
 ]
-lint.per-file-ignores."ihp/cells/__init__.py" = [
-  "F403"
-]  # allowing star imports to aggregate cells
-lint.per-file-ignores."ihp/models/__init__.py" = [
-  "F403"
-]  # allowing star imports to aggregate cells
 lint.select = [
   "B",  # flake8-bugbear
   "C",  # flake8-comprehensions
@@ -132,7 +111,7 @@ package-data."*" = [
   "*.md",
   "*.OAS"
 ]
-packages.find.include = ["ihp"]
+packages.find.include = ["myihp"]
 packages.find.where = ["."]
 
 [tool.tbump]
@@ -144,11 +123,11 @@ before_commit = [
 file = [
   { src = "README.md" },
   { src = "pyproject.toml" },
-  { src = "ihp/__init__.py" }
+  { src = "myihp/__init__.py" }
 ]
 git.message_template = "Bump to {new_version}"
 git.tag_template = "v{new_version}"
-version.current = "0.0.6"
+version.current = "0.0.7"
 version.regex = '''  (?P<major>\d+)
   \.
   (?P<minor>\d+)

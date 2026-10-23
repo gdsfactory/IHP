@@ -1,0 +1,22 @@
+info: {}
+name: sg13g2_fill_8
+ports:
+  VDD:
+    center:
+    - 1.92
+    - 3.78
+    layer: Metal1drawing
+    name: VDD
+    orientation: 90
+    port_type: electrical
+    width: 3.84
+  VSS:
+    center:
+    - 1.92
+    - 0
+    layer: Metal1drawing
+    name: VSS
+    orientation: 270
+    port_type: electrical
+    width: 3.84
+settings: {}

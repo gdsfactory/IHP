@@ -1,0 +1,85 @@
+info: {}
+name: sg13g2_mux4_1
+ports:
+  A0:
+    center:
+    - 1.422
+    - 1.678
+    layer: Metal1drawing
+    name: A0
+    orientation: 180
+    port_type: electrical
+    width: 0.294
+  A1:
+    center:
+    - 3.38
+    - 1.844
+    layer: Metal1drawing
+    name: A1
+    orientation: 270
+    port_type: electrical
+    width: 0.32
+  A2:
+    center:
+    - 3.904
+    - 1.844
+    layer: Metal1drawing
+    name: A2
+    orientation: 270
+    port_type: electrical
+    width: 0.37
+  A3:
+    center:
+    - 6.236
+    - 1.744
+    layer: Metal1drawing
+    name: A3
+    orientation: 270
+    port_type: electrical
+    width: 0.33
+  S0:
+    center:
+    - 0.916
+    - 1.678
+    layer: Metal1drawing
+    name: S0
+    orientation: 180
+    port_type: electrical
+    width: 0.36
+  S1:
+    center:
+    - 8.738
+    - 1.728
+    layer: Metal1drawing
+    name: S1
+    orientation: 270
+    port_type: electrical
+    width: 0.436
+  VDD:
+    center:
+    - 5.04
+    - 3.78
+    layer: Metal1drawing
+    name: VDD
+    orientation: 90
+    port_type: electrical
+    width: 10.08
+  VSS:
+    center:
+    - 5.04
+    - 0
+    layer: Metal1drawing
+    name: VSS
+    orientation: 270
+    port_type: electrical
+    width: 10.08
+  X:
+    center:
+    - 9.69
+    - 0.99
+    layer: Metal1drawing
+    name: X
+    orientation: 0
+    port_type: electrical
+    width: 0.43
+settings: {}

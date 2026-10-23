@@ -33,7 +33,7 @@ docs/_autosummary
 
 # Distribution / packaging
 .Python
-build/
+build/**
 develop-eggs/
 dist/
 downloads/
@@ -44,7 +44,6 @@ lib64/
 parts/
 sdist/
 var/
-wheels/
 extra/
 share/python-wheels/
 *.egg-info/

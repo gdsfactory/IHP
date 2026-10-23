@@ -1,0 +1,38 @@
+info: {}
+name: wilkinson_power_divider_CL50_F30000000000_Z50_SCStopmet_01d7b842
+ports:
+  e1:
+    center:
+    - 0
+    - 0
+    layer: TopMetal2drawing
+    name: e1
+    orientation: 180
+    port_type: electrical
+    width: 1.68
+  e2:
+    center:
+    - 731.163
+    - 17.506
+    layer: TopMetal2drawing
+    name: e2
+    orientation: 0
+    port_type: electrical
+    width: 1.68
+  e3:
+    center:
+    - 731.163
+    - -17.506
+    layer: TopMetal2drawing
+    name: e3
+    orientation: 0
+    port_type: electrical
+    width: 1.68
+settings:
+  Z0: 50
+  connection_length: 50
+  e_r: 4.1
+  frequency: 30000000000
+  ground_cross_section: topmetal1_routing
+  shape: C
+  signal_cross_section: topmetal2_routing

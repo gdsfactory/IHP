@@ -1,0 +1,29 @@
+info: {}
+name: quarter_wave_transformer_CL100_F50000000000_ZI50_ZL100__c87179b6
+ports:
+  e1:
+    center:
+    - -100
+    - 0
+    layer: TopMetal2drawing
+    name: e1
+    orientation: 180
+    port_type: electrical
+    width: 1.68
+  e2:
+    center:
+    - 846.878
+    - 0
+    layer: TopMetal2drawing
+    name: e2
+    orientation: 0
+    port_type: electrical
+    width: 0.2
+settings:
+  Z_L: 100
+  Z_in: 50
+  connection_length: 100
+  e_r: 4.1
+  frequency: 50000000000
+  ground_cross_section: topmetal1_routing
+  signal_cross_section: topmetal2_routing

@@ -6,10 +6,9 @@ import gdsfactory as gf
 import numpy as np
 import pytest
 from gdsfactory.difftest import difftest
+from ihp import PDK
 from pytest_regressions.data_regression import DataRegressionFixture
 from pytest_regressions.ndarrays_regression import NDArraysRegressionFixture
-
-from ihp import PDK
 
 
 @pytest.fixture(autouse=True)

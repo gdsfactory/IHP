@@ -1,0 +1,27 @@
+info: {}
+name: tline_bend_s_S11_1p8_SCStopmetal2_routing_GCStopmetal1__1bbeb7c7
+ports:
+  e1:
+    center:
+    - 0
+    - 0
+    layer: TopMetal2drawing
+    name: e1
+    orientation: 180
+    port_type: electrical
+    width: 2
+  e2:
+    center:
+    - 11
+    - 1.8
+    layer: TopMetal2drawing
+    name: e2
+    orientation: 0
+    port_type: electrical
+    width: 2
+settings:
+  ground_cross_section: topmetal1_routing
+  signal_cross_section: topmetal2_routing
+  size:
+  - 11
+  - 1.8

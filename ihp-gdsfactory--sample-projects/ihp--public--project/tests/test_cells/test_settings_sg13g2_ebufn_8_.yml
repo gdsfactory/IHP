@@ -1,0 +1,49 @@
+info: {}
+name: sg13g2_ebufn_8
+ports:
+  A:
+    center:
+    - 11.088
+    - 1.672
+    layer: Metal1drawing
+    name: A
+    orientation: 270
+    port_type: electrical
+    width: 0.496
+  TE_B:
+    center:
+    - 10.136
+    - 1.672
+    layer: Metal1drawing
+    name: TE_B
+    orientation: 270
+    port_type: electrical
+    width: 0.94
+  VDD:
+    center:
+    - 6
+    - 3.78
+    layer: Metal1drawing
+    name: VDD
+    orientation: 90
+    port_type: electrical
+    width: 12
+  VSS:
+    center:
+    - 6
+    - 0
+    layer: Metal1drawing
+    name: VSS
+    orientation: 270
+    port_type: electrical
+    width: 12
+  Z:
+    center:
+    - 0.96
+    - 1.828
+    layer: Metal1drawing
+    name: Z
+    orientation: 180
+    port_type: electrical
+    width: 0.36
+settings: {}

@@ -1,0 +1,49 @@
+info: {}
+name: sg13g2_einvn_2
+ports:
+  A:
+    center:
+    - 3.864
+    - 1.38
+    layer: Metal1drawing
+    name: A
+    orientation: 0
+    port_type: electrical
+    width: 0.33
+  TE_B:
+    center:
+    - 0.638
+    - 1.826
+    layer: Metal1drawing
+    name: TE_B
+    orientation: 180
+    port_type: electrical
+    width: 0.716
+  VDD:
+    center:
+    - 2.16
+    - 3.78
+    layer: Metal1drawing
+    name: VDD
+    orientation: 90
+    port_type: electrical
+    width: 4.32
+  VSS:
+    center:
+    - 2.16
+    - 0
+    layer: Metal1drawing
+    name: VSS
+    orientation: 270
+    port_type: electrical
+    width: 4.32
+  Z:
+    center:
+    - 3.324
+    - 1.916
+    layer: Metal1drawing
+    name: Z
+    orientation: 0
+    port_type: electrical
+    width: 0.33
+settings: {}

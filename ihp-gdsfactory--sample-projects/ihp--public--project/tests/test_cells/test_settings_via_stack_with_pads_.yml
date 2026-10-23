@@ -1,7 +1,51 @@
 info: {}
-name: via_stack_with_pads_BLMetal1_TLTopMetal2_S10_10_PS20_20_PS50
+name: via_stack_with_pads_BLMetal1_TLTopMetal2_S10_10_PS20_20_c1aea448
+ports:
+  pad1:
+    center:
+    - -25
+    - 0
+    layer: Metal1pin
+    name: pad1
+    orientation: 180
+    port_type: electrical
+    width: 20
+  pad2:
+    center:
+    - 25
+    - 0
+    layer: TopMetal2pin
+    name: pad2
+    orientation: 0
+    port_type: electrical
+    width: 20
 settings:
   bottom_layer: Metal1
+  layer_activ: Activdrawing
+  layer_activ_pin: Activpin
+  layer_cont: Contdrawing
+  layer_gatpoly: GatPolydrawing
+  layer_gatpoly_pin: GatPolypin
+  layer_metal1: Metal1drawing
+  layer_metal1_pin: Metal1pin
+  layer_metal2: Metal2drawing
+  layer_metal2_pin: Metal2pin
+  layer_metal3: Metal3drawing
+  layer_metal3_pin: Metal3pin
+  layer_metal4: Metal4drawing
+  layer_metal4_pin: Metal4pin
+  layer_metal5: Metal5drawing
+  layer_metal5_pin: Metal5pin
+  layer_topmetal1: TopMetal1drawing
+  layer_topmetal1_pin: TopMetal1pin
+  layer_topmetal2: TopMetal2drawing
+  layer_topmetal2_pin: TopMetal2pin
+  layer_topvia1: TopVia1drawing
+  layer_topvia2: TopVia2drawing
+  layer_via1: Via1drawing
+  layer_via2: Via2drawing
+  layer_via3: Via3drawing
+  layer_via4: Via4drawing
   pad_size:
   - 20
   - 20

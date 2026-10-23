@@ -1,0 +1,58 @@
+info: {}
+name: sg13g2_slgcp_1
+ports:
+  CLK:
+    center:
+    - 5.738
+    - 1.78
+    layer: Metal1drawing
+    name: CLK
+    orientation: 270
+    port_type: electrical
+    width: 0.304
+  GATE:
+    center:
+    - 1.172
+    - 2.1
+    layer: Metal1drawing
+    name: GATE
+    orientation: 90
+    port_type: electrical
+    width: 0.704
+  GCLK:
+    center:
+    - 7.642
+    - 2.62
+    layer: Metal1drawing
+    name: GCLK
+    orientation: 0
+    port_type: electrical
+    width: 0.394
+  SCE:
+    center:
+    - 0.484
+    - 1.828
+    layer: Metal1drawing
+    name: SCE
+    orientation: 180
+    port_type: electrical
+    width: 0.26
+  VDD:
+    center:
+    - 4.08
+    - 3.78
+    layer: Metal1drawing
+    name: VDD
+    orientation: 90
+    port_type: electrical
+    width: 8.16
+  VSS:
+    center:
+    - 4.08
+    - 0
+    layer: Metal1drawing
+    name: VSS
+    orientation: 270
+    port_type: electrical
+    width: 8.16
+settings: {}

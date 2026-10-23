@@ -1,0 +1,31 @@
+info: {}
+name: sg13g2_sighold
+ports:
+  SH:
+    center:
+    - 1.924
+    - 1.682
+    layer: Metal1drawing
+    name: SH
+    orientation: 0
+    port_type: electrical
+    width: 0.24
+  VDD:
+    center:
+    - 1.2
+    - 3.78
+    layer: Metal1drawing
+    name: VDD
+    orientation: 90
+    port_type: electrical
+    width: 2.4
+  VSS:
+    center:
+    - 1.2
+    - 0
+    layer: Metal1drawing
+    name: VSS
+    orientation: 270
+    port_type: electrical
+    width: 2.4
+settings: {}

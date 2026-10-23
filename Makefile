@@ -26,7 +26,7 @@ test-force: install
 	uv run pytest -s --force-regen
 
 test-gfp-projects:
-	cd ihp-gdsfactory--sample-projects/ihp--public--project && uv run --directory $(CURDIR) gfp test
+	cd ihp-gdsfactory--sample-projects/ihp--public--project && uv run gfp test
 
 git-rm-merged:
 	git branch -D `git branch --merged | grep -v \* | xargs`

@@ -1,0 +1,58 @@
+info: {}
+name: sg13g2_nand3b_1
+ports:
+  A_N:
+    center:
+    - 0.936
+    - 1.688
+    layer: Metal1drawing
+    name: A_N
+    orientation: 180
+    port_type: electrical
+    width: 0.29
+  B:
+    center:
+    - 1.95
+    - 1.688
+    layer: Metal1drawing
+    name: B
+    orientation: 0
+    port_type: electrical
+    width: 0.3
+  C:
+    center:
+    - 1.47
+    - 1.688
+    layer: Metal1drawing
+    name: C
+    orientation: 180
+    port_type: electrical
+    width: 0.3
+  VDD:
+    center:
+    - 1.68
+    - 3.78
+    layer: Metal1drawing
+    name: VDD
+    orientation: 90
+    port_type: electrical
+    width: 3.36
+  VSS:
+    center:
+    - 1.68
+    - 0
+    layer: Metal1drawing
+    name: VSS
+    orientation: 270
+    port_type: electrical
+    width: 3.36
+  Y:
+    center:
+    - 2.9
+    - 2.68
+    layer: Metal1drawing
+    name: Y
+    orientation: 0
+    port_type: electrical
+    width: 0.46
+settings: {}

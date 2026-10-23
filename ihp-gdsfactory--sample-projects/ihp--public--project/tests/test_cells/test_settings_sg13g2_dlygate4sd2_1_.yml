@@ -1,0 +1,40 @@
+info: {}
+name: sg13g2_dlygate4sd2_1
+ports:
+  A:
+    center:
+    - 0.52
+    - 1.684
+    layer: Metal1drawing
+    name: A
+    orientation: 270
+    port_type: electrical
+    width: 0.63
+  VDD:
+    center:
+    - 1.92
+    - 3.78
+    layer: Metal1drawing
+    name: VDD
+    orientation: 90
+    port_type: electrical
+    width: 3.84
+  VSS:
+    center:
+    - 1.92
+    - 0
+    layer: Metal1drawing
+    name: VSS
+    orientation: 270
+    port_type: electrical
+    width: 3.84
+  X:
+    center:
+    - 3.376
+    - 1.242
+    layer: Metal1drawing
+    name: X
+    orientation: 270
+    port_type: electrical
+    width: 0.62
+settings: {}

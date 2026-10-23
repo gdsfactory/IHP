@@ -27,11 +27,4 @@ build:
 	pip install build
 	python -m build
 
-docs:
-	uv run python .github/write_cells.py
-	uv run jb build docs
-
-mask:
-	python ubcpdk/samples/test_masks.py
-
-.PHONY: drc doc docs install build
+.PHONY: drc doc install build

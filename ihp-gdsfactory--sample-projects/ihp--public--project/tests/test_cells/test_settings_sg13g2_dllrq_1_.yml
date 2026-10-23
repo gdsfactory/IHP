@@ -1,0 +1,58 @@
+info: {}
+name: sg13g2_dllrq_1
+ports:
+  D:
+    center:
+    - 0.932
+    - 1.76
+    layer: Metal1drawing
+    name: D
+    orientation: 180
+    port_type: electrical
+    width: 0.364
+  GATE_N:
+    center:
+    - 1.462
+    - 1.76
+    layer: Metal1drawing
+    name: GATE_N
+    orientation: 180
+    port_type: electrical
+    width: 0.316
+  Q:
+    center:
+    - 7.25
+    - 2.62
+    layer: Metal1drawing
+    name: Q
+    orientation: 0
+    port_type: electrical
+    width: 0.33
+  RESET_B:
+    center:
+    - 6.332
+    - 1.602
+    layer: Metal1drawing
+    name: RESET_B
+    orientation: 0
+    port_type: electrical
+    width: 0.406
+  VDD:
+    center:
+    - 3.84
+    - 3.78
+    layer: Metal1drawing
+    name: VDD
+    orientation: 90
+    port_type: electrical
+    width: 7.68
+  VSS:
+    center:
+    - 3.84
+    - 0
+    layer: Metal1drawing
+    name: VSS
+    orientation: 270
+    port_type: electrical
+    width: 7.68
+settings: {}
