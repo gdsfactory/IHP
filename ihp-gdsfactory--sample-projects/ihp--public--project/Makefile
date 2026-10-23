@@ -9,12 +9,6 @@ update-pre:
 tech:
 	python install_tech.py
 
-test:
-	uv run pytest -s
-
-test-force:
-	uv run pytest -s --force-regen
-
 git-rm-merged:
 	git branch -D `git branch --merged | grep -v \* | xargs`
 

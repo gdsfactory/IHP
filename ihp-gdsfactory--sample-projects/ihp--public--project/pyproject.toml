@@ -20,14 +20,7 @@ description = "IHP PDK sample project"
 keywords = ["python"]
 license = { file = "LICENSE" }
 name = "myihp"
-optional-dependencies.dev = [
-  "pre-commit",
-  "pytest",
-  "pytest-cov",
-  "jsondiff",
-  "pytest-github-actions-annotate-failures",
-  "pytest-regressions"
-]
+optional-dependencies.dev = ["pre-commit"]
 optional-dependencies.docs = [
   "autodoc-pydantic",
   "jupyter-book==1.0.3",
@@ -64,14 +57,6 @@ match = "(?!test).*\\.py"
 enabled = true
 live_mode = true
 strict = true
-
-[tool.pytest]
-# testpaths = ["IHP/samples", "tests"]
-# addopts = --tb=no
-# addopts = '--tb=short'
-# python_files = ["IHP/samples*.py", "tests/*.py"]
-ini_options.python_files = ["tests/*.py"]
-ini_options.testpaths = ["tests"]
 
 [tool.ruff]
 fix = true

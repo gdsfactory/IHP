@@ -1,8 +1,0 @@
-info: {}
-name: text_rectangular_Tabc_S3_Jleft_LTopMetal2drawing
-ports: {}
-settings:
-  justify: left
-  layer: TopMetal2drawing
-  size: 3
-  text: abc
