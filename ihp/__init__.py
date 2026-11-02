@@ -54,9 +54,12 @@ __all__ = [
 #     gate, source and drain apart as 3);
 #   * whole `GatPolydrawing` where the deck has `GatPoly='5/0-SalBlock'` joins
 #     a contact over poly inside SalBlock to a net the deck omits (1 net vs 2);
-#   * `Metal1drawing` is (8,0) only, while the deck's `Metal1='8/0-8/29'` also
-#     reaches `Metal1res` (8,29): a bridge on that datatype connects nothing
-#     (2 nets vs 1).
+#   * `Metal1drawing` is (8,0) while the deck's `Metal1='8/0-8/29'` is a
+#     difference, not a datatype range: KLayout's `-` is NOT and its expression
+#     grammar has no range form (the same `-` as in `Diff` and `GatPoly`). So
+#     the declaration keeps geometry on `Metal1res` (8,29) inside Metal1 that
+#     the deck cuts out of it — an over-approximation, and modelled as the deck
+#     reads it the fixture gives the same 2 nets as the declaration.
 # Consumers resolve these names into `kdb.LayerInfo` stacks (gdsfactoryplus
 # `check/lvs.py` -> kfnetlist `l2n_elec`, whose `connectivity` is typed
 # `Sequence[Sequence[kdb.LayerInfo]]`) or into a `.lyt` whose writer emits only
