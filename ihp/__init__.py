@@ -44,12 +44,25 @@ __all__ = [
 # to the foundry's layer names (`64062f3`), and `POLY`/`ACTIVE` never were.
 #
 # Stack order and layer identity follow the foundry tech file checked in at
-# `ihp/klayout/tech/sg13g2.lyt`, but only its base layers: the deck's symbols
-# are region algebra as well (`Activ='1/0-Salblock'`, `Diff='Activ-GatPoly'`,
-# `Metal1='8/0-8/29'`), which one (layer, datatype) name cannot express. The
-# second stack is where that shows: extraction over raw `Activdrawing` merges
-# the two contacted diffusions through the channel (2 nets) where the deck's
-# `Diff` keeps them apart (3 nets).
+# `ihp/klayout/tech/sg13g2.lyt`, but only the base layers of its symbols: a
+# declared name resolves to exactly one (layer, datatype) (`gf.get_layer_info`
+# -> `Pdk.get_layer` -> `kcl.get_info`), so the deck's region algebra has no
+# expression here. Measured per symbol, extracting a fixture with KLayout's own
+# `LayoutToNetlist`:
+#   * raw `Activdrawing` where the deck has `Diff='Activ-GatPoly'` merges the
+#     contacted diffusions through the channel (2 nets where the deck keeps
+#     gate, source and drain apart as 3);
+#   * whole `GatPolydrawing` where the deck has `GatPoly='5/0-SalBlock'` joins
+#     a contact over poly inside SalBlock to a net the deck omits (1 net vs 2);
+#   * `Metal1drawing` is (8,0) only, while the deck's `Metal1='8/0-8/29'` also
+#     reaches `Metal1res` (8,29): a bridge on that datatype connects nothing
+#     (2 nets vs 1).
+# Consumers resolve these names into `kdb.LayerInfo` stacks (gdsfactoryplus
+# `check/lvs.py` -> kfnetlist `l2n_elec`, whose `connectivity` is typed
+# `Sequence[Sequence[kdb.LayerInfo]]`) or into a `.lyt` whose writer emits only
+# `name='L/D'` (`KLayoutTechnology._define_connections`). The deck's algebra
+# belongs to those, not to a layer map; `ihp/klayout/tech/sg13g2.lyt` already
+# carries it for the consumer that reads it.
 connectivity = cast(
     list[ConnectivitySpec],
     [
