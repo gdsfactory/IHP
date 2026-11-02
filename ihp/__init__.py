@@ -37,16 +37,19 @@ __all__ = [
     "__version__",
 ]
 
-# Connectivity stacks, named after the layers `LayerMapIHP` carries — the
-# drawing layers. A declared name is resolved against the layer map by every
-# consumer that reads it (`gf.get_layer_info`), so the process names KLayout's
-# tech file uses (`GatPoly`, `Metal1`) do not work here. Stack order and layer
-# identity follow the foundry tech file checked in at
-# `ihp/klayout/tech/sg13g2.lyt`.
+# Connectivity stacks, named after the layers `LayerMapIHP` carries. A declared
+# name is resolved against the layer map by every consumer that reads it
+# (`gf.get_layer_info`), so the names have to be map members: the previous
+# `METAL1`/`VIA1`/`CONT` spellings were members only until the map was renamed
+# to the foundry's layer names (`64062f3`), and `POLY`/`ACTIVE` never were.
 #
-# The second stack starts at `Activdrawing`; the foundry deck starts it at its
-# derived `Diff` (`Activ-GatPoly`), which a layer map cannot express as a single
-# (layer, datatype) pair.
+# Stack order and layer identity follow the foundry tech file checked in at
+# `ihp/klayout/tech/sg13g2.lyt`, but only its base layers: the deck's symbols
+# are region algebra as well (`Activ='1/0-Salblock'`, `Diff='Activ-GatPoly'`,
+# `Metal1='8/0-8/29'`), which one (layer, datatype) name cannot express. The
+# second stack is where that shows: extraction over raw `Activdrawing` merges
+# the two contacted diffusions through the channel (2 nets) where the deck's
+# `Diff` keeps them apart (3 nets).
 connectivity = cast(
     list[ConnectivitySpec],
     [
