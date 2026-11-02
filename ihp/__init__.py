@@ -37,17 +37,46 @@ __all__ = [
     "__version__",
 ]
 
+# Connectivity stacks, named after the layers `LayerMapIHP` carries. A declared
+# name is resolved against the layer map by every consumer that reads it
+# (`gf.get_layer_info`), so the names have to be map members: the previous
+# `METAL1`/`VIA1`/`CONT` spellings were members only until the map was renamed
+# to the foundry's layer names (`64062f3`), and `POLY`/`ACTIVE` never were.
+#
+# Stack order and layer identity follow the foundry tech file checked in at
+# `ihp/klayout/tech/sg13g2.lyt`, but only the base layers of its symbols: a
+# declared name resolves to exactly one (layer, datatype) (`gf.get_layer_info`
+# -> `Pdk.get_layer` -> `kcl.get_info`), so the deck's region algebra has no
+# expression here. Measured per symbol, extracting a fixture with KLayout's own
+# `LayoutToNetlist`:
+#   * raw `Activdrawing` where the deck has `Diff='Activ-GatPoly'` merges the
+#     contacted diffusions through the channel (2 nets where the deck keeps
+#     gate, source and drain apart as 3);
+#   * whole `GatPolydrawing` where the deck has `GatPoly='5/0-SalBlock'` joins
+#     a contact over poly inside SalBlock to a net the deck omits (1 net vs 2);
+#   * `Metal1drawing` is (8,0) while the deck's `Metal1='8/0-8/29'` is a
+#     difference, not a datatype range: KLayout's `-` is NOT and its expression
+#     grammar has no range form (the same `-` as in `Diff` and `GatPoly`). So
+#     the declaration keeps geometry on `Metal1res` (8,29) inside Metal1 that
+#     the deck cuts out of it — an over-approximation, and modelled as the deck
+#     reads it the fixture gives the same 2 nets as the declaration.
+# Consumers resolve these names into `kdb.LayerInfo` stacks (gdsfactoryplus
+# `check/lvs.py` -> kfnetlist `l2n_elec`, whose `connectivity` is typed
+# `Sequence[Sequence[kdb.LayerInfo]]`) or into a `.lyt` whose writer emits only
+# `name='L/D'` (`KLayoutTechnology._define_connections`). The deck's algebra
+# belongs to those, not to a layer map; `ihp/klayout/tech/sg13g2.lyt` already
+# carries it for the consumer that reads it.
 connectivity = cast(
     list[ConnectivitySpec],
     [
-        ("POLY", "CONT", "METAL1"),
-        ("ACTIVE", "CONT", "METAL1"),
-        ("METAL1", "VIA1", "METAL2"),
-        ("METAL2", "VIA2", "METAL3"),
-        ("METAL3", "VIA3", "METAL4"),
-        ("METAL4", "VIA4", "METAL5"),
-        ("METAL5", "TOPVIA1", "TOPMETAL1"),
-        ("TOPMETAL1", "TOPVIA2", "TOPMETAL2"),
+        ("GatPolydrawing", "Contdrawing", "Metal1drawing"),
+        ("Activdrawing", "Contdrawing", "Metal1drawing"),
+        ("Metal1drawing", "Via1drawing", "Metal2drawing"),
+        ("Metal2drawing", "Via2drawing", "Metal3drawing"),
+        ("Metal3drawing", "Via3drawing", "Metal4drawing"),
+        ("Metal4drawing", "Via4drawing", "Metal5drawing"),
+        ("Metal5drawing", "TopVia1drawing", "TopMetal1drawing"),
+        ("TopMetal1drawing", "TopVia2drawing", "TopMetal2drawing"),
     ],
 )
 
