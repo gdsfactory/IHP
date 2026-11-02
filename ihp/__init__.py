@@ -37,17 +37,27 @@ __all__ = [
     "__version__",
 ]
 
+# Connectivity stacks, named after the layers `LayerMapIHP` carries — the
+# drawing layers. A declared name is resolved against the layer map by every
+# consumer that reads it (`gf.get_layer_info`), so the process names KLayout's
+# tech file uses (`GatPoly`, `Metal1`) do not work here. Stack order and layer
+# identity follow the foundry tech file checked in at
+# `ihp/klayout/tech/sg13g2.lyt`.
+#
+# The second stack starts at `Activdrawing`; the foundry deck starts it at its
+# derived `Diff` (`Activ-GatPoly`), which a layer map cannot express as a single
+# (layer, datatype) pair.
 connectivity = cast(
     list[ConnectivitySpec],
     [
-        ("POLY", "CONT", "METAL1"),
-        ("ACTIVE", "CONT", "METAL1"),
-        ("METAL1", "VIA1", "METAL2"),
-        ("METAL2", "VIA2", "METAL3"),
-        ("METAL3", "VIA3", "METAL4"),
-        ("METAL4", "VIA4", "METAL5"),
-        ("METAL5", "TOPVIA1", "TOPMETAL1"),
-        ("TOPMETAL1", "TOPVIA2", "TOPMETAL2"),
+        ("GatPolydrawing", "Contdrawing", "Metal1drawing"),
+        ("Activdrawing", "Contdrawing", "Metal1drawing"),
+        ("Metal1drawing", "Via1drawing", "Metal2drawing"),
+        ("Metal2drawing", "Via2drawing", "Metal3drawing"),
+        ("Metal3drawing", "Via3drawing", "Metal4drawing"),
+        ("Metal4drawing", "Via4drawing", "Metal5drawing"),
+        ("Metal5drawing", "TopVia1drawing", "TopMetal1drawing"),
+        ("TopMetal1drawing", "TopVia2drawing", "TopMetal2drawing"),
     ],
 )
 
