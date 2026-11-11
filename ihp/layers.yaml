@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/gdsfactory/gdsfactory/f809618edba3ec212d40ac6d1bf3c02ab02e4251/gdsfactory/technology/layer_views.schema.json
 LayerViews:
   Substratedrawing:
     layer: [40, 0]
