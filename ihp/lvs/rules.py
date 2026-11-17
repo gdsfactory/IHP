@@ -20,7 +20,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from collections.abc import Callable, Iterable, Iterator
-from typing import Any
+from typing import Any, cast
 
 import gdstk
 from gflvs import (
@@ -231,7 +231,11 @@ Recogesd, Recogdiode = L(LAYER.Recogesd), L(LAYER.Recogdiode)
 
 # device marker / recognition / pin layers a terminal op may gate on
 MARKER_LAYERS: frozenset[LayerKey] = frozenset(
-    {_key(layer) for layer in LAYER if layer.name.startswith("Recog")}
+    {
+        _key(layer)
+        for layer in cast(Iterable[Any], LAYER)
+        if layer.name.startswith("Recog")
+    }
     | {
         _key(layer)
         for layer in (
@@ -257,6 +261,7 @@ RF_TIE_REACH = 1.5  # RF MOS guard ring around the channel
 BJT_REACH = 1.5  # collector/base Metal1 around the emitter window
 BJT_EMITTER_KEEPOUT = 0.3  # cut the emitter metal out of the collector op
 PNP_REACH = 1.5  # pnpMPA outer TIE ring around nBuLay
+RES_REACH = 0.3  # Metal1 head pads to the PolyRes body (max 0.15: rhigh)
 CAP_TIE_REACH = 6.0  # rfcmim TIE_LOW guard ring around the MIM
 VARICAP_REACH = 1.5  # svaricap Metal1 pads around the channel
 IND_TAP_REACH = 10.0  # inductor3 TopMetal2 centre tap near the TopMetal1 pins
@@ -265,11 +270,17 @@ IND_GLUE = 5.0  # inductor2 pin glue (pins are 2 x diameter apart)
 # Tracer connectivity: the PDK's own `connectivity`, minus Activ.
 # Activ not traced: S/D would short through the channel (and C/E/B through bipolar diffusions).
 # GatPoly kept: MOS gates and poly-resistor heads are GatPoly terminals.
-# TODO(issue: pending): inductor2's spiral is one TopMetal2 polygon from P1 to P2, so the tracer shorts them.
+# TODO(issue: pending): inductor spirals are one continuous metal path between their pins, so the tracer
+# shorts P1/P2 (inductor2) and P1/P2/P3 (inductor3).
 LAYER_CONNECTIVITY: dict[LayerKey, list[LayerKey]] = connectivity(
-    (_key(getattr(LAYER, a)), _key(getattr(LAYER, v)), _key(getattr(LAYER, b)))
-    for a, v, b in pdk_connectivity
-    if "Activdrawing" not in (a, v, b)
+    (
+        _key(getattr(LAYER, chain[0])),
+        _key(getattr(LAYER, chain[1])),
+        _key(getattr(LAYER, chain[2])),
+    )
+    # ponytail: 2-tuple (direct conductor-conductor) specs are skipped; ihp declares none
+    for chain in pdk_connectivity
+    if len(chain) == 3 and "Activdrawing" not in chain
 )
 
 # ── Templates ───────────────────────────────────────────────────────
@@ -301,6 +312,7 @@ def _mos(name: str, p: bool, hv: bool) -> DeviceTemplate:
                 "S/D",
                 _implant((Metal1 & Activ & grow(chan, MOS_SD_REACH)) - GatPoly, p, hv),
             ),  # x-ordered S,D,S..
+            # GatPoly is traced and the G port sits on GatPolypin, so the gate net is on GatPoly
             pin("G", _implant((GatPoly & HeatTrans) - Activ, p, hv)),
         ],
         [
@@ -427,22 +439,34 @@ BJT_TEMPLATES = _extract(
 )
 
 
-# Poly resistors: GatPoly heads abut the PolyRes body; built-in extractors work (gap=dy, facing edge=dx).
-# y-ordered heads: lower = P2, upper = P1 (matches ports).
+# Poly resistors: P1/P2 are the Metal1 pads on the GatPoly heads (ports sit on Metal1pin);
+# dy/dx are measured on the PolyRes body between the heads. y-ordered: lower = P2, upper = P1.
 # CONFIDENCE: HIGH
 # TODO(issue: pending): the BN (substrate) pin is never drawn.
-RESISTOR_TEMPLATES = [
-    tpl(
-        name,
-        [pin("P2/P1", head)],
-        [par("dy", body, "length"), par("dx", body, "width")],
-    )
-    for name, body, head in [
-        ("rsil", (PolyRes & RES) - pSD - nSD, (GatPoly & EXTBlock) - pSD - nSD),
-        ("rppd", (PolyRes & pSD & SalBlock) - nSD, (GatPoly & EXTBlock & pSD) - nSD),
-        ("rhigh", PolyRes & pSD & nSD & SalBlock, GatPoly & EXTBlock & pSD & nSD),
-    ]
-]
+RESISTOR_TEMPLATES = _extract(
+    [
+        tpl(
+            name,
+            [pin("P2/P1", Metal1 & head)],
+            [
+                par("dy", body - GatPoly),
+                par("dx", body - GatPoly),
+                par("glue", grow(body - GatPoly, RES_REACH)),
+            ],
+        )
+        for name, body, head in [
+            ("rsil", (PolyRes & RES) - pSD - nSD, (GatPoly & EXTBlock) - pSD - nSD),
+            (
+                "rppd",
+                (PolyRes & pSD & SalBlock) - nSD,
+                (GatPoly & EXTBlock & pSD) - nSD,
+            ),
+            ("rhigh", PolyRes & pSD & nSD & SalBlock, GatPoly & EXTBlock & pSD & nSD),
+        ]
+    ],
+    dy=dy_max,
+    dx=dx_max,
+)
 
 
 # MIM caps: TopMetal1 plate is width(y) x length(x).

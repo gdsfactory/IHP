@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, cast
 
 import pytest
 
@@ -40,7 +40,7 @@ def test_connectivity_symmetric() -> None:
 
 
 def test_template_layers_in_pdk() -> None:
-    pdk_layers = {(int(layer.layer), int(layer.datatype)) for layer in LAYER}
+    pdk_layers = {(int(layer.layer), int(layer.datatype)) for layer in cast(Any, LAYER)}
     used = rules.template_layers(rules.DEVICE_TEMPLATES) | set(rules.LAYER_CONNECTIVITY)
     assert used <= pdk_layers
 
@@ -90,6 +90,35 @@ def test_flags_toggle(monkeypatch: pytest.MonkeyPatch) -> None:
     with monkeypatch.context() as m:
         m.setattr(rules, "HIERARCHICAL_RUN", True)
         assert rules.build_lvs_config().run_mode == LvsRunMode.LVS_RUN_MODE_HIERARCHICAL
+
+
+def _library(component: Any, tmp_path: Any) -> gdstk.Library:
+    gds = tmp_path / f"{component.name}.gds"
+    component.write_gds(gds)
+    library = gdstk.read_gds(str(gds))
+    # kfactory also writes a $$$CONTEXT_INFO$$$ top cell
+    library.remove(*[c for c in library.cells if c.name.startswith("$$$")])
+    return library
+
+
+def test_mos_terminals_on_traced_nets(tmp_path: Any) -> None:
+    """Rule 2: S/D/G land on traced nets in a full tracer + extraction run."""
+    component = cells.nmos(nf=3, width=0.6)
+    cfg = rules.DEFAULT_LVS_CONFIG
+    _, l2n, _ = gflvs.layout_to_netlist(
+        _library(component, tmp_path),
+        component.name,
+        device_templates=cfg.device_templates,
+        nettracer_config=cfg.netlist_tracer_config,
+        electrical_device_extraction_config=cfg.electrical_device_extraction_config,
+    )
+    (device,) = [r for d in l2n.devices for r in d.device_references]
+    nets = {t.name: t.parent_net.net_name for t in device.terminals}
+    assert sorted(nets) == ["D", "G", "S"]
+    assert len(set(nets.values())) == 3, nets
+    # a floating terminal gets a bare Net$k with no traced shapes
+    traced = {n.name for n in l2n.nets if n.connected_shapes}
+    assert set(nets.values()) <= traced, nets
 
 
 # one row per HIGH-confidence template, values verified in templates-ihp.md
@@ -175,11 +204,12 @@ def test_pcell_extracts(
     params: dict[str, float],
     tmp_path: Any,
 ) -> None:
-    gds = tmp_path / f"{pcell}.gds"
     component = getattr(cells, pcell)(**kwargs)
-    component.write_gds(gds)
-    # by name: kfactory also writes a $$$CONTEXT_INFO$$$ top cell
-    top = next(c for c in gdstk.read_gds(str(gds)).cells if c.name == component.name)
+    top = next(
+        c
+        for c in _library(component, tmp_path).cells
+        if isinstance(c, gdstk.Cell) and c.name == component.name
+    )
     cfg = rules.DEFAULT_LVS_CONFIG
     results = ElectricalDeviceExtractionPolicy().execute(
         top, rules.DEVICE_TEMPLATES, cfg.electrical_device_extraction_config
