@@ -92,8 +92,6 @@ def test_flags_toggle(monkeypatch: pytest.MonkeyPatch) -> None:
         assert rules.build_lvs_config().run_mode == LvsRunMode.LVS_RUN_MODE_HIERARCHICAL
 
 
-FLATTEN = pytest.mark.xfail(strict=True, reason="needs flatten, Task 2")
-
 # one row per HIGH-confidence template, values verified in templates-ihp.md
 EXTRACT_CASES: list[Any] = [
     ("nmos", {}, "nmos", 3, {"width": 0.15, "length": 0.13, "nf": 1}),
@@ -119,63 +117,51 @@ EXTRACT_CASES: list[Any] = [
         3,
         {"width": 1.0, "length": 0.6, "nf": 2},
     ),
-    pytest.param(
+    (
         "npn13G2",
         {"Nx": 2},
         "npn13G2",
         3,
         {"emitter_width": 0.7, "emitter_length": 0.9, "Nx": 2},
-        marks=FLATTEN,
     ),
-    pytest.param(
+    (
         "npn13G2L",
         {"emitter_length": 2.0},
         "npn13G2L",
         3,
         {"emitter_width": 0.07, "emitter_length": 2.0, "Nx": 1},
-        marks=FLATTEN,
     ),
-    pytest.param(
+    (
         "npn13G2V",
         {"Nx": 3},
         "npn13G2V",
         3,
         {"emitter_width": 0.12, "emitter_length": 1.0, "Nx": 3},
-        marks=FLATTEN,
     ),
-    pytest.param(
-        "pnpMPA", {}, "pnpMPA", 3, {"width": 0.7, "length": 2.0}, marks=FLATTEN
-    ),
-    pytest.param(
+    ("pnpMPA", {}, "pnpMPA", 3, {"width": 0.7, "length": 2.0}),
+    (
         "pnpMPA",
         {"length": 4.0, "width": 1.2},
         "pnpMPA",
         3,
         {"width": 1.2, "length": 4.0},
-        marks=FLATTEN,
     ),
-    pytest.param(
-        "rsil", {"dx": 1.0, "dy": 3.0}, "rsil", 2, {"dx": 1.0, "dy": 3.0}, marks=FLATTEN
-    ),
-    pytest.param(
-        "rppd", {"dx": 2.0, "dy": 5.0}, "rppd", 2, {"dx": 2.0, "dy": 5.0}, marks=FLATTEN
-    ),
-    pytest.param(
+    ("rsil", {"dx": 1.0, "dy": 3.0}, "rsil", 2, {"dx": 1.0, "dy": 3.0}),
+    ("rppd", {"dx": 2.0, "dy": 5.0}, "rppd", 2, {"dx": 2.0, "dy": 5.0}),
+    (
         "rhigh",
         {"dx": 1.5, "dy": 7.0},
         "rhigh",
         2,
         {"dx": 1.5, "dy": 7.0},
-        marks=FLATTEN,
     ),
-    pytest.param("cmim", {}, "cmim", 2, {"width": 6.0, "length": 6.0}, marks=FLATTEN),
-    pytest.param(
+    ("cmim", {}, "cmim", 2, {"width": 6.0, "length": 6.0}),
+    (
         "cmim",
         {"width": 8.0, "length": 5.0},
         "cmim",
         2,
         {"width": 8.0, "length": 5.0},
-        marks=FLATTEN,
     ),
 ]
 

@@ -786,6 +786,7 @@ def npn13G2(
     )
 
     add_electrical_pins(c, port_pin_mapping={"C": ["C"], "B": ["B"], "E": ["E"]})
+    c.flatten()  # gflvs extracts devices from the cell's own polygons only
     return c
 
 
@@ -1392,6 +1393,7 @@ def npn13G2L(
     )
 
     add_electrical_pins(c, port_pin_mapping={"C": ["C"], "B": ["B"], "E": ["E"]})
+    c.flatten()  # gflvs extracts devices from the cell's own polygons only
     return c
 
 
@@ -2019,6 +2021,7 @@ def npn13G2V(
     )
 
     add_electrical_pins(c, port_pin_mapping={"C": ["C"], "B": ["B"], "E": ["E"]})
+    c.flatten()  # gflvs extracts devices from the cell's own polygons only
     return c
 
 
@@ -2606,4 +2609,5 @@ def pnpMPA(length: float = 2, width: float = 0.7) -> gf.Component:
     add_electrical_pins(
         c, port_pin_mapping={"TIE": ["TIE"], "PLUS": ["PLUS"], "MINUS": ["MINUS"]}
     )
+    c.flatten()  # gflvs extracts devices from the cell's own polygons only
     return c

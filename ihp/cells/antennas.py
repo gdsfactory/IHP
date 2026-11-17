@@ -267,6 +267,7 @@ def dantenna(
             )
         ).move((-diods_over, -diods_over))
 
+    c.flatten()  # gflvs extracts devices from the cell's own polygons only
     return c
 
 
@@ -419,4 +420,5 @@ def dpantenna(
         )
     ).move((-NW_c, -NW_c))
 
+    c.flatten()  # gflvs extracts devices from the cell's own polygons only
     return c

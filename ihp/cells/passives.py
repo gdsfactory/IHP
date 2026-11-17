@@ -222,6 +222,7 @@ def svaricap(
     )
 
     add_electrical_pins(c, port_pin_mapping={"G": ["G"], "B": ["B"]})
+    c.flatten()  # gflvs extracts devices from the cell's own polygons only
     return c
 
 
@@ -432,6 +433,7 @@ def esd_nmos(
     )
 
     add_electrical_pins(c, port_pin_mapping={"PAD": ["PAD"], "GND": ["GND"]})
+    c.flatten()  # gflvs extracts devices from the cell's own polygons only
     return c
 
 
