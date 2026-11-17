@@ -22,6 +22,9 @@ vacask-models:
 test:
 	uv run pytest -s
 
+test-pex:
+	uv run --no-sync pytest tests/gfpex/ -v
+
 test-force: install
 	uv run pytest -s --force-regen
 
@@ -106,4 +109,4 @@ docs-serve: cp-docs notebooks
 update-changelog:
 	claude -p "remove links and make a user friendly changelog from @CHANGELOG.md to @docs/changelog.md"
 
-.PHONY: drc drc-sample doc docs docs-pdf build update-changelog notebooks
+.PHONY: drc drc-sample doc docs docs-pdf build update-changelog notebooks test-pex
