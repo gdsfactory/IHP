@@ -49,7 +49,9 @@ ENABLE_ELECTRICAL_TRACING = (
 )
 ENABLE_DEVICE_EXTRACTION = True  # use DEVICE_TEMPLATES; False → connectivity-only LVS
 ENABLE_MOSFET_TEMPLATES = True  # False → drop nmos/pmos(_hv)
-ENABLE_RF_MOSFET_TEMPLATES = True  # False → drop rfnmos/rfpmos(_hv)
+ENABLE_RF_MOSFET_TEMPLATES = (
+    False  # True → add rfnmos/rfpmos(_hv); they then double-match MOS (no RF layer)
+)
 ENABLE_BJT_TEMPLATES = True  # False → drop npn13G2/L/V and pnpMPA
 ENABLE_RESISTOR_TEMPLATES = True  # False → drop rsil/rppd/rhigh
 ENABLE_CAPACITOR_TEMPLATES = True  # False → drop cmim/rfcmim
@@ -228,6 +230,7 @@ MemCap, Varicap, PolyRes = (
     L(LAYER.PolyResdrawing),
 )
 Recogesd, Recogdiode = L(LAYER.Recogesd), L(LAYER.Recogdiode)
+Activmask, Substrate = L(LAYER.Activmask), L(LAYER.Substratedrawing)
 
 # device marker / recognition / pin layers a terminal op may gate on
 MARKER_LAYERS: frozenset[LayerKey] = frozenset(
@@ -243,6 +246,7 @@ MARKER_LAYERS: frozenset[LayerKey] = frozenset(
             LAYER.TRANSdrawing,
             LAYER.RESdrawing,
             LAYER.MemCapdrawing,
+            LAYER.MIMdrawing,
             LAYER.Varicapdrawing,
             LAYER.INDdrawing,
             LAYER.INDpin,
@@ -253,17 +257,33 @@ MARKER_LAYERS: frozenset[LayerKey] = frozenset(
     }
 )
 
-# Grow distances. Values are the swarm's, verified on the variants in tests/test_lvs_rules.py.
+# Grow distances, measured on the PCells in tests/test_lvs_rules.py.
 # ponytail: tuned on PCell geometry; re-measure if PCell rules change
-MOS_SD_REACH = 0.5  # S/D Metal1 pads sit next to the channel
+# NB: every glue grow feeds gflvs' bbox device grouping (G2: neighbours merge); keep them minimal.
+MOS_SD_REACH = 0.5  # S/D Metal1 pads and gate endcaps sit next to the channel
+MOS_ENDCAP_PROBE = 0.01  # gate-end probe strip (needs gate endcap > 0.02; IHP min 0.18)
 RF_GATE_REACH = 1.0  # RF MOS Metal1 gate ring around the channel
 RF_TIE_REACH = 1.5  # RF MOS guard ring around the channel
 BJT_REACH = 1.5  # collector/base Metal1 around the emitter window
 BJT_EMITTER_KEEPOUT = 0.3  # cut the emitter metal out of the collector op
-PNP_REACH = 1.5  # pnpMPA outer TIE ring around nBuLay
+BJT_E_REACH = (
+    1.0  # Metal2 E strap between emitters (pitch 1.85, gap 1.15) and over the E port
+)
+PNP_BASE_REACH = 1.0  # pnpMPA MINUS (base) pin from the emitter (max 0.72)
+PNP_TIE_REACH = 2.5  # pnpMPA TIE (collector) pin from the emitter (max 2.01)
+PNP_POLY_KEEPOUT = (
+    3.0  # p+ diffusion this close to GatPoly is MOS S/D, not a pnp emitter
+)
 RES_REACH = 0.3  # Metal1 head pads to the PolyRes body (max 0.15: rhigh)
+CAP_PLATE_REACH = (
+    0.6  # Metal5 bottom plate overhang beyond MIM, MINUS port inside it (0.6)
+)
 CAP_TIE_REACH = 6.0  # rfcmim TIE_LOW guard ring around the MIM
 VARICAP_REACH = 1.5  # svaricap Metal1 pads around the channel
+VARICAP_PGATE_REACH = (
+    0.3  # pSD-covered gate ends of official svaricaps (0.25 deep), not pmos
+)
+ESD_REACH = 2.0  # esd_nmos Metal2 PAD strip from the gate (max 2.0)
 IND_TAP_REACH = 10.0  # inductor3 TopMetal2 centre tap near the TopMetal1 pins
 IND_GLUE = 5.0  # inductor2 pin glue (pins are 2 x diameter apart)
 
@@ -294,17 +314,51 @@ def _extract(templates: list[DeviceTemplate], **fns: Extractor) -> list[DeviceTe
     return templates
 
 
-# LV/HV MOS: HeatTrans sits on every finger of these PCells only (not RF, not std cells).
+def _minus(o: LayerRef | LayerOperation, *layers: LayerRef) -> LayerOperation:
+    for layer in layers:
+        o = o - layer
+    return op(o)
+
+
+# IHP deck `mos_exclude`: a gate under any of these is another device, not a MOS.
+_MOS_EXCLUDE: tuple[LayerRef, ...] = (
+    PWellblock,
+    nSD,
+    TRANS,
+    EmWind,
+    EmWiHV,
+    SalBlock,
+    PolyRes,
+    EXTBlock,
+    RES,
+)
+_MOS_EXCLUDE += (Activmask, Recogdiode, Recogesd, IND, INDpin, Substrate, nSDblock)
+# svaricap core (deck varicap_core): an n-gate inside NWell; see VARACTOR_TEMPLATES
+_vchan = _minus(
+    Activ & GatPoly & NWell, pSD, nSDblock, PWellblock, Recogesd, Recogdiode, Substrate
+)
+
+
+# LV/HV MOS: the deck's gate = Activ & GatPoly minus `mos_exclude`, split by pSD and ThickGateOx.
+# nmos also excludes NWell (an n-gate in NWell is the svaricap). Matches std cells and official layouts.
 # CONFIDENCE: HIGH
 # TODO(issue: pending): the bulk pin is never drawn (no B terminal).
 # TODO(issue: pending): finger width is rounded to the grid (width=0.5, nf=3 draws 0.495).
+# TODO(issue: pending): multi-finger nmos/pmos(_hv) leave S/D fingers unstrapped (P5; gflvs G1 hides it).
+# TODO(gflvs): moscap_n/p are told apart from MOS by a 63/0 text; gflvs can't key on text, so they extract as MOS.
 def _implant(o: LayerOperation, p: bool, hv: bool) -> LayerOperation:
-    o = (o & pSD) if p else (o - pSD)
+    o = (o & pSD) if p else (o - pSD - NWell)
     return (o & ThickGateOx) if hv else (o - ThickGateOx)
 
 
 def _mos(name: str, p: bool, hv: bool) -> DeviceTemplate:
-    chan = _implant(Activ & GatPoly & HeatTrans, p, hv)
+    # official svaricaps put pSD over their gate ends: a p-gate touching a varicap core is not a pmos
+    chan = _implant(_minus(Activ & GatPoly, *_MOS_EXCLUDE), p, hv) - grow(
+        _vchan, VARICAP_PGATE_REACH
+    )
+    # gates plus thin GatPoly strips just past each gate end, which show the W axis (rf PCells turn gates)
+    probe = (GatPoly & grow(chan, 2 * MOS_ENDCAP_PROBE)) - grow(Activ, MOS_ENDCAP_PROBE)
+    wl = chan | probe
     return tpl(
         name,
         [
@@ -312,16 +366,40 @@ def _mos(name: str, p: bool, hv: bool) -> DeviceTemplate:
                 "S/D",
                 _implant((Metal1 & Activ & grow(chan, MOS_SD_REACH)) - GatPoly, p, hv),
             ),  # x-ordered S,D,S..
-            # GatPoly is traced and the G port sits on GatPolypin, so the gate net is on GatPoly
-            pin("G", _implant((GatPoly & HeatTrans) - Activ, p, hv)),
+            # GatPoly is traced; the region covers the channel, where the G port sits
+            pin("G", GatPoly & grow(chan, MOS_SD_REACH)),
         ],
         [
-            par("width", chan),
-            par("length", chan),
+            par("width", wl),
+            par("length", wl),
             par("nf", chan),
             par("glue", grow(chan, MOS_SD_REACH)),
         ],
     )
+
+
+def _mos_wl(polys: list[gdstk.Polygon]) -> tuple[float, float]:
+    """(total W, L) from gate fingers plus the thin GatPoly probes past each gate end (W axis)."""
+    dims = [(b[1][0] - b[0][0], b[1][1] - b[0][1]) for b in _boxes(polys)]
+    probes = [d for d in dims if min(d) < 2 * MOS_ENDCAP_PROBE]
+    gates = [d for d in dims if min(d) >= 2 * MOS_ENDCAP_PROBE]
+    if not gates:
+        return float("nan"), float("nan")
+    if not probes:  # no endcap seen: vertical gates (W along y), the IHP default
+        return float(sum(dy for _, dy in gates)), float(max(dx for dx, _ in gates))
+    length = max(max(d) for d in probes)
+    width = sum(dy if abs(dx - length) <= abs(dy - length) else dx for dx, dy in gates)
+    return float(width), float(length)
+
+
+def mos_width(polys: list[gdstk.Polygon]) -> float:
+    """Total gate width over fingers, in either gate orientation."""
+    return _mos_wl(polys)[0]
+
+
+def mos_length(polys: list[gdstk.Polygon]) -> float:
+    """Gate length, in either gate orientation."""
+    return _mos_wl(polys)[1]
 
 
 MOSFET_TEMPLATES = _extract(
@@ -331,15 +409,19 @@ MOSFET_TEMPLATES = _extract(
         _mos("nmos_hv", False, True),
         _mos("pmos_hv", True, True),
     ],
-    width=dy_sum,  # total W over fingers; nf = count
-    length=dx_max,
+    width=mos_width,  # total W over fingers; nf = count
+    length=mos_length,
 )
 
 
-# RF MOS: no HeatTrans; S/D stacked in y; Metal1 gate ring; TIE = guard ring (bulk B).
-# CONFIDENCE: MEDIUM (standard cells sg13g2_* cross-match: blackbox or subcircuit them)
+# RF MOS: S/D stacked in y; Metal1 gate ring; TIE = guard ring (bulk B).
+# Off by default (ENABLE_RF_MOSFET_TEMPLATES): no geometric layer tells RF MOS from MOS.
+# TODO(gflvs): the deck recognises RF MOS by a 63/0 "rfnmos"/"rfpmos"(HV) text in the guard ring; gflvs can't
+# key on text, so RF MOS extract as nmos/pmos (as KLayout does for our rf PCells, which lack that text).
+# TODO(issue: pending): rfnmos/rfpmos(_hv) PCells don't draw the 63/0 RF text (P2), so the deck reads them as MOS.
+# CONFIDENCE: MEDIUM
 def _rf(o: LayerOperation, p: bool, hv: bool) -> LayerOperation:
-    o = o - HeatTrans - Recogesd - Varicap
+    o = _minus(o, *_MOS_EXCLUDE, Varicap)
     o = (o & pSD & NWell) if p else (o - pSD - NWell)
     return (o & ThickGateOx) if hv else (o - ThickGateOx)
 
@@ -376,15 +458,21 @@ RF_MOSFET_TEMPLATES = _extract(
 )
 
 
-# NPN HBTs: seed = emitter window; E on Metal1 (Via1 -> Metal2 E pin).
+# NPN HBTs, keyed like the deck's emitter windows (bjt_derivations.lvs):
+#   npn13G2 = EmWind & Activmask & nSDblock; npn13G2L = EmWind & Activ, not Activmask/nSDblock;
+#   npn13G2V = EmWiHV & Activ, not Activmask/nSDblock. All inside TRANS. (HeatTrans is on all three.)
+# E sits on the Metal2 strap over the emitters, where the E port is.
 # CONFIDENCE: HIGH
 # TODO(issue: pending): npn13G2 ignores `Ny` (one emitter window row only).
 # TODO(issue: pending): the BN (substrate) pin is never drawn.
+# TODO(issue: pending): npn13G2 draws a 0.7 um emitter; the deck needs 0.07-0.9 um bbox, 0.063 um2 (P1).
+# TODO(gflvs): the B and C ports sit on Metal1 straps outside these clipped regions, so a route landing there
+# stays open (G3: device-cell metal is never traced). Covering them needs whole-polygon selection or G3.
 def _npn(name: str, seed: LayerOperation) -> DeviceTemplate:
     return tpl(
         name,
         [
-            pin("E", Metal1 & seed),
+            pin("E", Metal2 & grow(seed, BJT_E_REACH)),
             pin(
                 "C",
                 (Metal1 & Activ & grow(seed, BJT_REACH))
@@ -402,14 +490,30 @@ def _npn(name: str, seed: LayerOperation) -> DeviceTemplate:
     )
 
 
-# pnpMPA: nBuLay is unique to it; Metal1pin gates the terminals (no other marker drawn).
+# pnpMPA, keyed like the deck's pnp_mpa_e: p+ Activ in NWell & nBuLay, away from any gate and outside
+# the deck's `pnp_exclude` layers. Metal1pin gates the terminals (no other marker drawn).
 # CONFIDENCE: HIGH
-_emitter = Activ & pSD & nBuLay
+_emitter = _minus(
+    Activ & pSD & NWell & nBuLay,
+    *(
+        TRANS,
+        EmWind,
+        EmWiHV,
+        nSDblock,
+        PWellblock,
+        nSD,
+        SalBlock,
+        PolyRes,
+        EXTBlock,
+        RES,
+    ),
+    *(Recogdiode, Recogesd, IND, INDpin, Substrate),
+) - grow(GatPoly, PNP_POLY_KEEPOUT)
 BJT_TEMPLATES = _extract(
     [
-        _npn("npn13G2", EmWind & nSDblock & TRANS),
-        _npn("npn13G2L", EmWind & HeatTrans & TRANS),
-        _npn("npn13G2V", EmWiHV & TRANS),
+        _npn("npn13G2", EmWind & Activmask & nSDblock & TRANS),
+        _npn("npn13G2L", (EmWind & Activ & TRANS) - Activmask - nSDblock),
+        _npn("npn13G2V", (EmWiHV & Activ & TRANS) - Activmask - nSDblock),
     ],
     emitter_width=dx_max,
     emitter_length=dy_max,
@@ -420,17 +524,27 @@ BJT_TEMPLATES = _extract(
             "pnpMPA",
             [
                 pin("PLUS", Metal1 & Metal1pin & _emitter),
-                pin("MINUS", (Metal1 & Metal1pin & Activ & nBuLay) - pSD),
+                pin(
+                    "MINUS",
+                    (
+                        Metal1
+                        & Metal1pin
+                        & Activ
+                        & nBuLay
+                        & grow(_emitter, PNP_BASE_REACH)
+                    )
+                    - pSD,
+                ),
                 pin(
                     "TIE",
-                    (Metal1 & Metal1pin & Activ & pSD & grow(nBuLay, PNP_REACH))
+                    (Metal1 & Metal1pin & Activ & pSD & grow(_emitter, PNP_TIE_REACH))
                     - NWell,
                 ),
             ],
             [
                 par("width", _emitter),
                 par("length", _emitter),
-                par("glue", grow(nBuLay, PNP_REACH)),
+                par("glue", grow(_emitter, PNP_TIE_REACH)),
             ],
         )
     ],
@@ -469,39 +583,45 @@ RESISTOR_TEMPLATES = _extract(
 )
 
 
-# MIM caps: TopMetal1 plate is width(y) x length(x).
+# MIM caps, keyed like the deck (cap_derivations.lvs): MIM between TopMetal1 and Metal5, rfcmim when
+# PWellblock covers it, never under IND/INDpin. w/l are the MIM extents (deck `calc_cmim_params`):
+# cmim w = x, l = y; rfcmim swaps them (l = x, w = y).
 # cmim CONFIDENCE: HIGH; rfcmim CONFIDENCE: MEDIUM (hierarchy: holds a cmim subcell unless flat)
+# TODO(issue: pending): the PCell draws MIM 0.72 um larger than its width/length arguments (P4).
 def _mim(name: str, seed: LayerOperation) -> DeviceTemplate:
-    terms = [pin("PLUS", TopMetal1 & seed), pin("MINUS", Metal5 & seed)]
+    terms = [
+        pin("PLUS", TopMetal1 & seed),
+        # the MINUS port sits on the Metal5 overhang outside MIM
+        pin("MINUS", Metal5 & grow(seed, CAP_PLATE_REACH)),
+    ]
     if name == "rfcmim":
         terms.append(pin("TIE_LOW", Metal1 & Activ & pSD & grow(seed, CAP_TIE_REACH)))
-    plate = TopMetal1 & seed
     return tpl(
         name,
         terms,
         [
-            par("width", plate),
-            par("length", plate),
-            par("glue", grow(seed, CAP_TIE_REACH)),
+            par("width", seed),
+            par("length", seed),
+            par(
+                "glue",
+                grow(seed, CAP_TIE_REACH if name == "rfcmim" else CAP_PLATE_REACH),
+            ),
         ],
     )
 
 
+_mim_seed = MIM - IND - INDpin
 CAPACITOR_TEMPLATES = _extract(
-    [
-        _mim("cmim", (MIM & MemCap) - PWellblock),
-        _mim("rfcmim", MIM & MemCap & PWellblock),
-    ],
-    width=dy_max,
-    length=dx_max,
-)
+    [_mim("cmim", _mim_seed - PWellblock)], width=dx_max, length=dy_max
+) + _extract([_mim("rfcmim", _mim_seed & PWellblock)], width=dy_max, length=dx_max)
 
 
-# svaricap: G = left pad, B = right pad, both Metal1.
+# svaricap, keyed like the deck's varicap_core: an n-gate (Activ & GatPoly, no pSD) inside NWell.
+# Our PCell also draws Varicap; official layouts draw nBuLay instead. G = left pad, B = right pad (Metal1).
 # CONFIDENCE: LOW
 # TODO(issue: pending): pads don't touch the contacts, the gate has no contact, and ports (G, B)
-# don't match the SPICE pins (G1, W, G2, BN).
-_vchan = Activ & GatPoly & Varicap
+# don't match the SPICE pins (G1, W, G2, BN); no 63/0 "SVaricap" text, so the deck skips it (P3).
+# TODO(gflvs): the deck measures on the 63/0 "SVaricap" text region; gflvs can't key on text.
 VARACTOR_TEMPLATES = _extract(
     [
         tpl(
@@ -520,18 +640,25 @@ VARACTOR_TEMPLATES = _extract(
 )
 
 
-# ESD clamp: PAD on Metal2 (-> VDD), GND on Metal1 (-> VSS).
+# ESD clamp, keyed like the deck's nmoscl (esd_derivations.lvs): gates inside Recogesd. ESD diodes have
+# Recogesd but no gate. PAD on Metal2 (-> VDD), GND on Metal1 (-> VSS).
 # CONFIDENCE: LOW (length not drawn)
-# TODO(issue: pending): GatPoly covers all of Activ, one Metal1 spans S and D, and the Metal2 PAD has no Via1.
+# TODO(issue: pending): GatPoly covers all of Activ, one Metal1 spans S and D, and the Metal2 PAD has no Via1;
+# no 63/0 "nmoscl_2" text, so the deck skips it (P3).
+# TODO(gflvs): the deck tells nmoscl_2/_4 apart by a 63/0 text; gflvs can't key on text.
+_esd_gate = Activ & GatPoly & Recogesd
 ESD_TEMPLATES = _extract(
     [
         tpl(
             "esd_nmos",
-            [pin("PAD", Metal2 & Recogesd), pin("GND", Metal1 & Recogesd)],
             [
-                par("width", Activ & Recogesd),
-                par("nf", Activ & Recogesd),
-                par("glue", Recogesd),
+                pin("PAD", Metal2 & Recogesd & grow(_esd_gate, ESD_REACH)),
+                pin("GND", Metal1 & Recogesd & grow(_esd_gate, ESD_REACH)),
+            ],
+            [
+                par("width", _esd_gate),
+                par("nf", _esd_gate),
+                par("glue", grow(_esd_gate, ESD_REACH)),
             ],
         )
     ],
@@ -542,6 +669,10 @@ ESD_TEMPLATES = _extract(
 # Inductors: pins are TopMetal1/TopMetal2 & INDpin & IND.
 # inductor2 CONFIDENCE: LOW (turns=1 only); inductor3 CONFIDENCE: MEDIUM
 # TODO(issue: pending): inductor2(turns=2) draws the same three-port geometry as inductor3 and is classified as it.
+# TODO(issue: pending): our inductor2 puts its ports on TopMetal2; the deck's are on TopMetal1 (LA/LB), and
+# neither PCell draws the 27/25 LA/LB/LC port texts (P3).
+# TODO(gflvs): the deck tells inductor2 from inductor3 by those texts; gflvs can't key on text, so official
+# inductor3 layouts also match inductor2 (R3, not fixed).
 _tm1_pins = TopMetal1 & INDpin & IND
 _ind2_pins = (TopMetal2 & INDpin & IND) - grow(_tm1_pins, IND_TAP_REACH)
 INDUCTOR_TEMPLATES = [
@@ -569,11 +700,17 @@ PAD_TEMPLATES = _extract(
 )
 
 
-# Antenna diodes: no ports in the PCells; terminal named by SPICE pin, the other pin is the implicit
-# substrate (dantenna) or well (dpantenna).
+# Antenna diodes, keyed like the deck's antenna_d_mk: Recogdiode minus `antenna_d_exc` (schottky draws
+# nSDblock/SalBlock/PWellblock, ESD diodes draw Recogesd). No ports in the PCells; terminal named by SPICE
+# pin, the other pin is the implicit substrate (dantenna) or well (dpantenna).
 # CONFIDENCE: MEDIUM
-_dn = (Activ & Recogdiode) - pSD - NWell
-_dp = Activ & Recogdiode & pSD & NWell
+_antenna = _minus(
+    Activ & Recogdiode,
+    *(PWellblock, SalBlock, nSDblock, GatPoly, nSD, TRANS, EmWind, EmWiHV, PolyRes),
+    *(EXTBlock, RES, Activmask, Recogesd, IND, INDpin, Substrate),
+)
+_dn = _antenna - pSD - NWell
+_dp = _antenna & pSD & NWell
 DIODE_TEMPLATES = _extract(
     [
         tpl(
@@ -595,6 +732,8 @@ DIODE_TEMPLATES = _extract(
 NO_MARKER_TEMPLATES: frozenset[str] = frozenset(
     # RF MOS draw no marker, and Metal1pin covers only the port fingers (nf>1 would lose S/D fingers)
     {"rfnmos", "rfpmos", "rfnmos_hv", "rfpmos_hv"}
+    # the deck keys MOS on the gate itself (Activ & GatPoly); std cells and official MOS draw no marker
+    | {"nmos", "pmos", "nmos_hv", "pmos_hv"}
 )
 
 # via_stack_*, via_array_*, via_stack_with_pads_* (matched as a lowercase cell-name prefix)
@@ -616,7 +755,10 @@ def _groups() -> list[tuple[bool, list[DeviceTemplate]]]:
     ]
 
 
-DEVICE_TEMPLATES: list[DeviceTemplate] = [t for _, group in _groups() for t in group]
+# the default-enabled templates (DEFAULT_LVS_CONFIG's)
+DEVICE_TEMPLATES: list[DeviceTemplate] = [
+    t for on, group in _groups() if on for t in group
+]
 
 
 def template_layers(templates: Iterable[DeviceTemplate]) -> frozenset[LayerKey]:
@@ -646,6 +788,8 @@ def build_lvs_config() -> LvsConfig:
         templates = blackboxed
     return LvsConfig(
         device_templates=templates,
+        # TODO(gflvs): no substrate net (R6). The deck puts bulk/BN/TIE on one substrate net; here
+        # `net_to_layer_op_map` stays empty because no template has a bulk terminal to hang on it.
         netlist_tracer_config=NetlistTracerConfig(
             layer_connectivity=LAYER_CONNECTIVITY,
             # routing metals, vias and GatPoly only: Activ/PolyRes/plates stay out or they short devices

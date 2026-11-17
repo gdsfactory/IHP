@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any, cast
 
 import pytest
@@ -86,6 +87,11 @@ def test_flags_toggle(monkeypatch: pytest.MonkeyPatch) -> None:
                 for t in rules.DEVICE_TEMPLATES
                 if t.device_name not in removed
             ], flag
+
+    with monkeypatch.context() as m:
+        m.setattr(rules, "ENABLE_RF_MOSFET_TEMPLATES", True)  # off by default
+        rf_on = {t.device_name for t in rules.build_lvs_config().device_templates}
+        assert {t.device_name for t in rules.RF_MOSFET_TEMPLATES} <= rf_on
 
     with monkeypatch.context() as m:
         m.setattr(rules, "HIERARCHICAL_RUN", True)
@@ -184,14 +190,10 @@ EXTRACT_CASES: list[Any] = [
         2,
         {"dx": 1.5, "dy": 7.0},
     ),
-    ("cmim", {}, "cmim", 2, {"width": 6.0, "length": 6.0}),
-    (
-        "cmim",
-        {"width": 8.0, "length": 5.0},
-        "cmim",
-        2,
-        {"width": 8.0, "length": 5.0},
-    ),
+    # cmim w/l are the MIM extents, as the IHP deck measures them (w = x, l = y); the PCell
+    # draws MIM 0.72 um larger than its width (y) / length (x) arguments
+    ("cmim", {}, "cmim", 2, {"width": 6.72, "length": 6.72}),
+    ("cmim", {"width": 8.0, "length": 5.0}, "cmim", 2, {"width": 5.72, "length": 8.72}),
 ]
 
 
@@ -220,3 +222,38 @@ def test_pcell_extracts(
     got = {p.name: p.value for p in devices[0].parameters}
     for name, value in params.items():
         assert got[name] == pytest.approx(value, rel=1e-3), name
+
+
+def _devices(cell: gdstk.Cell) -> list[Any]:
+    results = ElectricalDeviceExtractionPolicy().execute(
+        cell,
+        rules.DEVICE_TEMPLATES,
+        rules.DEFAULT_LVS_CONFIG.electrical_device_extraction_config,
+    )
+    return [r.unwrap() for r in results]
+
+
+# cut from IHP-Open-PDK testcases (Apache-2.0) @ e73adb40 unit/cap_devices: they draw no MemCap/Varicap
+OFFICIAL = Path(__file__).parent / "lvs_official"
+
+
+@pytest.mark.parametrize(
+    "gds, device",
+    [("sg13_hv_svaricap_cell.gds", "svaricap"), ("cap_cmim_one.gds", "cmim")],
+)
+def test_official_layout_extracts(gds: str, device: str) -> None:
+    (top,) = gdstk.read_gds(str(OFFICIAL / gds)).top_level()
+    assert isinstance(top, gdstk.Cell)
+    assert [d.class_name for d in _devices(top)] == [device]
+
+
+def test_std_cell_is_plain_mos(tmp_path: Any) -> None:
+    """sg13g2_inv_2 is one nmos + one pmos, never rfnmos/rfpmos (the IHP deck reads it so)."""
+    component = cells.sg13g2_inv_2()
+    library = _library(component, tmp_path)
+    top = next(
+        c
+        for c in library.cells
+        if isinstance(c, gdstk.Cell) and c.name == component.name
+    )
+    assert sorted(d.class_name for d in _devices(top)) == ["nmos", "pmos"]
