@@ -296,7 +296,7 @@ IND_GLUE = 5.0  # inductor2 pin glue (pins are 2 x diameter apart)
 # Tracer connectivity: the PDK's own `connectivity`, minus Activ.
 # Activ not traced: S/D would short through the channel (and C/E/B through bipolar diffusions).
 # GatPoly kept: MOS gates are GatPoly terminals (poly-resistor heads are Metal1 pads).
-# TODO(issue: pending): inductor spirals are one continuous metal path between their pins, so the tracer
+# TODO(https://github.com/gdsfactory/IHP/issues/302): inductor spirals are one continuous metal path between their pins, so the tracer
 # shorts P1/P2 (inductor2) and P1/P2/P3 (inductor3).
 LAYER_CONNECTIVITY: dict[LayerKey, list[LayerKey]] = connectivity(
     (
@@ -350,9 +350,9 @@ _vchan = _nwell_ngate & (Varicap | nBuLay)
 # LV/HV MOS: the deck's gate = Activ & GatPoly minus `mos_exclude`, split by pSD and ThickGateOx.
 # nmos also excludes NWell (an n-gate in NWell is the svaricap). Matches std cells and official layouts.
 # CONFIDENCE: HIGH
-# TODO(issue: pending): the bulk pin is never drawn (no B terminal).
-# TODO(issue: pending): finger width is rounded to the grid (width=0.5, nf=3 draws 0.495).
-# TODO(issue: pending): multi-finger nmos/pmos(_hv) leave S/D fingers unstrapped (P5; gflvs G1 hides it).
+# TODO(https://github.com/gdsfactory/IHP/issues/302): the bulk pin is never drawn (no B terminal).
+# TODO(https://github.com/gdsfactory/IHP/issues/302): finger width is rounded to the grid (width=0.5, nf=3 draws 0.495).
+# TODO(https://github.com/gdsfactory/IHP/issues/302): multi-finger nmos/pmos(_hv) leave S/D fingers unstrapped (P5; gflvs G1 hides it).
 # TODO(gflvs): moscap_n/p are told apart from MOS by a 63/0 text; gflvs can't key on text, so they extract as MOS.
 def _implant(o: LayerOperation, p: bool, hv: bool) -> LayerOperation:
     o = (o & pSD) if p else (o - pSD - NWell)
@@ -427,7 +427,7 @@ MOSFET_TEMPLATES = _extract(
 # Off by default (ENABLE_RF_MOSFET_TEMPLATES): no geometric layer tells RF MOS from MOS.
 # TODO(gflvs): the deck recognises RF MOS by a 63/0 "rfnmos"/"rfpmos"(HV) text in the guard ring; gflvs can't
 # key on text, so RF MOS extract as nmos/pmos (as KLayout does for our rf PCells, which lack that text).
-# TODO(issue: pending): rfnmos/rfpmos(_hv) PCells don't draw the 63/0 RF text (P2), so the deck reads them as MOS.
+# TODO(https://github.com/gdsfactory/IHP/issues/302): rfnmos/rfpmos(_hv) PCells don't draw the 63/0 RF text (P2), so the deck reads them as MOS.
 # CONFIDENCE: MEDIUM
 def _rf(o: LayerOperation, p: bool, hv: bool) -> LayerOperation:
     o = _minus(o, *_MOS_EXCLUDE, Varicap)
@@ -473,9 +473,9 @@ RF_MOSFET_TEMPLATES = _extract(
 #   npn13G2V = EmWiHV & Activ, not Activmask/nSDblock. All inside TRANS. (HeatTrans is on all three.)
 # E sits on the Metal2 strap over the emitters, where the E port is.
 # CONFIDENCE: HIGH
-# TODO(issue: pending): npn13G2 ignores `Ny` (one emitter window row only).
-# TODO(issue: pending): the BN (substrate) pin is never drawn.
-# TODO(issue: pending): npn13G2 draws a 0.7 um emitter; the deck needs 0.07-0.9 um bbox, 0.063 um2 (P1).
+# TODO(https://github.com/gdsfactory/IHP/issues/302): npn13G2 ignores `Ny` (one emitter window row only).
+# TODO(https://github.com/gdsfactory/IHP/issues/302): the BN (substrate) pin is never drawn.
+# TODO(https://github.com/gdsfactory/IHP/issues/302): npn13G2 draws a 0.7 um emitter; the deck needs 0.07-0.9 um bbox, 0.063 um2 (P1).
 # TODO(gflvs): the B and C ports sit on Metal1 straps outside these clipped regions, so a route landing there
 # stays open (G3: device-cell metal is never traced). Covering them needs whole-polygon selection or G3.
 def _npn(name: str, seed: LayerOperation) -> DeviceTemplate:
@@ -566,7 +566,7 @@ BJT_TEMPLATES = _extract(
 # Poly resistors: P1/P2 are the Metal1 pads on the GatPoly heads (ports sit on Metal1pin);
 # dy/dx are measured on the PolyRes body between the heads. y-ordered: lower = P2, upper = P1.
 # CONFIDENCE: HIGH
-# TODO(issue: pending): the BN (substrate) pin is never drawn.
+# TODO(https://github.com/gdsfactory/IHP/issues/302): the BN (substrate) pin is never drawn.
 RESISTOR_TEMPLATES = _extract(
     [
         tpl(
@@ -597,7 +597,7 @@ RESISTOR_TEMPLATES = _extract(
 # PWellblock covers it, never under IND/INDpin. w/l are the MIM extents (deck `calc_cmim_params`):
 # cmim w = x, l = y; rfcmim swaps them (l = x, w = y).
 # cmim CONFIDENCE: HIGH; rfcmim CONFIDENCE: MEDIUM (the PCell is flattened, so gflvs sees its cmim core)
-# TODO(issue: pending): the PCell draws MIM 0.72 um larger than its width/length arguments (P4).
+# TODO(https://github.com/gdsfactory/IHP/issues/302): the PCell draws MIM 0.72 um larger than its width/length arguments (P4).
 def _mim(name: str, seed: LayerOperation) -> DeviceTemplate:
     terms = [
         pin("PLUS", TopMetal1 & seed),
@@ -629,7 +629,7 @@ CAPACITOR_TEMPLATES = _extract(
 # svaricap, keyed like the deck's varicap_core: an n-gate (Activ & GatPoly, no pSD) inside NWell.
 # Our PCell also draws Varicap; official layouts draw nBuLay instead. G = left pad, B = right pad (Metal1).
 # CONFIDENCE: LOW
-# TODO(issue: pending): pads don't touch the contacts, the gate has no contact, and ports (G, B)
+# TODO(https://github.com/gdsfactory/IHP/issues/302): pads don't touch the contacts, the gate has no contact, and ports (G, B)
 # don't match the SPICE pins (G1, W, G2, BN); no 63/0 "SVaricap" text, so the deck skips it (P3).
 # TODO(gflvs): the deck measures on the 63/0 "SVaricap" text region; gflvs can't key on text.
 VARACTOR_TEMPLATES = _extract(
@@ -653,7 +653,7 @@ VARACTOR_TEMPLATES = _extract(
 # ESD clamp, keyed like the deck's nmoscl (esd_derivations.lvs): gates inside Recogesd. ESD diodes have
 # Recogesd but no gate. PAD on Metal2 (-> VDD), GND on Metal1 (-> VSS).
 # CONFIDENCE: LOW (length not drawn)
-# TODO(issue: pending): GatPoly covers all of Activ, one Metal1 spans S and D, and the Metal2 PAD has no Via1;
+# TODO(https://github.com/gdsfactory/IHP/issues/302): GatPoly covers all of Activ, one Metal1 spans S and D, and the Metal2 PAD has no Via1;
 # no 63/0 "nmoscl_2" text, so the deck skips it (P3).
 # TODO(gflvs): the deck tells nmoscl_2/_4 apart by a 63/0 text; gflvs can't key on text.
 _esd_gate = Activ & GatPoly & Recogesd
@@ -678,8 +678,8 @@ ESD_TEMPLATES = _extract(
 
 # Inductors: pins are TopMetal1/TopMetal2 & INDpin & IND.
 # inductor2 CONFIDENCE: LOW (turns=1 only); inductor3 CONFIDENCE: MEDIUM
-# TODO(issue: pending): inductor2(turns=2) draws the same three-port geometry as inductor3 and is classified as it.
-# TODO(issue: pending): our inductor2 puts its ports on TopMetal2; the deck's are on TopMetal1 (LA/LB), and
+# TODO(https://github.com/gdsfactory/IHP/issues/302): inductor2(turns=2) draws the same three-port geometry as inductor3 and is classified as it.
+# TODO(https://github.com/gdsfactory/IHP/issues/302): our inductor2 puts its ports on TopMetal2; the deck's are on TopMetal1 (LA/LB), and
 # neither PCell draws the 27/25 LA/LB/LC port texts (P3).
 # TODO(gflvs): the deck tells inductor2 from inductor3 by those texts; gflvs can't key on text, so official
 # inductor3 layouts also match inductor2 (R3, not fixed).
