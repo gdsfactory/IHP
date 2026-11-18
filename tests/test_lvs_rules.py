@@ -241,6 +241,9 @@ def test_pcell_extracts(
     devices = [r.unwrap() for r in results]
     assert [d.class_name for d in devices] == [device]
     assert len(devices[0].terminals) == n_terminals
+    # terminal names are the PCell's logical pins, its port names where it registers none
+    pins = {p.name for p in component.pins} or {p.name for p in component.ports}
+    assert {t.name for t in devices[0].terminals} == pins
     got = {p.name: p.value for p in devices[0].parameters}
     for name, value in params.items():
         assert got[name] == pytest.approx(value, rel=1e-3), name

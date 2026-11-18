@@ -5,7 +5,11 @@ Usage::
     import gflvs
     from ihp.lvs.rules import DEFAULT_LVS_CONFIG
 
-    ok, extracted, l2n, report = gflvs.lvs(netlist, lib, DEFAULT_LVS_CONFIG)
+    ok, extracted, l2n, report = gflvs.lvs(
+        netlist, lib, DEFAULT_LVS_CONFIG, topcell=component.name
+    )
+
+An empty topcell picks gdsfactory's ``$$$CONTEXT_INFO$$$`` cell (doplaydo/gflvs#137), so pass it.
 
 Flip the flags below and call ``build_lvs_config()`` for a variant config.
 
@@ -291,7 +295,7 @@ IND_GLUE = 5.0  # inductor2 pin glue (pins are 2 x diameter apart)
 
 # Tracer connectivity: the PDK's own `connectivity`, minus Activ.
 # Activ not traced: S/D would short through the channel (and C/E/B through bipolar diffusions).
-# GatPoly kept: MOS gates and poly-resistor heads are GatPoly terminals.
+# GatPoly kept: MOS gates are GatPoly terminals (poly-resistor heads are Metal1 pads).
 # TODO(issue: pending): inductor spirals are one continuous metal path between their pins, so the tracer
 # shorts P1/P2 (inductor2) and P1/P2/P3 (inductor3).
 LAYER_CONNECTIVITY: dict[LayerKey, list[LayerKey]] = connectivity(
@@ -592,7 +596,7 @@ RESISTOR_TEMPLATES = _extract(
 # MIM caps, keyed like the deck (cap_derivations.lvs): MIM between TopMetal1 and Metal5, rfcmim when
 # PWellblock covers it, never under IND/INDpin. w/l are the MIM extents (deck `calc_cmim_params`):
 # cmim w = x, l = y; rfcmim swaps them (l = x, w = y).
-# cmim CONFIDENCE: HIGH; rfcmim CONFIDENCE: MEDIUM (hierarchy: holds a cmim subcell unless flat)
+# cmim CONFIDENCE: HIGH; rfcmim CONFIDENCE: MEDIUM (the PCell is flattened, so gflvs sees its cmim core)
 # TODO(issue: pending): the PCell draws MIM 0.72 um larger than its width/length arguments (P4).
 def _mim(name: str, seed: LayerOperation) -> DeviceTemplate:
     terms = [

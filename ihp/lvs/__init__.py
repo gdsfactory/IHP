@@ -1,4 +1,7 @@
-"""gflvs LVS rules for IHP SG13G2: ``gflvs.lvs(netlist, lib, DEFAULT_LVS_CONFIG)``.
+"""gflvs LVS rules for IHP SG13G2.
+
+Usage: ``gflvs.lvs(netlist, lib, DEFAULT_LVS_CONFIG, topcell=component.name)``. An empty topcell
+picks gdsfactory's ``$$$CONTEXT_INFO$$$`` cell (doplaydo/gflvs#137), so pass it.
 
 Importing this package needs the ``gflvs`` library; importing ``ihp`` itself never does.
 """
