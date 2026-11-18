@@ -23,6 +23,7 @@ test:
 	uv run pytest -s
 
 test-pex:
+	uv run --extra dev --extra pex python -c "import gfpex.gfpex"  # fail here, not skip in pytest, if gfpex or a dependency is missing
 	uv run --extra dev --extra pex pytest tests/test_pex_ihp.py -v
 
 test-force: install

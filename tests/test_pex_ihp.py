@@ -96,9 +96,11 @@ def test_gds_pairs_match_layer(cfg: Any, field: str, suffix: str) -> None:
 def test_metal_z_monotonic(metals: list[Any]) -> None:
     # metal5_n_cap and metal5_cap are the two variants of Metal5 (without/with MIM) and share one z.
     zs = [s.metal_layer.z for s in metals]
+    assert len(zs) > 1
     assert zs == sorted(zs)
 
 
 def test_z_lookup_covers_contacts(cfg: Any, contacts: list[Any]) -> None:
     lookup = cfg.build_layer_z_lookup()
+    assert contacts
     assert all(c.name in lookup for c in contacts)
