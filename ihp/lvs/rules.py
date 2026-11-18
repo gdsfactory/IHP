@@ -274,6 +274,8 @@ PNP_TIE_REACH = 2.5  # pnpMPA TIE (collector) pin from the emitter (max 2.01)
 PNP_POLY_KEEPOUT = (
     3.0  # p+ diffusion this close to GatPoly is MOS S/D, not a pnp emitter
 )
+# ponytail: a real pnp emitter within 3 um of any GatPoly won't extract; the deck instead requires
+# base/collector rings around it (pnp_mpa_e), which needs gflvs "interacting" selection
 RES_REACH = 0.3  # Metal1 head pads to the PolyRes body (max 0.15: rhigh)
 CAP_PLATE_REACH = (
     0.6  # Metal5 bottom plate overhang beyond MIM, MINUS port inside it (0.6)
@@ -333,10 +335,12 @@ _MOS_EXCLUDE: tuple[LayerRef, ...] = (
     RES,
 )
 _MOS_EXCLUDE += (Activmask, Recogdiode, Recogesd, IND, INDpin, Substrate, nSDblock)
-# svaricap core (deck varicap_core): an n-gate inside NWell; see VARACTOR_TEMPLATES
-_vchan = _minus(
+# svaricap core (deck varicap_core): an n-gate inside NWell, gated by Varicap (our PCell) or nBuLay
+# (official layouts draw nBuLay, the deck's nwell_iso, and no Varicap); see VARACTOR_TEMPLATES
+_nwell_ngate = _minus(
     Activ & GatPoly & NWell, pSD, nSDblock, PWellblock, Recogesd, Recogdiode, Substrate
 )
+_vchan = _nwell_ngate & (Varicap | nBuLay)
 
 
 # LV/HV MOS: the deck's gate = Activ & GatPoly minus `mos_exclude`, split by pSD and ThickGateOx.
@@ -353,8 +357,9 @@ def _implant(o: LayerOperation, p: bool, hv: bool) -> LayerOperation:
 
 def _mos(name: str, p: bool, hv: bool) -> DeviceTemplate:
     # official svaricaps put pSD over their gate ends: a p-gate touching a varicap core is not a pmos
+    # (unclipped core: the official gate ends lie past nBuLay)
     chan = _implant(_minus(Activ & GatPoly, *_MOS_EXCLUDE), p, hv) - grow(
-        _vchan, VARICAP_PGATE_REACH
+        _nwell_ngate, VARICAP_PGATE_REACH
     )
     # gates plus thin GatPoly strips just past each gate end, which show the W axis (rf PCells turn gates)
     probe = (GatPoly & grow(chan, 2 * MOS_ENDCAP_PROBE)) - grow(Activ, MOS_ENDCAP_PROBE)
@@ -458,7 +463,8 @@ RF_MOSFET_TEMPLATES = _extract(
 )
 
 
-# NPN HBTs, keyed like the deck's emitter windows (bjt_derivations.lvs):
+# NPN HBTs: positive keys like the deck's emitter windows (bjt_derivations.lvs); exclusions partial
+# (the deck also drops Activ/EmWiHV/npn_exclude from npn13G2 and EmWind/EmWiHV/npn_exclude from L/V):
 #   npn13G2 = EmWind & Activmask & nSDblock; npn13G2L = EmWind & Activ, not Activmask/nSDblock;
 #   npn13G2V = EmWiHV & Activ, not Activmask/nSDblock. All inside TRANS. (HeatTrans is on all three.)
 # E sits on the Metal2 strap over the emitters, where the E port is.
@@ -732,7 +738,7 @@ DIODE_TEMPLATES = _extract(
 NO_MARKER_TEMPLATES: frozenset[str] = frozenset(
     # RF MOS draw no marker, and Metal1pin covers only the port fingers (nf>1 would lose S/D fingers)
     {"rfnmos", "rfpmos", "rfnmos_hv", "rfpmos_hv"}
-    # the deck keys MOS on the gate itself (Activ & GatPoly); std cells and official MOS draw no marker
+    # the deck keys MOS on the gate itself (Activ & GatPoly), not on HeatTrans; std cells draw no marker
     | {"nmos", "pmos", "nmos_hv", "pmos_hv"}
 )
 

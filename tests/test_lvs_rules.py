@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from pathlib import Path
 from typing import Any, cast
 
@@ -11,7 +12,7 @@ gflvs = pytest.importorskip("gflvs")
 
 import gdstk  # noqa: E402
 from gflvs.gflvs_refactor import ElectricalDeviceExtractionPolicy  # noqa: E402
-from gflvs.gflvs_schema import LvsRunMode  # noqa: E402
+from gflvs.gflvs_schema import LayerBooleanOperation, LvsRunMode  # noqa: E402
 
 from ihp import cells  # noqa: E402
 from ihp.lvs import rules  # noqa: E402
@@ -40,18 +41,39 @@ def test_connectivity_symmetric() -> None:
     assert all(a in connectivity[b] for a, bs in connectivity.items() for b in bs)
 
 
+# every template, including groups that are off by default (RF MOS)
+ALL_TEMPLATES = [t for _, group in rules._groups() for t in group]
+
+
 def test_template_layers_in_pdk() -> None:
     pdk_layers = {(int(layer.layer), int(layer.datatype)) for layer in cast(Any, LAYER)}
-    used = rules.template_layers(rules.DEVICE_TEMPLATES) | set(rules.LAYER_CONNECTIVITY)
+    used = rules.template_layers(ALL_TEMPLATES) | set(rules.LAYER_CONNECTIVITY)
     assert used <= pdk_layers
 
 
+def _positive_leaves(operation: Any) -> Iterator[tuple[int, int]]:
+    """Leaf layers an op requires: the right operand of a NOT (difference) is skipped."""
+    is_not = (
+        operation.WhichOneof("operation") == "bool_op"
+        and operation.bool_op == LayerBooleanOperation.LAYER_BOOLEAN_OPERATION_NOT
+    )
+    for side in ("left",) if is_not else ("left", "right"):
+        field = operation.WhichOneof(f"layer_{side}")
+        if field is None:
+            continue
+        if field.startswith("layer_ref"):
+            layer = getattr(operation, field).layer
+            yield (layer.layer, layer.datatype)
+        else:
+            yield from _positive_leaves(getattr(operation, field))
+
+
 def test_terminals_use_markers() -> None:
-    for t in rules.DEVICE_TEMPLATES:
+    for t in ALL_TEMPLATES:
         if t.device_name in rules.NO_MARKER_TEMPLATES:
             continue
         for term in t.device_terminal_template:
-            leaves = set(rules._leaf_layers(term.layer_composed_op))
+            leaves = set(_positive_leaves(term.layer_composed_op))
             assert leaves & rules.MARKER_LAYERS, f"{t.device_name}.{term.terminal_name}"
 
 
