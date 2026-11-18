@@ -51,6 +51,7 @@ docs = [
   "mkdocstrings[python]>=0.27.0",
   "zensical>=0.0.40,<0.2.0"
 ]
+pex = ["gfpex"]
 simulation = [
   "gsim~=0.7; python_version>='3.12'"
 ]
@@ -216,3 +217,11 @@ showcontent = true
 directory = "fixed"
 name = "Fixed"
 showcontent = true
+
+[tool.uv]
+# gfpex (git kfnetlist, protobuf>=7) and gsim (gdsfactoryplus -> vlsir, protobuf<5) can't share one environment.
+conflicts = [[{ extra = "pex" }, { extra = "simulation" }]]
+
+[tool.uv.sources]
+# gfpex is private and not on PyPI (needs access to doplaydo/gf-pex and a Rust toolchain).
+gfpex = { git = "https://github.com/doplaydo/gf-pex", branch = "dev/diogo-main" }

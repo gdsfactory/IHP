@@ -8,12 +8,15 @@ Magic tech file.
 
 ## Installation
 
-gfpex is optional and not a dependency of this package:
+gfpex is an optional dependency, the `pex` extra (gf-pex `dev/diogo-main`, private: needs GitHub access to
+`doplaydo/gf-pex` and a Rust toolchain to build):
 
 ```bash
-uv pip install networkx "kfnetlist @ git+https://github.com/gdsfactory/kfnetlist" \
-  "gfpex @ git+https://github.com/doplaydo/gf-pex@dev/diogo-main"
+uv sync --extra dev --extra pex
 ```
+
+The `pex` and `simulation` extras are mutually exclusive: gfpex needs protobuf >= 7 (git kfnetlist) and gsim needs
+protobuf < 5 (vlsir).
 
 ## Usage
 
@@ -41,5 +44,5 @@ Palace-fit values (fringe, sidewall, side-overlap) are pending.
 make test-pex
 ```
 
-The tests skip when gfpex is not installed. The `Test PEX rules with gfpex` workflow runs them on demand and needs
-the `GFPEX_TOKEN` secret.
+The tests skip when gfpex is not installed (`pytest.importorskip("gfpex.gfpex")`). The `Test PEX rules with gfpex`
+workflow runs them on demand and needs the `GFPEX_TOKEN` secret.

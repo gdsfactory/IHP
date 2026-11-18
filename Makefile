@@ -23,7 +23,7 @@ test:
 	uv run pytest -s
 
 test-pex:
-	uv run --no-sync pytest tests/gfpex/ -v
+	uv run --extra dev --extra pex pytest tests/test_pex_ihp.py -v
 
 test-force: install
 	uv run pytest -s --force-regen
