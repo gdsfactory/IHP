@@ -2,18 +2,22 @@
 
 `ihp/pex/rules.py` holds the default [gfpex](https://github.com/doplaydo/gf-pex) parasitic-extraction techfile for
 IHP SG13G2: the electrical layers and their GDS pairs, the KLayout-LVS computed layers, the process stack (z,
-thickness, dielectric k) and the resistance and capacitance coefficients. The data is carried over unchanged from
-gf-pex `gfpexconfg/ihp_sg13g2.py`, which derives from the KPEX (klayout-pex) SG13G2 definition and the IHP-Open-PDK
-Magic tech file.
+thickness, dielectric k) and the resistance and capacitance coefficients. The data is carried over from gf-pex
+`gfpexconfg/ihp_sg13g2.py`, which derives from the KPEX (klayout-pex) SG13G2 definition and the IHP-Open-PDK Magic
+tech file. Departures from that source: the MiM top plate (`MIM`, 36/0) and its via to TopMetal1 (`Vmim`, 129/0) are
+drawing layers that the `cmim_top` and `mim_via` computed layers map to, and the thick-oxide Activ overlap and
+side-overlap entries are dropped (gfpex can't tell them from LV Activ, and they overwrote the LV values).
 
 ## Installation
 
-gfpex is an optional dependency, the `pex` extra (gf-pex `dev/diogo-main`, private: needs GitHub access to
-`doplaydo/gf-pex` and a Rust toolchain to build):
+gfpex is an optional dependency, the `pex` extra (gf-pex `dev/diogo-main`):
 
 ```bash
 uv sync --extra dev --extra pex
 ```
+
+gfpex is private: installing it needs read access to `doplaydo/gf-pex`, git authenticated for github.com
+(for example `gh auth login && gh auth setup-git`) and a Rust toolchain to build it.
 
 The `pex` and `simulation` extras are mutually exclusive: gfpex needs protobuf >= 7 (git kfnetlist) and gsim needs
 protobuf < 5 (vlsir).

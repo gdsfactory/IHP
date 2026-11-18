@@ -4,8 +4,11 @@ Usage::
 
     from ihp.pex.rules import DEFAULT_PEX_RULES_CONFIG
 
-All data is carried over unchanged from gf-pex ``gfpexconfg/ihp_sg13g2.py``, which itself derives from the KPEX
-(klayout-pex) IHP SG13G2 technology definition.
+All data is carried over from gf-pex ``gfpexconfg/ihp_sg13g2.py``, which itself derives from the KPEX
+(klayout-pex) IHP SG13G2 technology definition, with these departures: the MiM top plate (MIM, 36/0) and its via to
+TopMetal1 (Vmim, 129/0) are drawing layers, and the ``cmim_top`` / ``mim_via`` computed layers map to them (the source
+mapped ``mim_via`` to TopVia1 and left ``cmim_top`` unmapped); the thick-oxide Activ overlap and side-overlap entries
+are dropped (gfpex can't tell them from LV Activ, and they overwrote the LV values).
 
 Provenance tags on every number:
     FOUNDRY <source>   value stated by a foundry document
@@ -262,6 +265,22 @@ def _build_layers(tech: Techfile) -> None:
             pin_gds_pair=GDSPair(layer=134, datatype=2),
             label_gds_pair=GDSPair(layer=134, datatype=25),
             description="Defines 2-nd thick TopMetal layer",
+        )
+    )
+    tech.layers.append(
+        LayerInfo(
+            purpose=MIM,
+            name="MIM",
+            drw_gds_pair=GDSPair(layer=36, datatype=0),
+            description="MiM capacitor top plate",
+        )
+    )
+    tech.layers.append(
+        LayerInfo(
+            purpose=VIA,
+            name="Vmim",
+            drw_gds_pair=GDSPair(layer=129, datatype=0),
+            description="Via from the MiM top plate to TopMetal1",
         )
     )
 
@@ -562,10 +581,10 @@ def _build_lvs_computed_layers(tech: Techfile) -> None:
             layer_info=LayerInfo(
                 purpose=VIA,
                 name="mim_via",
-                description="Original TopVia1 is 125/0, case MiM cap",
-                drw_gds_pair=GDSPair(layer=125, datatype=10),
+                description="Computed layer for Vmim, the MiM top plate to TopMetal1 via",
+                drw_gds_pair=GDSPair(layer=129, datatype=0),
             ),
-            original_layer_name="TopVia1",
+            original_layer_name="Vmim",
         )
     )
     tech.lvs_computed_layers.append(
@@ -589,7 +608,7 @@ def _build_lvs_computed_layers(tech: Techfile) -> None:
                 description="Computed layer for MiM cap above Metal5",
                 drw_gds_pair=GDSPair(layer=36, datatype=0),
             ),
-            original_layer_name="<TODO>",
+            original_layer_name="MIM",
         )
     )
 
@@ -1271,6 +1290,7 @@ def _build_parasitics(tech: Techfile) -> None:
     ri.vias.append(ViaResistance(via_name="Via4", resistance=9000))
     ri.vias.append(ViaResistance(via_name="TopVia1", resistance=2200))
     ri.vias.append(ViaResistance(via_name="TopVia2", resistance=1100))
+    # TODO: no Vmim resistance in the source data (gf-pex ihp_sg13g2.py / KPEX), so MiM top-plate vias carry none
 
     # substrate capacitance, Magic's defaultareacap / defaultperimeter:
     # - area (aF/µm²): per µm² of the layer over the substrate, with no conductor in between (the plate term)
@@ -1318,8 +1338,9 @@ def _build_parasitics(tech: Techfile) -> None:
         )
     )
 
+    # gfpex can't tell thick-oxide (HV) Activ from LV Activ (shapes map by GDS pair, no ThickGateOx boolean), and it
+    # keys these tables by layer pair. The source's HV entries (within 1 % of LV) overwrote the LV ones; only LV is kept.
     diff_lv_nonfet = "Activ"
-    diff_hv_nonfet = "Activ"
 
     # overlap capacitance (aF/µm²), Magic's defaultoverlap: per µm² where the top layer covers the bottom one with no
     # conductor in between; no lateral reference distance (the vertical gap is in the value)
@@ -1352,13 +1373,6 @@ def _build_parasitics(tech: Techfile) -> None:
     )
     ci.overlaps.append(
         OverlapCapacitance(
-            top_layer_name="Metal1",
-            bottom_layer_name=diff_hv_nonfet,
-            capacitance=57.702,
-        )
-    )
-    ci.overlaps.append(
-        OverlapCapacitance(
             top_layer_name="Metal1", bottom_layer_name="GatPoly", capacitance=78.653
         )
     )
@@ -1377,13 +1391,6 @@ def _build_parasitics(tech: Techfile) -> None:
             top_layer_name="Metal2",
             bottom_layer_name=diff_lv_nonfet,
             capacitance=22.916,
-        )
-    )
-    ci.overlaps.append(
-        OverlapCapacitance(
-            top_layer_name="Metal2",
-            bottom_layer_name=diff_hv_nonfet,
-            capacitance=22.844,
         )
     )
     ci.overlaps.append(
@@ -1415,13 +1422,6 @@ def _build_parasitics(tech: Techfile) -> None:
     )
     ci.overlaps.append(
         OverlapCapacitance(
-            top_layer_name="Metal3",
-            bottom_layer_name=diff_hv_nonfet,
-            capacitance=13.860,
-        )
-    )
-    ci.overlaps.append(
-        OverlapCapacitance(
             top_layer_name="Metal3", bottom_layer_name="GatPoly", capacitance=14.808
         )
     )
@@ -1448,11 +1448,6 @@ def _build_parasitics(tech: Techfile) -> None:
     ci.overlaps.append(
         OverlapCapacitance(
             top_layer_name="Metal4", bottom_layer_name=diff_lv_nonfet, capacitance=9.962
-        )
-    )
-    ci.overlaps.append(
-        OverlapCapacitance(
-            top_layer_name="Metal4", bottom_layer_name=diff_hv_nonfet, capacitance=9.948
         )
     )
     ci.overlaps.append(
@@ -1488,11 +1483,6 @@ def _build_parasitics(tech: Techfile) -> None:
     ci.overlaps.append(
         OverlapCapacitance(
             top_layer_name="Metal5", bottom_layer_name=diff_lv_nonfet, capacitance=7.766
-        )
-    )
-    ci.overlaps.append(
-        OverlapCapacitance(
-            top_layer_name="Metal5", bottom_layer_name=diff_hv_nonfet, capacitance=7.758
         )
     )
     ci.overlaps.append(
@@ -1535,13 +1525,6 @@ def _build_parasitics(tech: Techfile) -> None:
             top_layer_name="TopMetal1",
             bottom_layer_name=diff_lv_nonfet,
             capacitance=6.036,
-        )
-    )
-    ci.overlaps.append(
-        OverlapCapacitance(
-            top_layer_name="TopMetal1",
-            bottom_layer_name=diff_hv_nonfet,
-            capacitance=6.031,
         )
     )
     ci.overlaps.append(
@@ -1589,13 +1572,6 @@ def _build_parasitics(tech: Techfile) -> None:
             top_layer_name="TopMetal2",
             bottom_layer_name=diff_lv_nonfet,
             capacitance=3.357,
-        )
-    )
-    ci.overlaps.append(
-        OverlapCapacitance(
-            top_layer_name="TopMetal2",
-            bottom_layer_name=diff_hv_nonfet,
-            capacitance=3.355,
         )
     )
     ci.overlaps.append(
@@ -1696,11 +1672,6 @@ def _build_parasitics(tech: Techfile) -> None:
     )
     ci.sideoverlaps.append(
         SideOverlapCapacitance(
-            in_layer_name="Metal1", out_layer_name=diff_hv_nonfet, capacitance=45.041
-        )
-    )
-    ci.sideoverlaps.append(
-        SideOverlapCapacitance(
             in_layer_name="Metal1", out_layer_name="GatPoly", capacitance=49.378
         )
     )
@@ -1722,11 +1693,6 @@ def _build_parasitics(tech: Techfile) -> None:
     ci.sideoverlaps.append(
         SideOverlapCapacitance(
             in_layer_name="Metal2", out_layer_name=diff_lv_nonfet, capacitance=36.950
-        )
-    )
-    ci.sideoverlaps.append(
-        SideOverlapCapacitance(
-            in_layer_name="Metal2", out_layer_name=diff_hv_nonfet, capacitance=36.919
         )
     )
     ci.sideoverlaps.append(
@@ -1762,11 +1728,6 @@ def _build_parasitics(tech: Techfile) -> None:
     ci.sideoverlaps.append(
         SideOverlapCapacitance(
             in_layer_name="Metal3", out_layer_name=diff_lv_nonfet, capacitance=32.271
-        )
-    )
-    ci.sideoverlaps.append(
-        SideOverlapCapacitance(
-            in_layer_name="Metal3", out_layer_name=diff_hv_nonfet, capacitance=32.495
         )
     )
     ci.sideoverlaps.append(
@@ -1812,11 +1773,6 @@ def _build_parasitics(tech: Techfile) -> None:
     ci.sideoverlaps.append(
         SideOverlapCapacitance(
             in_layer_name="Metal4", out_layer_name=diff_lv_nonfet, capacitance=29.755
-        )
-    )
-    ci.sideoverlaps.append(
-        SideOverlapCapacitance(
-            in_layer_name="Metal4", out_layer_name=diff_hv_nonfet, capacitance=29.942
         )
     )
     ci.sideoverlaps.append(
@@ -1872,11 +1828,6 @@ def _build_parasitics(tech: Techfile) -> None:
     ci.sideoverlaps.append(
         SideOverlapCapacitance(
             in_layer_name="Metal5", out_layer_name=diff_lv_nonfet, capacitance=28.227
-        )
-    )
-    ci.sideoverlaps.append(
-        SideOverlapCapacitance(
-            in_layer_name="Metal5", out_layer_name=diff_hv_nonfet, capacitance=28.221
         )
     )
     ci.sideoverlaps.append(
@@ -1942,11 +1893,6 @@ def _build_parasitics(tech: Techfile) -> None:
     ci.sideoverlaps.append(
         SideOverlapCapacitance(
             in_layer_name="TopMetal1", out_layer_name=diff_lv_nonfet, capacitance=38.084
-        )
-    )
-    ci.sideoverlaps.append(
-        SideOverlapCapacitance(
-            in_layer_name="TopMetal1", out_layer_name=diff_hv_nonfet, capacitance=38.085
         )
     )
     ci.sideoverlaps.append(
@@ -2022,11 +1968,6 @@ def _build_parasitics(tech: Techfile) -> None:
     ci.sideoverlaps.append(
         SideOverlapCapacitance(
             in_layer_name="TopMetal2", out_layer_name=diff_lv_nonfet, capacitance=31.484
-        )
-    )
-    ci.sideoverlaps.append(
-        SideOverlapCapacitance(
-            in_layer_name="TopMetal2", out_layer_name=diff_hv_nonfet, capacitance=30.835
         )
     )
     ci.sideoverlaps.append(

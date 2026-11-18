@@ -104,3 +104,15 @@ def test_z_lookup_covers_contacts(cfg: Any, contacts: list[Any]) -> None:
     lookup = cfg.build_layer_z_lookup()
     assert contacts
     assert all(c.name in lookup for c in contacts)
+
+
+def test_computed_layers_name_a_drawing_layer(cfg: Any) -> None:
+    # gfpex maps a computed layer to its drawing layer by original_layer_name; an unknown name drops the mapping.
+    names = {li.name for li in cfg.layers}
+    assert {
+        c.layer_info.name: c.original_layer_name
+        for c in cfg.lvs_computed_layers
+        if c.original_layer_name.split(".")[0] not in names
+    } == {}
+    assert cfg.drawing_layer_by_computed_layer["mim_via"] == "Vmim"
+    assert cfg.drawing_layer_by_computed_layer["cmim_top"] == "MIM"
