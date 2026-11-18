@@ -181,6 +181,8 @@ def main() -> int:
             if DEFAULT_MODEL_MODULES.get(mt) != module:
                 sys.exit(f"Unexpected default model {mt} -> {module}")
 
+    localize_common_definitions(OUT_DIR, dflmods)
+    write_common_lib(osdi_files)
     postprocess(OUT_DIR, osdi_files)
     print(f"Wrote {OUT_DIR / COMMON_LIB}")
     return 0

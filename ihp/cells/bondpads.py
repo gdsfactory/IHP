@@ -9,6 +9,8 @@ from gdsfactory.add_pins import add_electrical_pins
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 
+from ihp.models.circulax import with_circulax_models
+
 from ..config import PATH
 
 _XS = "metal1_routing"
@@ -66,6 +68,7 @@ def bondpad_schematic(
             },
         },
     ]
+    s.info["models"] = with_circulax_models(s.info["models"])
     s.create_port(name="PAD", cross_section=_XS, x=0, y=1, orientation=90)
     return s
 
