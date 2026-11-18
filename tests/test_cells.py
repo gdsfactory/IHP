@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import inspect
 import pathlib
 
 import gdsfactory as gf
+import jax.numpy as jnp
 import jsondiff
 import numpy as np
 import pytest
@@ -95,6 +97,28 @@ def test_settings(component_name: str, data_regression: DataRegressionFixture) -
     data_regression.check(component.to_dict(with_ports=True))
 
 
+MANHATTAN_ORIENTATIONS = (0.0, 90.0, 180.0, 270.0)
+
+skip_test_manhattan_ports: set[str] = set()
+
+
+@pytest.mark.parametrize("component_name", cell_names)
+def test_port_orientations_manhattan(component_name: str) -> None:
+    """Ensure that all ports have a manhattan orientation (0, 90, 180 or 270 deg)."""
+    if component_name in skip_test_manhattan_ports:
+        pytest.skip(f"Skipping manhattan port orientation test for {component_name}")
+    component = cells[component_name]()
+    if isinstance(component, gf.ComponentAllAngle):
+        pytest.skip(f"{component_name} is an all-angle component")
+    for port in component.ports:
+        orientation = port.orientation % 360
+        if not np.any(np.isclose(orientation, MANHATTAN_ORIENTATIONS, atol=1e-3)):
+            raise AssertionError(
+                f"Port {port.name} of {component_name} has non-manhattan "
+                f"orientation {port.orientation} degrees."
+            )
+
+
 skip_test_models = {}
 
 
@@ -109,17 +133,16 @@ model_names = sorted(
 
 
 @pytest.mark.parametrize("model_name", model_names)
-def test_models_with_wavelength_sweep(
+def test_models_with_frequency_sweep(
     model_name: str, ndarrays_regression: NDArraysRegressionFixture
 ) -> None:
-    """Test models with different wavelengths to avoid regressions in frequency response."""
-    # Test at different wavelengths
-    wl = [1.53, 1.55, 1.57]
-    try:
-        model = models[model_name]
-        s_params = model(wl=wl)
-    except TypeError:
-        pytest.skip(f"{model_name} does not accept a wl argument")
+    """Test models at different frequencies to avoid regressions in frequency response."""
+    model = models[model_name]
+    if "f" not in inspect.signature(getattr(model, "__wrapped__", model)).parameters:
+        pytest.skip(f"{model_name} does not accept an f argument")
+
+    f = jnp.array([1e9, 5e9, 10e9])
+    s_params = model(f=f)
 
     # Convert s_params dictionary to arrays for regression testing
     # s_params is a dict with tuple keys (port pairs) and JAX array values

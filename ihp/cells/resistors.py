@@ -2,6 +2,7 @@
 
 import gdsfactory as gf
 from gdsfactory import Component
+from gdsfactory.add_pins import add_electrical_pins
 from gdsfactory.typings import LayerSpec
 from kfactory.schematic import DSchematic
 
@@ -31,7 +32,6 @@ def rsil_schematic(
     resistance: float | None = None,
 ) -> DSchematic:
     s = DSchematic()
-    s.info["symbol"] = "resistor"
     s.info["ports"] = [
         {"name": "P1", "side": "top", "type": "electric"},
         {"name": "P2", "side": "bottom", "type": "electric"},
@@ -242,6 +242,7 @@ def rsil(
         }
     )
 
+    add_electrical_pins(c, port_pin_mapping={"P1": ["P1"], "P2": ["P2"]})
     return c
 
 
@@ -251,7 +252,6 @@ def rppd_schematic(
     resistance: float | None = None,
 ) -> DSchematic:
     s = DSchematic()
-    s.info["symbol"] = "resistor"
     s.info["ports"] = [
         {"name": "P1", "side": "top", "type": "electric"},
         {"name": "P2", "side": "bottom", "type": "electric"},
@@ -476,6 +476,7 @@ def rppd(
         }
     )
 
+    add_electrical_pins(c, port_pin_mapping={"P1": ["P1"], "P2": ["P2"]})
     return c
 
 
@@ -485,7 +486,6 @@ def rhigh_schematic(
     resistance: float | None = None,
 ) -> DSchematic:
     s = DSchematic()
-    s.info["symbol"] = "resistor"
     s.info["ports"] = [
         {"name": "P1", "side": "top", "type": "electric"},
         {"name": "P2", "side": "bottom", "type": "electric"},
@@ -711,4 +711,5 @@ def rhigh(
         }
     )
 
+    add_electrical_pins(c, port_pin_mapping={"P1": ["P1"], "P2": ["P2"]})
     return c

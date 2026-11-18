@@ -1,12 +1,33 @@
 info:
-  vlsir:
-    model: diodevss_4kv
-    port_map: {}
-    port_order:
-    - VDD
-    - PAD
-    - VSS
-    spice_lib: sg13g2_esd.lib
-    spice_type: SUBCKT
-name: diodevss_4kv
-settings: {}
+  model: diodevss_4kv
+name: diodevss_4kv_M1
+ports:
+  PAD:
+    center:
+    - -2.31
+    - 18.44
+    layer: Metal2drawing
+    name: PAD
+    orientation: 180
+    port_type: electrical
+    width: 21.56
+  VDD:
+    center:
+    - 7.16
+    - 37.05
+    layer: Metal1drawing
+    name: VDD
+    orientation: 90
+    port_type: electrical
+    width: 14.32
+  VSS:
+    center:
+    - 15.46
+    - 18.525
+    layer: Metal2drawing
+    name: VSS
+    orientation: 0
+    port_type: electrical
+    width: 29.61
+settings:
+  m: 1

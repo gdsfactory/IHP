@@ -4,7 +4,7 @@ info:
   length: 6
   model: cmim
   width: 6
-name: cmim_W6_L6_LMMetal5drawing_LMMIMdrawing_LVVmimdrawing_L_8b51f9e9
+name: cmim_W6_L6_LMMetal5drawing_LMMIMdrawing_LVVmimdrawing_L_97c9d037
 ports:
   MINUS:
     center:
@@ -40,5 +40,6 @@ settings:
   layer_topmetal1pin: TopMetal1pin
   layer_vmim: Vmimdrawing
   length: 6
+  m: 1
   model: cmim
   width: 6

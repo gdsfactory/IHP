@@ -1,12 +1,33 @@
 info:
-  vlsir:
-    model: diodevdd_2kv
-    port_map: {}
-    port_order:
-    - VDD
-    - PAD
-    - VSS
-    spice_lib: sg13g2_esd.lib
-    spice_type: SUBCKT
-name: diodevdd_2kv
-settings: {}
+  model: diodevdd_2kv
+name: diodevdd_2kv_M1
+ports:
+  PAD:
+    center:
+    - -2.12
+    - 18.535
+    layer: Metal2drawing
+    name: PAD
+    orientation: 180
+    port_type: electrical
+    width: 21.56
+  VDD:
+    center:
+    - 10.94
+    - 18.535
+    layer: Metal2drawing
+    name: VDD
+    orientation: 0
+    port_type: electrical
+    width: 29.6
+  VSS:
+    center:
+    - 4.86
+    - 0
+    layer: Metal1drawing
+    name: VSS
+    orientation: 270
+    port_type: electrical
+    width: 9.72
+settings:
+  m: 1

@@ -5,6 +5,10 @@
 // to .osdi on first run by the openvaf-r bundled in vacask-bin. The .osdi
 // loads are SPICE-compatible primitives bundled in vacask-bin (resolved
 // via its module path / SIM_MODULE_PATH at runtime).
+//
+// Every converted lib includes this file, so it is read many times per
+// netlist. Keep it to load statements: VACASK rejects a repeated
+// parameters or model statement.
 
 // IHP Verilog-A device sources (compiled on the fly):
 load "../../ngspice/va/psp103/psp103.va"

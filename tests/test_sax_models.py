@@ -1,7 +1,11 @@
 """Tests for IHP SAX models."""
 
-import jax.numpy as jnp
+import inspect
 
+import jax.numpy as jnp
+import pytest
+
+from ihp import cells
 from ihp.models.sax import models
 from ihp.models.sax.capacitors import (
     cmim,
@@ -224,3 +228,28 @@ class TestModelsDict:
         for name, fn in models.items():
             result = fn()
             assert isinstance(result, dict) and len(result) == 4, name
+
+
+def _defaults(func) -> dict:
+    func = getattr(func, "__wrapped__", func)
+    return {
+        name: p.default
+        for name, p in inspect.signature(func).parameters.items()
+        if p.default is not inspect.Parameter.empty
+    }
+
+
+@pytest.mark.parametrize(
+    "name", sorted(name for name in models if hasattr(cells, name))
+)
+def test_model_defaults_match_cell(name):
+    """A model's defaults must describe the default layout of the matching cell."""
+    model_defaults = _defaults(models[name])
+    cell_defaults = _defaults(getattr(cells, name))
+    shared = model_defaults.keys() & cell_defaults.keys()
+    mismatched = {
+        k: (model_defaults[k], cell_defaults[k])
+        for k in shared
+        if model_defaults[k] != pytest.approx(cell_defaults[k])
+    }
+    assert not mismatched, f"(model, cell) defaults differ: {mismatched}"

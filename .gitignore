@@ -1,5 +1,6 @@
 ihp-klayout/
 docs/cells.md
+docs/layer_stack.md
 docs/cells_fixed.md
 docs/cells2_reference.md
 docs/changelog.md
@@ -188,3 +189,7 @@ cython_debug/
 .DS_Store
 *Thumbs.db
 .pre-commit-config.yaml
+
+# LLM
+.agents
+.cursor

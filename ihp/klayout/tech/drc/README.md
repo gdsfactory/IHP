@@ -13,7 +13,7 @@ Explains how to use the SG13G2 DRC rule decks.
     - [CLI](#cli)
       - [DRC Outputs](#drc-outputs)
     - [GUI](#gui)
-  - [This set includes additional residual rules that are not part of the main set. These rules can be deactivated by using the `--disable_extra_rules` switch when executing the DRC. Please note that these rules have not been verified or tested and may be slower.](#this-set-includes-additional-residual-rules-that-are-not-part-of-the-main-set-these-rules-can-be-deactivated-by-using-the---disable_extra_rules-switch-when-executing-the-drc-please-note-that-these-rules-have-not-been-verified-or-tested-and-may-be-slower)
+  - add_electrical_pins
 
 
 ## Folder Structure
@@ -99,7 +99,7 @@ The `run_drc.py` script takes your gds to run DRC rule decks with switches to se
 > By default, the **main DRC rule set** is executed, which includes checks such as **density rules**.
 > To skip density checks, use the `--no_density` option.
 >
-> If the `--drc_json=<json_path>` option is **not specified**, the script will get rule values as following:
+> add_electrical_pins
 >
 > 1. Attempt to load the **SG13G2 technology JSON file**:
 >    [SG13G2 tech JSON](../../python/sg13g2_pycell_lib/sg13g2_tech_mod.json)
@@ -109,7 +109,7 @@ The `run_drc.py` script takes your gds to run DRC rule decks with switches to se
 
 #### DRC Outputs
 
-You could find the run results at your run directory if you previously specified it through `--run_dir=<run_dir_path>`. Default path of run directory is `drc_run_<date>_<time>` in current directory.
+add_electrical_pins
 
 **Folder Structure of run results**
 
@@ -120,7 +120,7 @@ You could find the run results at your run directory if you previously specified
  ┗ 📜 <your_design_name>.lyrdb
  ```
 
-The outcome includes a database (`<your_design_name>.lyrdb`) containing DRC results. You can view it by opening your gds file with: `klayout <device_name>.gds -m <your_design_name>.lyrdb`. Alternatively, you can visualize it on your GDS file using the netlist browser option in the tools menu of the KLayout GUI as illustrated in the following figures.
+add_electrical_pins
 
 <p align="center">
   <img src="images/drc_marker_1.png" width="50%" >
@@ -162,7 +162,7 @@ First, you need to add the DRC menus to your `KLAYOUT_PATH`, you could do that b
 KLAYOUT_PATH=$PDKPATH/libs.tech/klayout:$PDKPATH/libs.tech/klayout/tech/ klayout -e
 ```
 
-> **_NOTE:_** In this context, `PDKPATH` refers to the path leading to the IHP-Open-PDK/ihp-sg13g2 directory within the current repository.
+> add_electrical_pins
 
 Then, you will get the DRC menus for SG13G2, you could set your desired options as shown below:
 

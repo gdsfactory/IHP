@@ -1,0 +1,11 @@
+* Series R-L model for the IHP SG13G2 spiral inductors (inductor2).
+*
+* Not part of the IHP PDK, which ships no compact inductor model. Written for
+* this package; it matches ihp.models.sax.inductors.inductor_with_loss:
+* Z = resistance + j*omega*inductance. Set ``resistance`` to the series
+* resistance at the operating frequency (2*pi*f*L/Q) for RF work.
+
+.subckt ihp_inductor_rl p1 p2 inductance=33.303e-12 resistance=0.5777
+L1 p1 n1 {inductance}
+R1 n1 p2 {resistance}
+.ends ihp_inductor_rl

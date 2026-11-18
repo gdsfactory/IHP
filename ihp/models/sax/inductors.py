@@ -63,8 +63,8 @@ def inductor2(
 def inductor3(
     *,
     f: sax.FloatArrayLike = DEFAULT_FREQUENCY,
-    inductance: float = 33.303e-12,
-    resistance: float = 0.5777,
+    inductance: float = 221.5e-12,
+    resistance: float = 1.386,
     z0: sax.ComplexLike = Z0_DEFAULT,
 ) -> sax.SDict:
     """IHP inductor3 PCell — 3-terminal (centre-tapped) spiral.
@@ -74,8 +74,8 @@ def inductor3(
 
     Args:
         f: Frequency in Hz.
-        inductance: Total inductance in Henries.
-        resistance: Total series resistance in Ohm.
+        inductance: Total inductance in Henries (default: 221.5 pH from PCell).
+        resistance: Total series resistance in Ohm (default: 1.386 from PCell).
         z0: Reference impedance in Ohm.
     """
     return inductor_with_loss(f=f, inductance=inductance, resistance=resistance, z0=z0)

@@ -108,8 +108,8 @@ def cmom_capacitance(
 def cmim(
     *,
     f: sax.FloatArrayLike = DEFAULT_FREQUENCY,
-    length: float = 7.0,
-    width: float = 7.0,
+    length: float = 6.0,
+    width: float = 6.0,
     series_resistance: float = CMIM_SERIES_R,
     z0: sax.ComplexLike = Z0_DEFAULT,
 ) -> sax.SDict:
