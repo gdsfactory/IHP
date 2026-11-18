@@ -8,7 +8,9 @@ All data is carried over from gf-pex ``gfpexconfg/ihp_sg13g2.py``, which itself 
 (klayout-pex) IHP SG13G2 technology definition, with these departures: the MiM top plate (MIM, 36/0) and its via to
 TopMetal1 (Vmim, 129/0) are drawing layers, and the ``cmim_top`` / ``mim_via`` computed layers map to them (the source
 mapped ``mim_via`` to TopVia1 and left ``cmim_top`` unmapped); the thick-oxide Activ overlap and side-overlap entries
-are dropped (gfpex can't tell them from LV Activ, and they overwrote the LV values).
+are dropped (gfpex can't tell them from LV Activ, and they overwrote the LV values); and the ``ildtm1`` dielectric the
+source repeats after each Metal5 variant is named ``ildtm1``, ``ildtm1_cap`` and ``ildtm1_cmim``, so stack names are
+unique.
 
 Provenance tags on every number:
     FOUNDRY <source>   value stated by a foundry document
@@ -1124,7 +1126,7 @@ def _build_process_stack(tech: Techfile) -> None:
     )
     psi.layers.append(
         StackLayerInfo(
-            name="ildtm1",
+            name="ildtm1_cap",
             layer_type=StackLayerType.LAYER_TYPE_SIMPLE_DIELECTRIC,
             simple_dielectric_layer=SimpleDielectricLayer(
                 dielectric_k=4.1, reference="ild4"
@@ -1154,7 +1156,7 @@ def _build_process_stack(tech: Techfile) -> None:
     )
     psi.layers.append(
         StackLayerInfo(
-            name="ildtm1",
+            name="ildtm1_cmim",
             layer_type=StackLayerType.LAYER_TYPE_SIMPLE_DIELECTRIC,
             simple_dielectric_layer=SimpleDielectricLayer(
                 dielectric_k=4.1, reference="ild4"

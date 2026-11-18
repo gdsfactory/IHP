@@ -116,3 +116,9 @@ def test_computed_layers_name_a_drawing_layer(cfg: Any) -> None:
     } == {}
     assert cfg.drawing_layer_by_computed_layer["mim_via"] == "Vmim"
     assert cfg.drawing_layer_by_computed_layer["cmim_top"] == "MIM"
+
+
+def test_stack_names_unique(cfg: Any) -> None:
+    # A stack entry is referenced by name; a repeated name makes the reference ambiguous.
+    names = [s.name for s in cfg.process_stack.layers]
+    assert len(names) == len(set(names))

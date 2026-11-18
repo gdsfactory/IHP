@@ -6,7 +6,9 @@ thickness, dielectric k) and the resistance and capacitance coefficients. The da
 `gfpexconfg/ihp_sg13g2.py`, which derives from the KPEX (klayout-pex) SG13G2 definition and the IHP-Open-PDK Magic
 tech file. Departures from that source: the MiM top plate (`MIM`, 36/0) and its via to TopMetal1 (`Vmim`, 129/0) are
 drawing layers that the `cmim_top` and `mim_via` computed layers map to, and the thick-oxide Activ overlap and
-side-overlap entries are dropped (gfpex can't tell them from LV Activ, and they overwrote the LV values).
+side-overlap entries are dropped (gfpex can't tell them from LV Activ, and they overwrote the LV values). The
+`ildtm1` dielectric the source repeats after each Metal5 variant is named `ildtm1`, `ildtm1_cap` and `ildtm1_cmim`,
+so stack names are unique.
 
 ## Installation
 
