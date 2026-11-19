@@ -640,9 +640,9 @@ MOM_METAL_NUMBERS: dict[LayerKey, int] = {
     _key(getattr(LAYER, f"Metal{number}drawing")): number for number in range(1, 6)
 }
 MOM_FINGER_PROBE = 0.001  # height of the strip cut across the fingers at mid-length
-_mom = (Metal1 | Metal2 | Metal3 | Metal4 | Metal5) & (
-    MemCap - grow(MIM, CAP_TIE_REACH)
-)
+_MOM_METALS = (Metal1, Metal2, Metal3, Metal4, Metal5)
+_mom_marker = MemCap - grow(MIM, CAP_TIE_REACH)
+_mom = (Metal1 | Metal2 | Metal3 | Metal4 | Metal5) & _mom_marker
 
 
 def _mom_finger_boxes(polys: list[gdstk.Polygon]) -> list[Any]:
@@ -716,7 +716,9 @@ CAPACITOR_TEMPLATES += _extract(
     [
         tpl(
             "cmom",
-            [pin("MINUS/PLUS", _mom)],
+            # one op per metal: an OR of metals would put every comb on Metal1, which routing may not touch;
+            # same-named pieces merge, so PLUS / MINUS hold the comb on every metal
+            [pin("MINUS/PLUS", metal & _mom_marker) for metal in _MOM_METALS],
             [
                 par(name, _mom)
                 for name in ("nfingers", "length", "spacing", "botmetal", "topmetal")
