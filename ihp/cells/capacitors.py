@@ -313,6 +313,7 @@ def cmom(
 
     #   return the component
     add_electrical_pins(c, port_pin_mapping={"PLUS": ["PLUS"], "MINUS": ["MINUS"]})
+    c.flatten()  # gflvs extracts devices from the cell's own polygons only
     return c
 
 

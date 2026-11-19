@@ -11,7 +11,10 @@ import pytest
 gflvs = pytest.importorskip("gflvs")
 
 import gdstk  # noqa: E402
-from gflvs.gflvs_refactor import ElectricalDeviceExtractionPolicy  # noqa: E402
+from gflvs.gflvs_refactor import (  # noqa: E402
+    ElectricalDeviceExtractionPolicy,
+    WaveguideDeviceExtractionPolicy,
+)
 from gflvs.gflvs_schema import LayerBooleanOperation, LvsRunMode  # noqa: E402
 
 from ihp import cells  # noqa: E402
@@ -43,6 +46,12 @@ def test_connectivity_symmetric() -> None:
 
 # every template, including groups that are off by default (RF MOS)
 ALL_TEMPLATES = [t for _, group in rules._groups() for t in group]
+# gflvs fits PCELL_GENERATORS templates to their PCell instead of extracting them from templates
+ELECTRICAL_TEMPLATES = [
+    t
+    for t in rules.DEVICE_TEMPLATES
+    if t.device_class_name not in rules.PCELL_GENERATORS
+]
 
 
 def test_template_layers_in_pdk() -> None:
@@ -216,6 +225,34 @@ EXTRACT_CASES: list[Any] = [
     # draws MIM 0.72 um larger than its width (y) / length (x) arguments
     ("cmim", {}, "cmim", 2, {"width": 6.72, "length": 6.72}),
     ("cmim", {"width": 8.0, "length": 5.0}, "cmim", 2, {"width": 5.72, "length": 8.72}),
+    # cmom parameters are the PCell arguments, metals numbered 1-5
+    (
+        "cmom",
+        {},
+        "cmom",
+        2,
+        {"nfingers": 1, "length": 4.0, "spacing": 0.26, "botmetal": 1, "topmetal": 3},
+    ),
+    (
+        "cmom",
+        {"nfingers": 4, "length": 39.0, "botmetal": "Metal1", "topmetal": "Metal5"},
+        "cmom",
+        2,
+        {"nfingers": 4, "length": 39.0, "spacing": 0.26, "botmetal": 1, "topmetal": 5},
+    ),
+    (
+        "cmom",
+        {
+            "nfingers": 7,
+            "length": 12.5,
+            "spacing": 0.3,
+            "botmetal": "Metal2",
+            "topmetal": "Metal4",
+        },
+        "cmom",
+        2,
+        {"nfingers": 7, "length": 12.5, "spacing": 0.3, "botmetal": 2, "topmetal": 4},
+    ),
 ]
 
 
@@ -236,7 +273,7 @@ def test_pcell_extracts(
     )
     cfg = rules.DEFAULT_LVS_CONFIG
     results = ElectricalDeviceExtractionPolicy().execute(
-        top, rules.DEVICE_TEMPLATES, cfg.electrical_device_extraction_config
+        top, ELECTRICAL_TEMPLATES, cfg.electrical_device_extraction_config
     )
     devices = [r.unwrap() for r in results]
     assert [d.class_name for d in devices] == [device]
@@ -252,10 +289,33 @@ def test_pcell_extracts(
 def _devices(cell: gdstk.Cell) -> list[Any]:
     results = ElectricalDeviceExtractionPolicy().execute(
         cell,
-        rules.DEVICE_TEMPLATES,
+        ELECTRICAL_TEMPLATES,
         rules.DEFAULT_LVS_CONFIG.electrical_device_extraction_config,
     )
     return [r.unwrap() for r in results]
+
+
+def test_inductor2_fits_pcell(tmp_path: Any) -> None:
+    component = cells.inductor2(width=8.0, space=2.1, diameter=150.0)
+    top = next(
+        c
+        for c in _library(component, tmp_path).cells
+        if isinstance(c, gdstk.Cell) and c.name == component.name
+    )
+    device = (
+        WaveguideDeviceExtractionPolicy()
+        .execute(
+            top,
+            rules.DEVICE_TEMPLATES,
+            rules.DEFAULT_LVS_CONFIG.waveguide_device_extraction_config,
+        )
+        .unwrap()
+    )
+    assert device.class_name == "inductor2"
+    assert sorted(t.name for t in device.terminals) == ["P1", "P2"]
+    assert {p.name: p.value for p in device.parameters} == pytest.approx(
+        {"width": 8.0, "space": 2.1, "diameter": 150.0}, rel=1e-3
+    )
 
 
 # cut from IHP-Open-PDK testcases (Apache-2.0) @ e73adb40 unit/cap_devices: they draw no MemCap/Varicap

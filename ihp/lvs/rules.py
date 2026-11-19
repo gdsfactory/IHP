@@ -24,6 +24,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from collections.abc import Callable, Iterable, Iterator
+from itertools import pairwise
 from typing import Any, cast
 
 import gdstk
@@ -31,6 +32,7 @@ from gflvs import (
     ElectricalDeviceExtractionConfig,
     LvsConfig,
     NetlistTracerConfig,
+    WaveguideDeviceExtractionConfig,
 )
 from gflvs.gflvs_schema import (
     DeviceParameterTemplate,
@@ -45,6 +47,7 @@ from gflvs.gflvs_schema import (
 )
 
 from ihp import connectivity as pdk_connectivity
+from ihp.cells import inductor2
 from ihp.tech import LAYER
 
 # ── Flags ───────────────────────────────────────────────────────────
@@ -58,7 +61,7 @@ ENABLE_RF_MOSFET_TEMPLATES = (
 )
 ENABLE_BJT_TEMPLATES = True  # False → drop npn13G2/L/V and pnpMPA
 ENABLE_RESISTOR_TEMPLATES = True  # False → drop rsil/rppd/rhigh
-ENABLE_CAPACITOR_TEMPLATES = True  # False → drop cmim/rfcmim
+ENABLE_CAPACITOR_TEMPLATES = True  # False → drop cmim/rfcmim/cmom
 ENABLE_VARACTOR_TEMPLATES = True  # False → drop svaricap
 ENABLE_ESD_TEMPLATES = True  # False → drop esd_nmos
 ENABLE_INDUCTOR_TEMPLATES = True  # False → drop inductor2/inductor3
@@ -72,7 +75,8 @@ PARAMETER_RELATIVE_TOLERANCE = 1e-3  # relative tolerance for parameter comparis
 # ── Helpers ─────────────────────────────────────────────────────────
 # ponytail: duplicated per PDK repo; move to gflvs when it ships helpers
 LayerKey = tuple[int, int]
-Extractor = Callable[[list[gdstk.Polygon]], float]
+# an extractor may also take `geometry_by_layer`: the cell's polygons by layer (gflvs passes it by keyword)
+Extractor = Callable[..., float]
 PIN = DeviceTerminalType.DEVICE_TERMINAL_TYPE_PIN
 
 
@@ -202,6 +206,7 @@ Metal1, Metal1pin, Metal2 = (
     L(LAYER.Metal1pin),
     L(LAYER.Metal2drawing),
 )
+Metal3, Metal4 = L(LAYER.Metal3drawing), L(LAYER.Metal4drawing)
 Metal5, TopMetal1, TopMetal2 = (
     L(LAYER.Metal5drawing),
     L(LAYER.TopMetal1drawing),
@@ -291,7 +296,6 @@ VARICAP_PGATE_REACH = (
 )
 ESD_REACH = 2.0  # esd_nmos Metal2 PAD strip from the gate (max 2.0)
 IND_TAP_REACH = 10.0  # inductor3 TopMetal2 centre tap near the TopMetal1 pins
-IND_GLUE = 5.0  # inductor2 pin glue (pins are 2 x diameter apart)
 
 # Tracer connectivity: the PDK's own `connectivity`, minus Activ.
 # Activ not traced: S/D would short through the channel (and C/E/B through bipolar diffusions).
@@ -626,6 +630,107 @@ CAPACITOR_TEMPLATES = _extract(
 ) + _extract([_mim("rfcmim", _mim_seed & PWellblock)], width=dy_max, length=dx_max)
 
 
+# MOM caps: two interdigitated combs under MemCap, drawn on every metal from botmetal to topmetal and
+# unioned here into one comb pair. In the PCell frame the 2 * nfingers + 1 fingers run along y, each comb
+# a finger set plus its pad bar; PLUS is the top comb, MINUS the bottom one. Parameters are the PCell's
+# arguments, metals numbered 1-5 (Metal1-Metal5). MIM caps draw MemCap too: their plates and tie rings
+# (within CAP_TIE_REACH of the MIM) are cut out.
+# CONFIDENCE: MEDIUM (measured on the PCell; official layouts untested)
+MOM_METAL_NUMBERS: dict[LayerKey, int] = {
+    _key(getattr(LAYER, f"Metal{number}drawing")): number for number in range(1, 6)
+}
+MOM_FINGER_PROBE = 0.001  # height of the strip cut across the fingers at mid-length
+_mom = (Metal1 | Metal2 | Metal3 | Metal4 | Metal5) & (
+    MemCap - grow(MIM, CAP_TIE_REACH)
+)
+
+
+def _mom_finger_boxes(polys: list[gdstk.Polygon]) -> list[Any]:
+    """Finger cross-sections at the combs' mid-height, left to right."""
+    (x_min, y_min), (x_max, y_max) = gdstk.Cell("mom").add(*polys).bounding_box()
+    y_mid = (y_min + y_max) / 2
+    strip = gdstk.rectangle(
+        (x_min, y_mid - MOM_FINGER_PROBE), (x_max, y_mid + MOM_FINGER_PROBE)
+    )
+    return sorted(
+        (cut.bounding_box() for cut in gdstk.boolean(polys, strip, "and")),
+        key=lambda box: box[0][0],
+    )
+
+
+def mom_nfingers(polys: list[gdstk.Polygon]) -> float:
+    """PCell nfingers: the combs draw 2 * nfingers + 1 fingers."""
+    return (len(_mom_finger_boxes(polys)) - 1) / 2
+
+
+def mom_spacing(polys: list[gdstk.Polygon]) -> float:
+    """Gap between neighbouring fingers; NaN (a bound error in gflvs) without two fingers."""
+    boxes = _mom_finger_boxes(polys)
+    return float(
+        min(
+            (right[0][0] - left[1][0] for left, right in pairwise(boxes)),
+            default=float("nan"),
+        )
+    )
+
+
+def mom_length(polys: list[gdstk.Polygon]) -> float:
+    """Finger length: each comb is length + bar tall, the pair length + spacing + 2 bars."""
+    comb_height = dy_max(polys)
+    (_, y_min), (_, y_max) = gdstk.Cell("mom").add(*polys).bounding_box()
+    return 2 * comb_height - (y_max - y_min) + mom_spacing(polys)
+
+
+def _mom_metals(
+    polys: list[gdstk.Polygon], geometry_by_layer: dict[LayerKey, list[gdstk.Polygon]]
+) -> list[int]:
+    (x_min, y_min), (x_max, y_max) = gdstk.Cell("mom").add(*polys).bounding_box()
+    return sorted(
+        number
+        for layer, number in MOM_METAL_NUMBERS.items()
+        if any(
+            (box := polygon.bounding_box())[0][0] < x_max
+            and box[1][0] > x_min
+            and box[0][1] < y_max
+            and box[1][1] > y_min
+            for polygon in geometry_by_layer.get(layer, ())
+        )
+    )
+
+
+def mom_botmetal(
+    polys: list[gdstk.Polygon], geometry_by_layer: dict[LayerKey, list[gdstk.Polygon]]
+) -> float:
+    """Lowest metal (1-5) drawn inside the combs."""
+    return float(_mom_metals(polys, geometry_by_layer)[0])
+
+
+def mom_topmetal(
+    polys: list[gdstk.Polygon], geometry_by_layer: dict[LayerKey, list[gdstk.Polygon]]
+) -> float:
+    """Highest metal (1-5) drawn inside the combs."""
+    return float(_mom_metals(polys, geometry_by_layer)[-1])
+
+
+CAPACITOR_TEMPLATES += _extract(
+    [
+        tpl(
+            "cmom",
+            [pin("MINUS/PLUS", _mom)],
+            [
+                par(name, _mom)
+                for name in ("nfingers", "length", "spacing", "botmetal", "topmetal")
+            ],
+        )
+    ],
+    nfingers=mom_nfingers,
+    length=mom_length,
+    spacing=mom_spacing,
+    botmetal=mom_botmetal,
+    topmetal=mom_topmetal,
+)
+
+
 # svaricap, keyed like the deck's varicap_core: an n-gate (Activ & GatPoly, no pSD) inside NWell.
 # Our PCell also draws Varicap; official layouts draw nBuLay instead. G = left pad, B = right pad (Metal1).
 # CONFIDENCE: LOW
@@ -685,11 +790,52 @@ ESD_TEMPLATES = _extract(
 # inductor3 layouts also match inductor2 (R3, not fixed).
 _tm1_pins = TopMetal1 & INDpin & IND
 _ind2_pins = (TopMetal2 & INDpin & IND) - grow(_tm1_pins, IND_TAP_REACH)
+# inductor2 is fitted to its PCell (gflvs waveguide device extraction): width, space and diameter are
+# searched within their bounds until the PCell's TopMetal2 matches the drawn spiral; its P1/P2 pin op
+# names the terminals.
+INDUCTOR2_FIT_BOUNDS = {
+    "width": (2.0, 30.0),
+    "space": (2.1, 10.0),
+    "diameter": (15.0, 500.0),
+}
+INDUCTOR2_FIT_LAYERS: frozenset[LayerKey] = frozenset({_key(LAYER.TopMetal2drawing)})
+FIT_GRID_UM = 0.001  # fitted PCell arguments snap to the database grid
+
+
+def generate_inductor2(width: float, space: float, diameter: float) -> gdstk.Cell:
+    """One-turn inductor2 as a flat gdstk cell, its arguments snapped to the grid."""
+    # ponytail: every distinct argument set adds a cached PCell to the layout; bounded by the fit's evaluations
+    component = inductor2(
+        **{
+            name: round(value / FIT_GRID_UM) * FIT_GRID_UM
+            for name, value in {
+                "width": width,
+                "space": space,
+                "diameter": diameter,
+            }.items()
+        },
+        turns=1,
+    )
+    cell = gdstk.Cell("inductor2_fit")
+    for (layer, datatype), points in component.get_polygons_points(by="tuple").items():
+        cell.add(*(gdstk.Polygon(p, layer=layer, datatype=datatype) for p in points))
+    return cell
+
+
+PCELL_GENERATORS: dict[str, Callable[..., gdstk.Cell]] = {
+    "inductor2": generate_inductor2
+}
+
 INDUCTOR_TEMPLATES = [
     tpl(
         "inductor2",
         [pin("P1/P2", _ind2_pins)],
-        [par("glue", grow(_ind2_pins, IND_GLUE))],
+        [
+            DeviceParameterTemplate(
+                name=name, param_bound_min=low, param_bound_max=high
+            )
+            for name, (low, high) in INDUCTOR2_FIT_BOUNDS.items()
+        ],
     ),
     tpl(
         "inductor3",
@@ -811,6 +957,18 @@ def build_lvs_config() -> LvsConfig:
         electrical_device_extraction_config=ElectricalDeviceExtractionConfig(
             galvanic_drawing_layers=template_layers(templates),
             parameter_extractors=PARAMETER_EXTRACTORS,
+        ),
+        waveguide_device_extraction_config=WaveguideDeviceExtractionConfig(
+            pcell_generators={
+                name: generator
+                for name, generator in PCELL_GENERATORS.items()
+                if any(t.device_class_name == name for t in templates)
+            },
+            waveguide_layers=INDUCTOR2_FIT_LAYERS,
+            # extraction runs in the device cell's own frame, where a PCell is never rotated
+            rotation_bounds_degrees=(0.0, 0.0),
+            # the inductor PCells snap width and diameter to 0.01 um: report the fit on that grid
+            parameter_decimal_places=2,
         ),
         parameter_relative_tolerance=PARAMETER_RELATIVE_TOLERANCE,
         run_mode=LvsRunMode.LVS_RUN_MODE_HIERARCHICAL
