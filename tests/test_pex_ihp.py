@@ -122,3 +122,37 @@ def test_stack_names_unique(cfg: Any) -> None:
     # A stack entry is referenced by name; a repeated name makes the reference ambiguous.
     names = [s.name for s in cfg.process_stack.layers]
     assert len(names) == len(set(names))
+
+
+@pytest.mark.parametrize(
+    "nfingers, length, spacing, botmetal, topmetal",
+    [(4, 39.0, 0.26, 1, 5), (27, 26.0, 0.26, 1, 5), (1, 4.0, 0.3, 2, 3)],
+)
+def test_cmom_spice_model_is_cmom_capacitance(
+    gfpex: ModuleType,
+    nfingers: int,
+    length: float,
+    spacing: float,
+    botmetal: int,
+    topmetal: int,
+) -> None:
+    from ihp.models.sax.capacitors import cmom_capacitance
+    from ihp.pex.rules import cmom_capacitance_expression
+
+    # the ngspice expression is Python too: comparisons multiply as 0 / 1
+    spice_farad = eval(  # noqa: S307 - our own expression
+        cmom_capacitance_expression(),
+        {
+            "nfingers": nfingers,
+            "length": length,
+            "spacing": spacing,
+            "botmetal": botmetal,
+            "topmetal": topmetal,
+        },
+    )
+    metals = [f"Metal{number}" for number in range(botmetal, topmetal + 1)]
+    assert spice_farad == pytest.approx(
+        cmom_capacitance(nfingers, length, spacing, mom_metals=metals),
+        rel=1e-9,
+        abs=0,  # femtofarads sit below approx's default 1e-12 absolute tolerance
+    )

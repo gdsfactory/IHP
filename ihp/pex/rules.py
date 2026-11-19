@@ -37,6 +37,9 @@ capacitance aF/µm²; perimeter and side-overlap aF/µm; sidewall in Magic form,
 
 from __future__ import annotations
 
+import math
+
+import scipy.constants
 from gfpex.gfpex import (
     CapacitanceInfo,
     ComputedLayerInfo,
@@ -67,7 +70,15 @@ from gfpex.gfpex import (
     ViaResistance,
 )
 
-__all__ = ["DEFAULT_PEX_RULES_CONFIG"]
+from ihp.models.sax.constants import (
+    CMOM_DIELECTRIC_CONSTANT,
+    CMOM_FRINGE_FACTOR,
+    CMOM_LAYER_THICKNESS,
+)
+
+__all__ = ["DEFAULT_PEX_RULES_CONFIG", "SPICE_MODELS"]
+
+TOP_METAL2_SHEET_RESISTANCE_MOHM = 11
 
 DNWELL = LayerPurpose.PURPOSE_DNWELL
 NWELL = LayerPurpose.PURPOSE_NWELL
@@ -1257,7 +1268,11 @@ def _build_parasitics(tech: Techfile) -> None:
     ri.layers.append(LayerResistance(layer_name="Metal4", resistance=88))
     ri.layers.append(LayerResistance(layer_name="Metal5", resistance=88))
     ri.layers.append(LayerResistance(layer_name="TopMetal1", resistance=18))
-    ri.layers.append(LayerResistance(layer_name="TopMetal2", resistance=11))
+    ri.layers.append(
+        LayerResistance(
+            layer_name="TopMetal2", resistance=TOP_METAL2_SHEET_RESISTANCE_MOHM
+        )
+    )
 
     # contact resistance (mΩ/CNT)
     ri.contacts.append(
@@ -2054,3 +2069,58 @@ def _build() -> Techfile:
 
 
 DEFAULT_PEX_RULES_CONFIG = _build()
+
+
+# ---- SPICE models for the S-parameter deck (gdsfactoryplus PEX) ----
+# Subcircuits of the devices ihp.lvs.rules checks by geometry, taking the PCell arguments the LVS reference
+# netlist states (metals numbered 1-5). DERIVED: cmom is ihp.models.sax.capacitors.cmom_capacitance; inductor2
+# is a series R-L, L from the modified Wheeler formula for a one-turn octagon (Mohan et al., JSSC 1999) and R
+# the DC TopMetal2 sheet resistance along the turn.
+CMOM_MIN_FINGER_WIDTH_UM = 0.2  # cmom_capacitance's min_width
+INDUCTOR2_WHEELER_K1, INDUCTOR2_WHEELER_K2 = 2.25, 3.55
+OCTAGON_PERIMETER_PER_DIAMETER = 8 * math.tan(math.pi / 8)
+
+
+def cmom_capacitance_expression() -> str:
+    """cmom_capacitance (F) over Metal{botmetal}..Metal{topmetal}, as an expression of the cmom parameters."""
+    thickness_um = " + ".join(
+        f"(botmetal <= {number})*(topmetal >= {number})*{CMOM_LAYER_THICKNESS[f'Metal{number}']}"
+        for number in range(1, 6)
+    )
+    permittivity_f_per_um = (
+        CMOM_DIELECTRIC_CONSTANT
+        * scipy.constants.epsilon_0
+        * 1e-6
+        * (1 + CMOM_FRINGE_FACTOR)
+    )
+    return (
+        f"{permittivity_f_per_um!r}*({thickness_um})/spacing"
+        f"*(2*nfingers*(length + spacing) + {CMOM_MIN_FINGER_WIDTH_UM}*(2*nfingers + 1))"
+    )
+
+
+def inductor2_inductance_expression() -> str:
+    """One-turn octagon inductance (H) of the inductor2 parameters (um)."""
+    return (
+        f"{INDUCTOR2_WHEELER_K1 * scipy.constants.mu_0 * 1e-6!r}*(diameter + width)"
+        f"/(1 + {INDUCTOR2_WHEELER_K2}*width/(diameter + width))"
+    )
+
+
+def inductor2_resistance_expression() -> str:
+    """DC TopMetal2 resistance (ohm) along the turn, of the inductor2 parameters (um)."""
+    sheet_resistance_ohm = TOP_METAL2_SHEET_RESISTANCE_MOHM * 1e-3
+    return f"{sheet_resistance_ohm * OCTAGON_PERIMETER_PER_DIAMETER!r}*(diameter + width)/width"
+
+
+SPICE_MODELS = f"""
+.subckt cmom PLUS MINUS nfingers=1 length=4 spacing=0.26 botmetal=1 topmetal=3
+C1 PLUS MINUS {{{cmom_capacitance_expression()}}}
+.ends cmom
+.subckt inductor2 P1 P2 width=2 space=2.1 diameter=25.35
+R1 P1 internal {{{inductor2_resistance_expression()}}}
+L1 internal P2 {{{inductor2_inductance_expression()}}}
+.ends inductor2
+.subckt bondpad pad diameter=80
+.ends bondpad
+"""
