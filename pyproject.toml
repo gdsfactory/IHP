@@ -102,6 +102,7 @@ strict = true
 # addopts = --tb=no
 # addopts = '--tb=short'
 # python_files = ["IHP/samples*.py", "tests/*.py"]
+markers = ["slow: long-running tests (deselect with -m 'not slow')"]
 python_files = ["tests/*.py"]
 testpaths = ["tests"]
 

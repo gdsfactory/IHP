@@ -151,6 +151,7 @@ def bondpad(
     c.info["top_metal"] = layer_top_metal
 
     add_electrical_pins(c, port_pin_mapping={"pad": ["pad"]})
+    c.flatten()  # gflvs extracts devices from the cell's own polygons only
     return c
 
 

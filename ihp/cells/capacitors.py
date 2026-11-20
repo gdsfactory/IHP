@@ -313,6 +313,7 @@ def cmom(
 
     #   return the component
     add_electrical_pins(c, port_pin_mapping={"PLUS": ["PLUS"], "MINUS": ["MINUS"]})
+    c.flatten()  # gflvs extracts devices from the cell's own polygons only
     return c
 
 
@@ -570,6 +571,7 @@ def cmim(
     c.info["area_um2"] = width * length
 
     add_electrical_pins(c, port_pin_mapping={"MINUS": ["MINUS"], "PLUS": ["PLUS"]})
+    c.flatten()  # gflvs extracts devices from the cell's own polygons only
     return c
 
 
@@ -794,4 +796,5 @@ def rfcmim(
         c,
         port_pin_mapping={"MINUS": ["MINUS"], "PLUS": ["PLUS"], "TIE_LOW": ["TIE_LOW"]},
     )
+    c.flatten()  # gflvs extracts devices from the cell's own polygons only
     return c

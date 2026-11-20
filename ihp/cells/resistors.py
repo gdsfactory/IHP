@@ -241,6 +241,7 @@ def rsil(
     )
 
     add_electrical_pins(c, port_pin_mapping={"P1": ["P1"], "P2": ["P2"]})
+    c.flatten()  # gflvs extracts devices from the cell's own polygons only
     return c
 
 
@@ -474,6 +475,7 @@ def rppd(
     )
 
     add_electrical_pins(c, port_pin_mapping={"P1": ["P1"], "P2": ["P2"]})
+    c.flatten()  # gflvs extracts devices from the cell's own polygons only
     return c
 
 
@@ -708,4 +710,5 @@ def rhigh(
     )
 
     add_electrical_pins(c, port_pin_mapping={"P1": ["P1"], "P2": ["P2"]})
+    c.flatten()  # gflvs extracts devices from the cell's own polygons only
     return c

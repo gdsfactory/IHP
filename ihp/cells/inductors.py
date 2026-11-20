@@ -354,6 +354,7 @@ def inductor2(
             p.name: [p.name] for p in c.ports if p.port_type == "electrical"
         },
     )
+    c.flatten()  # gflvs extracts devices from the cell's own polygons only
     return c
 
 
